@@ -20,8 +20,8 @@ Mp_im = []
 w = []
 i_type = []
 
-figure(figsize=(8,8))
-ax = subplot(111)
+figure(figsize=(8,8), frameon=False)
+ax = subplot(111, frameon=True)
 hold(True)
 criteria = np.loadtxt("../data/filter.dat")
 traj_M = np.loadtxt("../data/traj_m.dat")
