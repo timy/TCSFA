@@ -32,7 +32,7 @@ subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, n_p
 
     integer:: n_pass_x, n_pass_z
 
-    character(len=20):: rk4_plot_file_name
+    character(len=200):: rk4_plot_file_name
     logical:: file_e;
 
 #ifdef RK4_PRNT_DATA
@@ -66,7 +66,9 @@ subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, n_p
     else
         rk4_plot_file_name = RK4_TRAJ_PLOT_FILE_NAME;
     end if
+
     open( RK4_TRAJ_PLOT_FILE_ID, file = trim(rk4_plot_file_name) )
+
 
 #endif
 

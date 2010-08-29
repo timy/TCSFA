@@ -176,23 +176,23 @@ if plot == 1:
 
     plot_crf_track.append( def_key_val( 'CRF_PLOT_STEP   ', 's', '' ) )
     plot_crf_track.append( def_key_val( 'CRF_PLOT_FILE_ID', 'i', 102 ) )
-    plot_crf_track.append( def_key_val( 'CRF_PLOT_FILE_NAME', 's', '\'dat/crf_track.dat\'' ) )
+    plot_crf_track.append( def_key_val( 'CRF_PLOT_FILE_NAME', 's', '\'ana/data/crf_track.dat\'' ) )
 
     plot_crf_map.append( def_key_val( 'CRF_PLOT_FILE_ID ', 'i', 101 ) )
     plot_crf_map.append( def_key_val( 'CRF_PLOT_N_GRID_X', 'i', lms_nx ) )
     plot_crf_map.append( def_key_val( 'CRF_PLOT_N_GRID_Y', 'i', lms_ny ) )
     plot_crf_map.append( def_key_val( 'CRF_PLOT_MAP', 's', '' ) )
     plot_crf_map.append( def_key_val( 'CRF_PLOT_MAP_FIX', 's', '' ) )
-    plot_crf_map.append( def_key_val( 'CRF_PLOT_MAP_FILE_NAME', 's', '\'dat/crf_map.dat\'') )
+    plot_crf_map.append( def_key_val( 'CRF_PLOT_MAP_FILE_NAME', 's', '\'ana/data/crf_map.dat\'') )
 
 #define RK4_FILE_ID 101
 #define RK4_PLOT_FILE_NAME 'dat/traj.dat'
     
     plot_rk4.append( def_key_val( 'RK4_PLOT_TRAJ', 's', '') )
     plot_rk4.append( def_key_val( 'RK4_TRAJ_QUEU_FILE_ID', 'i', 103 ) )
-    plot_rk4.append( def_key_val( 'RK4_TRAJ_QUEU_FILE_NAME', 's', '\'dat/temp\'') )
+    plot_rk4.append( def_key_val( 'RK4_TRAJ_QUEU_FILE_NAME', 's', '\'ana/data/temp\'') )
     plot_rk4.append( def_key_val( 'RK4_TRAJ_PLOT_FILE_ID', 'i', 104 ) )
-    plot_rk4.append( def_key_val( 'RK4_TRAJ_PLOT_FILE_NAME', 's', '\'dat/traj.dat\'') )
+    plot_rk4.append( def_key_val( 'RK4_TRAJ_PLOT_FILE_NAME', 's', '\'ana/data/traj.dat\'') )
 
 with open('include/inc_plot_crf_track.h', 'w') as f:
     for s in plot_crf_track:

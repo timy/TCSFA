@@ -23,8 +23,8 @@ i_type = []
 figure(figsize=(8,8))
 ax = subplot(111)
 hold(True)
-criteria = np.loadtxt("../dat/filter.dat")
-traj_M = np.loadtxt("../dat/traj_m.dat")
+criteria = np.loadtxt("../data/filter.dat")
+traj_M = np.loadtxt("../data/traj_m.dat")
 #n_traj = 514
 n_traj = len(criteria)
 index = range(n_traj)
@@ -35,7 +35,7 @@ print 'number of trajectories:', n_traj
 
 # read in the amplitude and get ionization probability
 for i_traj in index:
-    data = np.loadtxt('../dat/traj_m.dat');
+    data = np.loadtxt('../data/traj_m.dat');
     Mp_re.append( data[i_traj,0] );
     Mp_im.append( data[i_traj,1] );
     i_type.append( data[i_traj,2] );
@@ -48,7 +48,7 @@ print i_type
 # read in the trajectories
 for i_traj in index:
 #    file_name = "../dat/traj_%3d.dat" % i_traj
-    file_name = "../dat/traj_%3d.dat" % criteria[i_traj]
+    file_name = "../data/traj_%3d.dat" % criteria[i_traj]
     
     data = np.loadtxt(file_name)
     t = data[:,0];
@@ -96,4 +96,6 @@ for tick in ax.yaxis.get_major_ticks():
 #plt.ylabel('x')
 
 
+plt.savefig('/data/Document/Poster/EMMI_Workshop_2010/latex-poster/fig/traj.svg')
 plt.show()
+

@@ -1,6 +1,6 @@
-#define FILE_NAME_SELECT '../dat/select 1.dat'
-#define FILE_NAME_FILTER '../dat/filter.dat'
-#define FILE_NAME_TRAJ_M '../dat/traj_m.dat'
+#define FILE_NAME_SELECT 'ana/data/select 1.dat'
+#define FILE_NAME_FILTER 'ana/data/filter.dat'
+#define FILE_NAME_TRAJ_M 'ana/data/traj_m.dat'
 
 #define FID_SELECT 121
 #define FID_FILTER 122
@@ -35,8 +35,8 @@ subroutine read_data_and_plot_traj()
     do i_data = 1, n_line
 
         print*, repeat('-', 40) // 'data', i_data;
-        open( 999, file='../dat/temp' );
-        write( text, '(a,i3,a)'), '../dat/traj_', i_data, '.dat'
+        open( 999, file='ana/data/temp' );
+        write( text, '(a,i3,a)'), 'ana/data/traj_', i_data, '.dat'
         write( 999, '(a)' ), text;
         close( 999 );
 

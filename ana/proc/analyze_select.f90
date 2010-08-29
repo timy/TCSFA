@@ -4,18 +4,18 @@
 #define GRID_UPPER_X  0.5d0 
 #define GRID_LOWER_Z  -2d0
 #define GRID_UPPER_Z  2d0 
-#define N_LINE  99345212
+#define N_LINE 37123188
 #define N_TRAJ_TYPE   4
 
 #define FID_RAW 101 
-#define DATA_FILE_RAW '../dat/data.dat'
+#define DATA_FILE_RAW '../../dat/data.dat'
 #define FID_TRAJ 110
-#define DATA_FILE_SELECT 'dat/select'
+#define DATA_FILE_SELECT '../data/select'
 
 #define N_SELECT 1
 
-#define SELECT_PX   0.007
-#define SELECT_PZ  -0.016
+#define SELECT_PX   0.1
+#define SELECT_PZ  -0.22
 
 program main
 
@@ -109,6 +109,10 @@ program main
                       data_M_re, data_M_im, n_pass_x, n_pass_z, ierr, i_type;
             end if
         end do
+
+        if( mod(i_pos, 2000000) == 0 ) then
+            write(*, '(a,f6.2,a)'), 'progress toward completetion: ', i_pos * 100d0 / N_LINE, '%' ;
+        end if
 
         ! error
         if(ierr > 0) then
