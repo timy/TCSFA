@@ -1,45 +1,29 @@
-#define GRID_NX 100
-#define GRID_NZ 800
-#define GRID_LOWER_X  0d0
-#define GRID_UPPER_X  0.5d0 
+#define GRID_NX 300
+#define GRID_NZ 500
+#define GRID_LOWER_X  -1.2d0
+#define GRID_UPPER_X  1.2d0 
 #define GRID_LOWER_Z  -2d0
 #define GRID_UPPER_Z  2d0 
-#define N_LINE  37123188
-!#define N_LINE 514
+#define N_LINE  37106638
 
 #define FID_RAW 101
 #define DATA_FILE_RAW '../../dat/data.dat'
-!#define DATA_FILE_RAW 'dat/select.dat'
 #define FID_SPEC 102
 #define DATA_FILE_SPEC '../data/spectra.dat'
 
 #define N_TRAJ_TYPE 4
-!#define N_TUNNEL_TIME 8
-#define N_TUNNEL_TIME 12
-
-! criteria to classify which cycle the traj belongs to: 1: fix interval; 2: antomative group 
-#define TIME_INTERVAL_CHOOSE 2
-
-! criteria to choose best trajectory within a family: 1: p_inf; 2: max(w)
-#define CRITERA_BEST_TRAJ 1
 
 ! coordinate system: 1: cartesian; 2: cylindrical
 #define SPECTRA_COORD 1
-
-#if TIME_INTERVAL_CHOOSE == 1
-#define TIME_BOUNDARY 138.9d0, 221.8d0, 274.7d0, 346.2d0, 415.8d0, 478.4d0, 549.9d0, 608.8d0, 687.4d0
-#elif TIME_INTERVAL_CHOOSE == 2
-#define PULSE_CYCLE 275.578d0
-#endif
 
 program main
 
     implicit none
     integer, parameter:: n_pos = N_LINE
-    integer:: i_pos, i_px, i_pz, i_type, i_temp, ierr
+    integer:: i_pos, i_px, i_pz, ierr_read, i_type 
     double precision:: data_px_0, data_pz_0, data_ts_re, data_ts_im, &
           data_x_0, data_z_0, data_px_inf, data_pz_inf, data_M_re, data_M_im
-    
+    integer::  n_pass_x, n_pass_z, ierr
     
     integer, parameter:: nx = GRID_NX
     integer, parameter:: nz = GRID_NZ
@@ -50,17 +34,11 @@ program main
     double precision, parameter:: d_px = ( px_upper - px_lower ) / nx;
     double precision, parameter:: d_pz = ( pz_upper - pz_lower ) / nz;
     double precision:: grid_px(nx), grid_pz(nz), grid_w(nx,nz)
-    integer:: grid_count(nx,nz)
     double complex:: grid_Mp(nx,nz)    
-    integer:: ierr_read, n_pass_x, n_pass_z
-
-    integer:: traj_type_count(nx,nz,N_TRAJ_TYPE)
-
     double complex:: qtm_Mp(nx,nz,N_TRAJ_TYPE)
     double precision:: cls_Mp(nx,nz,N_TRAJ_TYPE)
-    double precision:: delta_px, delta_pz, r
-    double precision:: dt_a, dt_b
     character(len=200):: text
+    integer:: grid_count(nx,nz), traj_type_count(nx,nz,N_TRAJ_TYPE)
     integer:: count_bound, count_error
 
     ! initialization
@@ -99,7 +77,7 @@ program main
         i_pz = ceiling( ( data_pz_inf - pz_lower ) / d_pz );
 
         if( mod(i_pos, 2000000) == 0 ) then
-            write(*, '(a,f6.2,a)'), 'progress toward completetion: ', i_pos * 100d0 / N_LINE, '%' ;
+            write(*, '(a,f6.2,a)'), 'progress towards completion: ', i_pos * 100d0 / N_LINE, '%' ;
         end if
 
         ! check whether the data is reasonable for further process
@@ -114,8 +92,6 @@ program main
         ! boundary
         if(i_px < 1 .or. i_px > nx) cycle;
         if(i_pz < 1 .or. i_pz > nz) cycle;
-
-
 
         grid_count(i_px, i_pz) = grid_count(i_px, i_pz) + 1;
 

@@ -74,7 +74,7 @@ subroutine console_master( mpi_info )
         n_ts_in_proc(i_proc) = sum( n_ts_in_p0_( first:last ) );
     end do
     n_all_ts = sum( n_ts_in_proc );
-
+    print*, 'The number of trajectories to be calculated:', n_all_ts;
 
 
     !* broadcast the task of each proc to slaves
