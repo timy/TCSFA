@@ -28,3 +28,11 @@ cleanall: clean
 	$(RM) $(EXE_NAME)
 	$(RM) dat/*.dat
 	$(RM) LOG
+
+commit:
+	$(RM) ana/data/*.dat
+	$(RM) ana/data/plot/*~
+	$(RM) ana/data/proc/app
+	git add .
+	git commit -m 'progress forward completion in analyze_spec.f90'
+	git push origin master

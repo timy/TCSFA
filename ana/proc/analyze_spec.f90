@@ -4,7 +4,7 @@
 #define GRID_UPPER_X  0.5d0 
 #define GRID_LOWER_Z  -2d0
 #define GRID_UPPER_Z  2d0 
-#define N_LINE  10069524
+#define N_LINE  37123188
 !#define N_LINE 514
 
 #define FID_RAW 101
@@ -98,6 +98,9 @@ program main
         i_px = ceiling( ( data_px_inf - px_lower ) / d_px );
         i_pz = ceiling( ( data_pz_inf - pz_lower ) / d_pz );
 
+        if( mod(i_pos, 2000000) == 0 ) then
+            write(*, '(a,f6.2,a)'), 'progress toward completetion: ', i_pos * 100d0 / N_LINE, '%' ;
+        end if
 
         ! check whether the data is reasonable for further process
         if(ierr > 0) then
