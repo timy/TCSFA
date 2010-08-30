@@ -63,10 +63,5 @@ subroutine local_minima( xa, xb, ya, yb, func, count, guess )
         end do
     end do
 
-    print*, 'count', count
-
-
-
-
     return;
 end subroutine local_minima

@@ -34,5 +34,5 @@ commit:
 	$(RM) ana/data/plot/*~
 	$(RM) ana/data/proc/app
 	git add .
-	git commit -m 'progress forward completion in analyze_spec.f90'
+	git commit -m 'remove redundant printing in local_minima.f90'
 	git push origin master
