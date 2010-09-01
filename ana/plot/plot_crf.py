@@ -4,13 +4,13 @@ import matplotlib.cm as cm
 from matplotlib import colors, ticker
 from pylab import *
 
-data = np.loadtxt('dat/crf_map.dat')
+data = np.loadtxt('../data/crf_map.dat')
 data_re = data[:,0]
 data_im = data[:,1]
 data_hi = data[:,2]
 
-n_grid_x = 80 # should agree with the n_grid in file 'find_root.f90'
-n_grid_y = 50
+n_grid_x = 160 # should agree with the n_grid in file 'find_root.f90'
+n_grid_y = 20
 
 
 #transfer to 2D matrix
@@ -46,7 +46,7 @@ plt.title('Searching the root on the complex plane')
 
 
 
-data = np.loadtxt('dat/crf_track.dat')
+data = np.loadtxt('../data/crf_track.dat')
 re_pt = data[:,0]
 im_pt = data[:,1]
 dr_pt = data[:,2]
