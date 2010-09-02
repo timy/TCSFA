@@ -75,12 +75,15 @@ subroutine set_criteria( index, x0_, z0_, px_0_, pz_0_, pinf_x_, pinf_z_, ts_, a
     integer:: i_type_, i_type
 
 
-    if( dreal(ts_) < 560 .and. dreal(ts_) > 260 ) then
-        write(*, '(i4, 6(e15.8,1x))'), index, ts_, pinf_x_, pinf_z_, amp_M_;
-        print*, ierr_;
-        write( FID_FILTER, '(i3)'), index;
-        write( FID_TRAJ_M, '(2(e15.8,1x), i4)'), amp_M_, i_type;
-    end if
+    !if( dreal(ts_) < 560 .and. dreal(ts_) > 260 ) then
+        if( i_type == 2 ) then
+            write(*, '(i4, 6(e15.8,1x))'), index, ts_, pinf_x_, pinf_z_, amp_M_;
+            print*, ierr_;
+            write( FID_FILTER, '(i3)'), index;
+            amp_M_ = dcmplx( max( dabs(dreal(amp_M_)), 1d-99), max( dabs(dimag(amp_M_)), 1d-99 ) );
+            write( FID_TRAJ_M, '(2(e15.8,1x), i4)'), amp_M_, i_type;
+        end if
+    !end if
 
     return;
     

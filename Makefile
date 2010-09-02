@@ -34,5 +34,5 @@ commit:
 	$(RM) ana/data/plot/*~
 	$(RM) ana/data/proc/app
 	git add .
-	git commit -m 'some change in plot_spec.f90 and plot_crf.f90'
+	git commit -m 'A new error type (ierr=3) is added to propagate.f90: positive value of Im[W_im]'
 	git push origin master

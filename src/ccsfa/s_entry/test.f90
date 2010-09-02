@@ -14,12 +14,13 @@ program main
     call set_pulse_t0( (238.769d0, 0d0) );
     call plot_pulse
 
-    call read_data_and_plot_traj()
+!    call read_data_and_plot_traj()
 
-!!$    p0_x = 0.15d0;
-!!$    p0_z = -0.18d0;
-!!$    ts_guess = ( 150d0, 40d0 )
-!!$    call disp_one_traj( p0_x, p0_z, ts_guess )
+    p0_x = -0.42901813d0;
+    p0_z = -3.0137534d0;
+    ts_guess = ( 470.60866d0, 120.860932d0 )
+
+    call disp_one_traj( p0_x, p0_z, ts_guess )
     
 end program main
 

@@ -10,7 +10,7 @@ data_im = data[:,1]
 data_hi = data[:,2]
 
 n_grid_x = 160 # should agree with the n_grid in file 'find_root.f90'
-n_grid_y = 20
+n_grid_y = 80
 
 
 #transfer to 2D matrix
@@ -25,8 +25,10 @@ print('im_max', np.max(arry_im))
 print('w_min', np.min(arry_hi))
 print('w_max',np.max(arry_hi))
 
+fig = plt.figure(figsize=(16,6), frameon=False)
+ax = fig.add_subplot(111)
 levels = arange(-3, 2, 0.2)
-cset1 = contourf(arry_re, arry_im, arry_hi, levels,
+cset1 = plt.contourf(arry_re, arry_im, arry_hi, levels,
                         cmap=cm.get_cmap('jet', len(levels)-1)
                         )
 
@@ -59,4 +61,5 @@ plt.ylabel('Im')
 
 grid(True)
 
+savefig('/home/timy/Desktop/fig/crf_map.png')
 plt.show()

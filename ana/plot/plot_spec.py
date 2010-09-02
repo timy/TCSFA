@@ -4,7 +4,7 @@ import matplotlib.cm as cm
 from matplotlib import colors, ticker
 from pylab import *
 
-file_name = 'spec_qtm_all'
+file_name = 'spec_qtm_ 4'
 data = np.loadtxt('../data/'+file_name+'.dat')
 data_pz = data[:,0]
 data_px = data[:,1]
@@ -35,7 +35,7 @@ arry_hi = log10( arry_hi )
 #cset1 = contourf(arry_re, arry_im, arry_hi, levels,
 #                        cmap=cm.get_cmap('jet', len(levels)-1)
 fig = plt.figure(figsize=(16, 6), frameon = False )
-ax = fig.add_subplot(111)
+ax = fig.add_subplot(111, aspect='equal')
 fig.patch.set_alpha(0.0)
 plt.imshow(arry_hi, interpolation='bilinear', 
            origin='lower', #cmap=cm.gray,
@@ -50,13 +50,13 @@ plt.imshow(arry_hi, interpolation='bilinear',
 #for tick in ax.yaxis.get_major_ticks():
 #    tick.label1.set_fontsize(18)
 for tick in ax.xaxis.get_major_ticks():
-    tick.label1On = False
+    tick.label1On = True
     tick.label2On = False
 
 
 xlim(-4, 4)
-ylim(-2.0, 2.0)
-clim(-10, -1)
+ylim(-2, 2)
+clim(-10, -3)
 #clim(250, 500)
 
 #pcolor(arry_pz, arry_px, arry_hi)

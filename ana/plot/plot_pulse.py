@@ -7,7 +7,7 @@ from matplotlib import *
 from pylab import *
 import numpy as np
 
-data = np.loadtxt('dat/pulse.dat')
+data = np.loadtxt('../../dat/pulse.dat')
 t = data[:,0];
 Az = data[:,1];
 Ax = data[:,2];
@@ -16,8 +16,9 @@ Ex = data[:,4];
 
 n_t = 200 # should agree with the n_t
 
-
-plot( t, Ez, 'r.-' );
+fig = figure();
+ax = fig.add_subplot(111, aspect='equal');
+plot( Ez, Ex, 'r.-' );
 #plot( [0], x[0], 'bo')
 plt.xlabel('z')
 plt.ylabel('x')

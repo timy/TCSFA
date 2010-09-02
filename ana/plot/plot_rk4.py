@@ -78,9 +78,9 @@ w_size = ceil( ratio * ( log10( w ) - amin( log10(w) ) + 1 ) );
 #print w_size
 #scatter( t0, x0, c=t0, s=w_size )
 
-ax.set_xticks([-250, -200, -150, -100, -50, 0, 50, 100, 150, 200])
-ax.set_xticklabels(['', '', '', '', '', '', '', '', '', ''])
-ax.set_yticks([-40, -20, 0, 20, 40, 60, 80])
+#ax.set_xticks([-250, -200, -150, -100, -50, 0, 50, 100, 150, 200])
+#ax.set_xticklabels(['', '', '', '', '', '', '', '', '', ''])
+#ax.set_yticks([-40, -20, 0, 20, 40, 60, 80])
 ax.set_yticklabels(['', '', '', '', '', '', ''])
 grid(True)
 

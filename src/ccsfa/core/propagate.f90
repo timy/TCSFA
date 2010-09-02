@@ -53,6 +53,11 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 
 
     W_im = action_W_im( ts );
+    
+    if( dimag(W_im) > 0 ) then
+        ierr = 3;
+        return;
+    end if
 
     DDW = action_DDW( ts );    
     
@@ -66,9 +71,9 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     amp_M = cdexp( -(0d0, 1d0) * action_W ) / DDW;
 
     ! TEST
-    if(ierr > 0) then
-        print*, 'ierr', ierr
-    end if
+!    if(ierr > 0) then
+!        print*, 'ierr', ierr
+!    end if
 
 #ifdef PROP_PRNT_RK4_DATA
     print*, 'tp', tp
