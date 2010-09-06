@@ -34,5 +34,5 @@ commit:
 	$(RM) ana/data/plot/*~
 	$(RM) ana/data/proc/app
 	git add .
-	git commit -a -m 'A new error type (ierr=3) is added to propagate.f90: positive value of Im[W_im]'
+	git commit -a -m 'the module of plot_im_integrand is added: the integrand of action W_im can be visualized along the path of the integration.'
 	git push origin master

@@ -167,6 +167,7 @@ plot = config.getint('MISC', 'plot')
 plot_crf_track = []
 plot_crf_map = []
 plot_rk4 = []
+plot_im_integrand = []
 
 if plot == 0:
 
@@ -194,6 +195,12 @@ if plot == 1:
     plot_rk4.append( def_key_val( 'RK4_TRAJ_PLOT_FILE_ID', 'i', 104 ) )
     plot_rk4.append( def_key_val( 'RK4_TRAJ_PLOT_FILE_NAME', 's', '\'ana/data/traj.dat\'') )
 
+    plot_im_integrand.append( def_key_val( 'IM_PLOT_INTEGRAND  ', 's', '') )
+    plot_im_integrand.append( def_key_val( 'IM_PLOT_FILE_ID', 'i', 105) )
+    plot_im_integrand.append( def_key_val( 'IM_PLOT_FILE_NAME', 's', '\'ana/data/im_integrand.dat\'') )
+    plot_im_integrand.append( def_key_val( 'IM_PLOT_N_PTS', 'i', 200 ) )
+    plot_im_integrand.append( def_key_val( 'IM_PLOT_OFFSET', 'f', 40.0) )
+
 with open('include/inc_plot_crf_track.h', 'w') as f:
     for s in plot_crf_track:
         f.write( s )
@@ -206,3 +213,6 @@ with open('include/inc_plot_rk4.h', 'w') as f:
     for s in plot_rk4:
         f.write( s )
 
+with open('include/inc_plot_im_integrand.h', 'w') as f:
+    for s in plot_im_integrand:
+        f.write( s )
