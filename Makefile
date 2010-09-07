@@ -33,6 +33,5 @@ commit:
 	$(RM) ana/data/*.dat
 	$(RM) ana/data/plot/*~
 	$(RM) ana/data/proc/app
-	git add .
-	git commit -a -m 'the module of plot_im_integrand is added: the integrand of action W_im can be visualized along the path of the integration.'
-	git push origin master
+	git commit -a -m 'new branch: TCSFA with the laser field of flip-flop envelop'
+	git push origin flip-flop
