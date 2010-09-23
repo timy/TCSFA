@@ -34,5 +34,5 @@ commit:
 	$(RM) ana/data/plot/*~
 	$(RM) ana/data/proc/app
 	git add .
-	git commit -a -m 'the module of plot_im_integrand is added: the integrand of action W_im can be visualized along the path of the integration.'
+	git commit -a -m 'Kepler.f90: no need to calculate the direction of movement if the initial angular momentum is 0'
 	git push origin master
