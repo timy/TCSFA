@@ -34,5 +34,5 @@ commit:
 	$(RM) ana/data/plot/*~
 	$(RM) ana/data/proc/app
 	git add .
-	git commit -a -m 'Kepler.f90: no need to calculate the direction of movement if the initial angular momentum is 0'
+	git commit -a -m 'New files: analyze_energy_spec.f90, plot_energy_spec.f90 - Add function to plot the  energy spectra'
 	git push origin master
