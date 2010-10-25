@@ -10,7 +10,7 @@ program main
     double complex:: ts_guess, W_im, W_re
     double complex, external:: pulse_A_z, pulse_A_x, pulse_E_z, pulse_E_x, alpha_x, alpha_z
 
-    call set_pulse( E0, OM, NC, XI );
+    call set_pulse( E0, OM, NC, XI, PH );
     call set_pulse_t0( (238.769d0, 0d0) );
     call plot_pulse
 
@@ -18,7 +18,7 @@ program main
 
     p0_x = -0.42901813d0;
     p0_z = -3.0137534d0;
-    ts_guess = ( 470.60866d0, 120.860932d0 )
+    ts_guess = ( 470.60866d0, 120.860932d0 );
 
     call disp_one_traj( p0_x, p0_z, ts_guess )
     
@@ -50,13 +50,13 @@ subroutine disp_one_traj( p0_x, p0_z, ts_guess )
           ts, amp_M, x0, z0, px_inf, pz_inf, &
           n_pass_x, n_pass_z, ierr )    
 
-    write(fid, '(a)'), 'Results'
-    print*, 'ts', ts;
-    print*, 'amp_M', amp_M
-    print*, 'x0', x0, 'z0', z0
-    print*, 'px', px_inf, 'pz', pz_inf
-    print*, 'n_pass_x', n_pass_x, 'n_pass_z', n_pass_z
-    print*, 'ierr', ierr;
+!!$    write(fid, '(a)'), 'Results'
+!!$    print*, 'ts', ts;
+!!$    print*, 'amp_M', amp_M
+!!$    print*, 'x0', x0, 'z0', z0
+!!$    print*, 'px', px_inf, 'pz', pz_inf
+!!$    print*, 'n_pass_x', n_pass_x, 'n_pass_z', n_pass_z
+!!$    print*, 'ierr', ierr;
 
     return;
     

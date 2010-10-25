@@ -9,8 +9,8 @@ data_re = data[:,0]
 data_im = data[:,1]
 data_hi = data[:,2]
 
-n_grid_x = 160 # should agree with the n_grid in file 'find_root.f90'
-n_grid_y = 80
+n_grid_x = 480 # should agree with the n_grid in file 'find_root.f90'
+n_grid_y = 40
 
 
 #transfer to 2D matrix

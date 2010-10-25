@@ -1,4 +1,4 @@
-!#define RK4_PRNT_DATA
+#define RK4_PRNT_DATA
 !#define RK4_BOUND_WARNING
 
 #include '../include/inc_rk4.h'

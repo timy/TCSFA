@@ -4,14 +4,14 @@ import matplotlib.cm as cm
 from matplotlib import colors, ticker
 from pylab import *
 
-file_name = 'energy_spec_qtm_all_250_2000x4000_6'
+file_name = '../data/energy_spec_qtm_all'
 data = np.loadtxt(file_name+'.dat')
 data_energy = data[:,0]
 data_angle = data[:,1]
 data_w = data[:,2]
 
 n_grid_energy = 250
-n_grid_angle = 10
+n_grid_angle = 100
 grid_lower_energy = 0.0
 grid_upper_energy = 0.5
 grid_lower_angle =  0.0
@@ -33,8 +33,9 @@ w = []                       # y-axis
 
 for index in range(n_grid_energy):
     energy.append( arry_energy[0,index] * 27.2 )
-    w.append( sum( arry_w[:,index] ) )
+    w.append( sum( arry_w[10:19,index] ) )
 
+#w = log10(w)
 plt.plot(energy, w, 'b-o')
 
 plt.hold(True)

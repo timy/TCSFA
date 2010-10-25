@@ -1,7 +1,7 @@
 #include '../include/inc_atom.h'
 #include '../include/inc_plot_im_integrand.h'
 
-!#define IM_PROP_PRNT_DATA
+#define IM_PROP_PRNT_DATA
 
 #define CRF_STEP_LENGTH 0.1d0
 

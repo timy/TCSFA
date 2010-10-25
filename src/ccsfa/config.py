@@ -56,12 +56,16 @@ E0    = config.getfloat('FIELD', 'E0')
 om    = config.getfloat('FIELD', 'om')
 nc    = config.getfloat('FIELD', 'nc')
 xi    = config.getfloat('FIELD', 'xi')
+ph    = config.getfloat('FIELD', 'ph')
+
 
 field = []
 field.append( def_key_val( 'E0', 'f', E0 ) )
 field.append( def_key_val( 'OM', 'f', om ) )
 field.append( def_key_val( 'NC', 'f', nc ) )
 field.append( def_key_val( 'XI', 'f', xi ) )
+field.append( def_key_val( 'PH', 'f', ph ) )
+
 
 with open('include/inc_field.h', 'w') as f:
     for s in field:
