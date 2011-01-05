@@ -150,9 +150,18 @@ program main
             
             ! identify the angle index
             angle = datan( grid_px(i_px) / grid_pz(i_pz) );
-            if( grid_pz(i_pz) < 0 ) then
-                angle = angle + PI;
+
+            ! map from [-pi/2, pi/2] to [0,2*pi]
+            if( grid_pz(i_pz) < 0 .and. grid_px(i_px) > 0 ) then
+                angle = angle + PI; ! 2nd quadrant
             end if
+            if( grid_pz(i_pz) < 0 .and. grid_px(i_px) < 0 ) then
+                angle = angle + PI; ! 3rd quadrant
+            end if
+            if( grid_pz(i_pz) > 0 .and. grid_px(i_px) < 0 ) then
+                angle = angle + 2d0*PI; ! 4th quadrant
+            end if
+
             i_angle = ceiling( (angle - angle_lower) / d_angle );
             ! identify the energy index
             energy = ( grid_px(i_px)**2 + grid_pz(i_pz)**2 ) / 2d0;

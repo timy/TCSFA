@@ -34,5 +34,5 @@ commit:
 	$(RM) ana/data/plot/*~
 	$(RM) ana/data/proc/app
 	git add .
-	git commit -a -m '1. New files: analyze_energy_spec_2D.f90 - angular-resolved energy spectra; 2. CEP is included in the pulse.'
+	git commit -a -m 'analyze_energy_spec.f90: a problem to decide the angle in different quadrants is found'
 	git push origin master
