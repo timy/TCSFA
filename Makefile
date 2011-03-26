@@ -40,5 +40,5 @@ cleanall: clean
 commit: cleanall
 	$(RM) ana/data/*.dat
 	git add .
-	git commit -a -m 'bug fix'
+	git commit -a -m 'update analysis module: analysis_spec.f90; new analysis module is added: analysis_subset.f90'
 	git push origin master

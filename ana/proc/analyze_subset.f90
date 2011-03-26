@@ -6,15 +6,17 @@
 #define GRID_UPPER_X  0.5d0 
 #define GRID_LOWER_Z  -1d0
 #define GRID_UPPER_Z  1d0 
-#define N_LINE 55514402
+
+#define N_LINE  145122
 
 #define FID_RAW 101
-#define DATA_FILE_RAW '../../dat/data.dat'
+#define DATA_FILE_RAW '../data/dat_subset.dat'
 #define FID_SPEC 102
-#define OUTPUT_DIR '../data/'
+#define OUTPUT_DIR '../data/subset/'
 #define FID_T0_DIST 103
 #define FID_L_DIST 104
-#define FID_SUBSET 105
+#define FID_Z0_DIST 105
+#define FID_SUBSET 106
 
 #define N_TRAJ_TYPE 5
 
@@ -24,34 +26,28 @@
 ! the following parameters are used for statistic information in specified area
 #define N_CYCLE 3
 #define OMEGA 0.0227817
-#define N_BIN_PER_CYCLE 800
-!#define RANGE_PX_A GRID_LOWER_X
-!#define RANGE_PX_B GRID_UPPER_X
-!#define RANGE_PZ_A GRID_LOWER_Z
-!#define RANGE_PZ_B GRID_UPPER_Z
-#define RANGE_PX_A 0d0
-#define RANGE_PX_B 0.2d0
-#define RANGE_PZ_A -0.1d0
-#define RANGE_PZ_B 0d0
-
+#define N_BIN_PER_CYCLE 8000
+! tunnel time bin
 #define PI ( 2d0*asin(1d0) )
 #define N_TIME_BIN (N_CYCLE*N_BIN_PER_CYCLE)
 #define TIME_END (N_CYCLE * 2 * PI / OMEGA)
+! angular momentum bin
+#define N_L_BIN 3200
+#define RANGE_L_A -20d0
+#define RANGE_L_B 30d0
+! tunnel exit bin
+#define N_Z0_BIN 800
+#define RANGE_Z0_A -30d0
+#define RANGE_Z0_B 30d0
 
-#define N_L_BIN 800
-#define RANGE_L_A -80d0
-#define RANGE_L_B 80d0
-
-! whether ouput subset data in the specified region
 #define IF_OUTPUT_SUBSET .true.
-
 
 program main
 
     implicit none
     integer, parameter:: nx = GRID_NX
     integer, parameter:: nz = GRID_NZ
-    integer:: i_pos, i_px, i_pz, ierr_read, i_type, i_t0, i_L, i_range_x_a, i_range_x_b, i_range_z_a, i_range_z_b
+    integer:: i_pos, i_px, i_pz, ierr_read, i_type, i_t0, i_L, i_z0
     double precision:: data_px_0, data_pz_0, data_ts_re, data_ts_im, data_L, &
           data_x_0, data_z_0, data_px_inf, data_pz_inf, data_M_re, data_M_im
     integer::  data_n_pass_x, data_n_pass_z, data_ierr
@@ -59,14 +55,17 @@ program main
     double precision, parameter:: d_pz = ( GRID_UPPER_Z - GRID_LOWER_Z ) / GRID_NZ
     double precision, parameter:: dt = ( TIME_END ) / N_TIME_BIN
     double precision, parameter:: dL = ( RANGE_L_B - RANGE_L_A ) / N_L_BIN
+    double precision, parameter:: d_z0 = ( RANGE_Z0_B - RANGE_Z0_A ) / N_Z0_BIN
     double complex:: qtm_Mp(nx,nz,N_TRAJ_TYPE)
     double precision:: cls_Mp(nx,nz,N_TRAJ_TYPE)
     double complex:: grid_Mp(nx,nz)
     character(len=200):: file_name
     integer:: traj_count(nx,nz,N_TRAJ_TYPE)
     integer:: count_bound, count_error, count_caught, count_subset
-    double complex:: t0_weight(N_TIME_BIN,N_TRAJ_TYPE), L_weight(N_L_BIN,N_TRAJ_TYPE)
+    double complex:: t0_weight(N_TIME_BIN,N_TRAJ_TYPE), L_weight(N_L_BIN,N_TRAJ_TYPE), &
+          z0_weight(N_Z0_BIN,N_TRAJ_TYPE)
     double precision:: L_max, L_min, z0_max, z0_min
+    logical, external:: filter_t0, filter_type, filter_L
 
     ! initialization
     forall(i_px=1:nx, i_pz=1:nz, i_type=1:N_TRAJ_TYPE) traj_count(i_px,i_pz,i_type) = 0;
@@ -74,18 +73,12 @@ program main
     forall(i_px=1:nx, i_pz=1:nz, i_type=1:N_TRAJ_TYPE) cls_Mp(i_px,i_pz,i_type) = 0d0;
     forall(i_t0=1:N_TIME_BIN, i_type=1:N_TRAJ_TYPE) t0_weight(i_t0,i_type) = (0d0, 0d0);
     forall(i_L=1:N_L_BIN, i_type=1:N_TRAJ_TYPE) L_weight(i_L,i_type) = (0d0, 0d0);
-
+    forall(i_z0=1:N_Z0_BIN, i_type=1:N_TRAJ_TYPE) z0_weight(i_z0,i_type) = (0d0, 0d0);
     count_error = 0; count_bound = 0; count_caught = 0; count_subset = 0;
     L_max = 0d0; L_min = 0d0; z0_max = 0d0; z0_min = 0d0;
 
-    i_range_x_a = ceiling( ( RANGE_PX_A - GRID_LOWER_X ) / d_px );
-    i_range_x_b = ceiling( ( RANGE_PX_B - GRID_LOWER_X ) / d_px );
-    i_range_z_a = ceiling( ( RANGE_PZ_A - GRID_LOWER_Z ) / d_pz );
-    i_range_z_b = ceiling( ( RANGE_PZ_B - GRID_LOWER_Z ) / d_pz );
-
     ! open file of raw data
     open(FID_RAW, file=DATA_FILE_RAW, status='OLD');
-
     if( IF_OUTPUT_SUBSET ) open( FID_SUBSET, file=OUTPUT_DIR // 'dat_subset.dat')
 
     write(*,*), 'start to loop the raw data ...'
@@ -104,7 +97,7 @@ program main
         i_pz = ceiling( ( data_pz_inf - GRID_LOWER_Z ) / d_pz );
         i_t0 = ceiling( ( data_ts_re - 0d0 ) / dt );
         i_L  = ceiling( ( data_L - RANGE_L_A ) / dL );
-
+        i_z0 = ceiling( ( data_z_0 - RANGE_Z0_A ) / d_z0);
         ! print information for current progress
         if( mod(i_pos, 2000000) == 0 ) then
             write(*, '(a,f6.2,a)'), 'progress towards completion: ', i_pos * 100d0 / N_LINE, '%' ;
@@ -147,24 +140,28 @@ program main
         ! count for statistics information
         traj_count(i_px,i_pz,i_type) = traj_count(i_px,i_pz,i_type) + 1;
 
-        if( i_px >=  i_range_x_a .and. i_px <=  i_range_x_b &
-              .and. i_pz >=  i_range_z_a .and. i_pz <=  i_range_z_b ) then
-            t0_weight(i_t0,i_type) = t0_weight(i_t0,i_type) + dcmplx( data_M_re, data_M_im );
-            L_weight(i_L,i_type) = L_weight(i_L,i_type) + dcmplx( data_M_re, data_M_im );
-            if(L_max < data_L) L_max = data_L;
-            if(L_min > data_L) L_min = data_L;
-            if(z0_max < data_z_0) z0_max = data_z_0;
-            if(z0_min > data_z_0) z0_min = data_z_0;
-            if( IF_OUTPUT_SUBSET ) then
-                write(FID_SUBSET, '(11(e15.8,1x),3(i2,1x))'),  &
-                      data_px_0, data_pz_0, data_ts_re, data_ts_im, &
-                      data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
-                      data_M_re, data_M_im, data_n_pass_x, data_n_pass_z, &
-                      data_ierr;
-            end if
-            count_subset = count_subset + 1;
+        ! filter:
+        ! ------------------------------------------------------------------------------
+        if( .not. ( filter_t0(data_ts_re) .and. filter_type(i_type) .and. filter_L(data_L) ) ) then        
+            cycle;
         end if
+        ! ------------------------------------------------------------------------------
 
+        t0_weight(i_t0,i_type) = t0_weight(i_t0,i_type) + dcmplx( data_M_re, data_M_im );
+        L_weight(i_L,i_type) = L_weight(i_L,i_type) + dcmplx( data_M_re, data_M_im );
+        z0_weight(i_z0,i_type) = z0_weight(i_z0,i_type) + dcmplx( data_M_re, data_M_im );
+        if(L_max < data_L) L_max = data_L;
+        if(L_min > data_L) L_min = data_L;
+        if(z0_max < data_z_0) z0_max = data_z_0;
+        if(z0_min > data_z_0) z0_min = data_z_0;
+        if( IF_OUTPUT_SUBSET ) then
+            write(FID_SUBSET, '(11(e15.8,1x),3(i2,1x))'),  &
+                  data_px_0, data_pz_0, data_ts_re, data_ts_im, &
+                  data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
+                  data_M_re, data_M_im, data_n_pass_x, data_n_pass_z, &
+                  data_ierr;
+        end if
+        count_subset = count_subset + 1;
         ! superposition in "binning grid" for quantum spectra
         qtm_Mp(i_px,i_pz,i_type) = qtm_Mp(i_px,i_pz,i_type) +  dcmplx( data_M_re, data_M_im );
         
@@ -179,7 +176,6 @@ program main
    
     close(FID_RAW);
     if( IF_OUTPUT_SUBSET ) close( FID_SUBSET );
-
     ! ==============================================================================
     ! finish the loop of raw-data file, output statistical information
 
@@ -192,12 +188,11 @@ program main
     do i_type = 1, N_TRAJ_TYPE
         write(*, '(a,i2,a,2x,i12)'), 'count_type', i_type, ':', sum( traj_count(:,:,i_type) );
     end do
-    write(*, '(2(a,2x,f15.8))'), 'L_min =', L_min, 'L_max =', L_max
-    write(*, '(2(a,2x,f15.8))'), 'z0_min =', z0_min, 'z0_max =', z0_max
+    write(*, '(2(a,2x,f15.8))'), 'L_min =', L_min, 'L_max =', L_max;
+    write(*, '(2(a,2x,f15.8))'), 'z0_min =', z0_min, 'z0_max =', z0_max;
     if( IF_OUTPUT_SUBSET ) then
         write(*, '(a,2x,i12)'), 'count_subset = ', count_subset;
-    end if
-
+    end if    
     ! ==============================================================================
     ! ------------------------------------------------------------
     ! the quantum spectra including all types of traj
@@ -283,6 +278,7 @@ program main
 
     call output_t0_distribution( t0_weight );
     call output_L_distribution( L_weight );
+    call output_z0_distribution( z0_weight );
     print*, 'done!'
 
 
@@ -385,3 +381,62 @@ subroutine output_L_distribution( L_weight )
     close(FID_L_DIST);
 
 end subroutine output_L_distribution
+
+subroutine output_z0_distribution( z0_weight )
+    implicit none
+    double complex, intent(in):: z0_weight(N_Z0_BIN,N_TRAJ_TYPE)
+    double precision:: z0
+    double precision, parameter:: d_z0 = ( RANGE_Z0_B - RANGE_Z0_A ) / N_Z0_BIN
+    integer:: i_z0, i_type
+    character(len=200):: file_name
+    
+    write(file_name, '(a)'), OUTPUT_DIR // 'z0_dist.dat';
+    open(FID_Z0_DIST, file=trim(file_name));
+    do i_z0 = 1, N_Z0_BIN
+        z0 = RANGE_Z0_A + (i_z0 - 0.5d0) * d_z0;
+        write(FID_Z0_DIST, '(6(e15.8,2x))'), z0, ( cdabs(z0_weight(i_z0, i_type)), i_type=1,N_TRAJ_TYPE );
+    end do
+    close(FID_Z0_DIST);
+    
+end subroutine output_z0_distribution
+
+logical function filter_t0( t0 )
+    
+    implicit none
+    double precision, intent(in):: t0
+
+    if( t0 > 405d0 .and. t0 < 420d0 ) then
+        filter_t0 = .true.;    
+    else
+        filter_t0 = .false.;
+    end if
+
+    return;
+
+end function filter_t0
+
+logical function filter_L( L )
+    
+    implicit none
+    double precision, intent(in):: L
+
+  !  if( ( L > 20d0 .and. L < 30d0 ) .or. L < 10d0) then ! (L > -4.72782d0 .and. L < 4d0) .or. 
+        filter_L = .true.;
+  !  else 
+  !      filter_L = .false.;
+  !  end if
+
+    return;
+
+end function filter_L
+
+logical function filter_type( itype )
+    
+    implicit none
+    integer, intent(in):: itype
+    
+    filter_type = .true.;
+
+    return;
+
+end function filter_type

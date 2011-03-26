@@ -1,17 +1,17 @@
 #define PI    3.14159265
 #define GRID_NX 1000
 #define GRID_NZ 2000
-#define GRID_N_ANGLE  10
+#define GRID_N_ANGLE  100
 #define GRID_N_ENERGY 250
-#define GRID_LOWER_X  -2d0
-#define GRID_UPPER_X  2d0 
-#define GRID_LOWER_Z  -4d0
-#define GRID_UPPER_Z  4d0
+#define GRID_LOWER_X  -1d0
+#define GRID_UPPER_X  1d0 
+#define GRID_LOWER_Z  -2d0
+#define GRID_UPPER_Z  2d0
 #define GRID_LOWER_ANGLE   0d0
 #define GRID_UPPER_ANGLE   PI
 #define GRID_LOWER_ENERGY  0d0
 #define GRID_UPPER_ENERGY  0.5d0
-#define N_LINE 63706888
+#define N_LINE 63438407
 
 #define FID_RAW 101
 #define DATA_FILE_RAW '../../dat/data.dat'
@@ -150,7 +150,7 @@ program main
             
             ! identify the angle index
             angle = datan( grid_px(i_px) / grid_pz(i_pz) );
-
+            
             ! map from [-pi/2, pi/2] to [0,2*pi]
             if( grid_pz(i_pz) < 0 .and. grid_px(i_px) > 0 ) then
                 angle = angle + PI; ! 2nd quadrant

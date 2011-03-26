@@ -1,10 +1,10 @@
-#define GRID_NX 100
-#define GRID_NZ 800
-#define GRID_LOWER_X  0d0
-#define GRID_UPPER_X  0.5d0 
-#define GRID_LOWER_Z  -2d0
-#define GRID_UPPER_Z  2d0 
-#define N_LINE 37123188
+#define GRID_NX 300
+#define GRID_NZ 600
+#define GRID_LOWER_X  -2d0
+#define GRID_UPPER_X   2d0 
+#define GRID_LOWER_Z  -4d0
+#define GRID_UPPER_Z   4d0 
+#define N_LINE 50766569
 #define N_TRAJ_TYPE   4
 
 #define FID_RAW 101 
@@ -14,8 +14,8 @@
 
 #define N_SELECT 1
 
-#define SELECT_PX   0.1
-#define SELECT_PZ  -0.22
+#define SELECT_PX   0.5d0
+#define SELECT_PZ   1.5875d0
 
 program main
 
@@ -103,15 +103,17 @@ program main
 
         do i_select = 1, N_SELECT
             if(i_px == index_select_x(i_select) .and. i_pz == index_select_z(i_select) ) then
-                write(FID_TRAJ+i_select, '(10(e15.8,1x),4(i2,1x))'),  &
-                      data_px_0, data_pz_0, data_ts_re, data_ts_im, &
-                      data_x_0, data_z_0, data_px_inf, data_pz_inf, &
-                      data_M_re, data_M_im, n_pass_x, n_pass_z, ierr, i_type;
+                if( data_M_re**2 + data_M_im**2 > 1d-2 ) then
+                    write(FID_TRAJ+i_select, '(10(e15.8,1x),4(i2,1x))'),  &
+                          data_px_0, data_pz_0, data_ts_re, data_ts_im, &
+                          data_x_0, data_z_0, data_px_inf, data_pz_inf, &
+                          data_M_re, data_M_im, n_pass_x, n_pass_z, ierr, i_type;
+                end if
             end if
         end do
 
         if( mod(i_pos, 2000000) == 0 ) then
-            write(*, '(a,f6.2,a)'), 'progress toward completetion: ', i_pos * 100d0 / N_LINE, '%' ;
+            write(*, '(a,f6.2,a)'), 'progress towards completion: ', i_pos * 100d0 / N_LINE, '%' ;
         end if
 
         ! error
