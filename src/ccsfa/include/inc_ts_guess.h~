@@ -1,7 +1,0 @@
-#define LMS_MAX_COUNT              40
-#define LMS_NX                    160
-#define LMS_NY                     80
-#define LMS_RE_LOWER   1.00000000d-02
-#define LMS_RE_UPPER   8.26724909d+02
-#define LMS_IM_LOWER   5.00000000d+00
-#define LMS_IM_UPPER   1.50000000d+02

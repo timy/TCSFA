@@ -18,13 +18,15 @@ double precision function asymptotic_angle( x0, y0, vx0, vy0, energy, charge ) r
         theta_r0 = datan( y0 / x0 );
     end if
 
-    L = x0 * vy0 - vx0 * y0;
+ 
 
     ! if there is no long range central force
-    if( dabs(charge) < 1d-8 .or. dabs(L) < 1d-8 ) then
+    if( dabs(charge) < 1d-8 ) then
         angle = theta_v0;
         return;
     end if
+
+    L = x0 * vy0 - vx0 * y0;
 
     B = charge / ( L * L );
     C = dsqrt( B * B + 2d0 * energy / ( L * L ) );

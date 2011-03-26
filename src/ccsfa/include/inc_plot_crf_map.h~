@@ -1,6 +1,0 @@
-#define CRF_PLOT_FILE_ID              101
-#define CRF_PLOT_N_GRID_X             160
-#define CRF_PLOT_N_GRID_Y              80
-#define CRF_PLOT_MAP	
-#define CRF_PLOT_MAP_FIX	
-#define CRF_PLOT_MAP_FILE_NAME	'ana/data/crf_map.dat'

@@ -7,7 +7,7 @@
 
 ! --------------------------------------------------------------------------------
 subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
-      ts, amp_M, x0, z0, px_inf, pz_inf, n_pass_x, n_pass_z, ierr )
+      ts, amp_M, x0, z0, px_inf, pz_inf, L, n_pass_x, n_pass_z, ierr )
 
 
     implicit none;
@@ -22,7 +22,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     external:: newton_equation_re
     integer:: ierr, n_pass_x, n_pass_z
     double complex:: W_im, W_re, action_W, DDW, amp_M
-    double precision:: px_inf, pz_inf, xp, zp
+    double precision:: px_inf, pz_inf, xp, zp, L
 
     call set_p0( p0_x, p0_z );
 
@@ -55,8 +55,8 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     W_im = action_W_im( ts );
     
     if( dimag(W_im) > 0 ) then
-        ierr = 3;
-        return;
+!        ierr = 3;
+!        return;
     end if
 
     DDW = action_DDW( ts );    
@@ -64,7 +64,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     call rk4_re( t0, tp, x0, vx0, z0, vz0, &
           newton_equation_re, &
           ierr, W_re, px_inf, pz_inf, &
-          xp, zp, n_pass_x, n_pass_z);
+          xp, zp, L, n_pass_x, n_pass_z);
 
     action_W = W_im + W_re;
 

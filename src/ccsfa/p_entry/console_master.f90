@@ -7,15 +7,16 @@ subroutine console_master( mpi_info )
 
     implicit none;
     type(T_mmff_mpi_info), intent(in):: mpi_info;
-    double precision, pointer:: px_0_(:), pz_0_(:), x_0_(:), z_0_(:), px_inf_(:), pz_inf_(:)
+    double precision, pointer:: px_0_(:), pz_0_(:), x_0_(:), z_0_(:), px_inf_(:), pz_inf_(:), L_(:)
     double complex, pointer:: amp_M_(:), ts_(:)
     integer, pointer:: n_ts_in_p0_(:), n_pass_x_(:), n_pass_z_(:), ierr_(:)
     integer, pointer:: a_task(:), n_ts(:)
     integer, allocatable:: n_p0_in_proc(:), n_ts_in_proc(:)
+    double precision:: rand_px_0, rand_pz_0
     external:: null_dbl, null_int, null_dcp
     integer:: i_pz, i_px, first, last, i_proc, n_proc, n_all_ts, count, i_ts
     integer:: h_q1, h_q2, h_q3
-    integer:: h_a1, h_a2, h_a3, h_a4, h_a5, h_a6, h_a7, h_a8, h_a9, h_a10, h_a11, h_a12, h_a13, h_a14
+    integer:: h_a1, h_a2, h_a3, h_a4, h_a5, h_a6, h_a7, h_a8, h_a9, h_a10, h_a11, h_a12, h_a13, h_a14, h_a15
     integer:: n_data
     integer:: time_start(6)
 
@@ -33,14 +34,51 @@ subroutine console_master( mpi_info )
     call mmff_create_data_dbl( px_0_, null_dbl, 'px_0', h_a1 );
     call mmff_create_data_dbl( pz_0_, null_dbl, 'pz_0', h_a2 );
     !! initialize the parameters
+    ! even spaced
+!!$    count = 0;
+!!$    do i_pz = 1, N_PZ
+!!$        do i_px = 1, N_PX
+!!$            count = count + 1;
+!!$            px_0_(count) = PX_BEGIN + ( i_px - 1d0 ) * D_PX;
+!!$            pz_0_(count) = PZ_BEGIN + ( i_pz - 1d0 ) * D_PZ;
+!!$        end do
+!!$    end do
+
+!    call random_seed()
+!!$    ! randomly but uniformly distributed
+!!$    allocate( rand_px_0(N_PX) );
+!!$    allocate( rand_pz_0(N_PZ) );
+!!$    call random_seed()
+!!$    call random_number( harvest = rand_px_0 );
+!!$    call random_seed()
+!!$    call random_number( harvest = rand_pz_0 );
+!!$    count = 0;
+!!$    do i_pz = 1, N_PZ
+!!$        do i_px = 1, N_PX
+!!$            count = count + 1;
+!!$            px_0_(count) = PX_BEGIN + ( PX_END - PX_BEGIN ) * rand_px_0(i_px);
+!!$            pz_0_(count) = PZ_BEGIN + ( PZ_END - PZ_BEGIN ) * rand_pz_0(i_pz);
+!!$        end do
+!!$    end do
+!!$    deallocate( rand_px_0 );
+!!$    deallocate( rand_pz_0 );
+ 
+    call random_seed();
     count = 0;
     do i_pz = 1, N_PZ
         do i_px = 1, N_PX
             count = count + 1;
-            px_0_(count) = PX_BEGIN + ( i_px - 1d0 ) * D_PX;
-            pz_0_(count) = PZ_BEGIN + ( i_pz - 1d0 ) * D_PZ;
+            call random_number( harvest = rand_px_0 );
+            call random_number( harvest = rand_pz_0 );
+            px_0_(count) = PX_BEGIN + ( i_px + rand_px_0 - 1.5 ) * D_PX;
+            pz_0_(count) = PZ_BEGIN + ( i_pz + rand_pz_0 - 1.5 ) * D_PZ;
+            !px_0_(count) = PX_BEGIN + ( PX_END - PX_BEGIN ) * rand_px_0;
+            !pz_0_(count) = PZ_BEGIN + ( PZ_END - PZ_BEGIN ) * rand_pz_0;
+
         end do
     end do
+
+
     !!
     call mmff_send_data( h_q1 );
     call mmff_delete_data_dbl( px_0_, h_a1 );
@@ -95,21 +133,22 @@ subroutine console_master( mpi_info )
     call mmff_create_data_dbl( z_0_, null_dbl, 'z_t0', h_a8);
     call mmff_create_data_dbl( px_inf_, null_dbl, 'px_inf', h_a9 );
     call mmff_create_data_dbl( pz_inf_, null_dbl, 'pz_inf', h_a10 );
-    call mmff_create_data_dcp( amp_M_, null_dcp, 'amp_M', h_a11 );
-    call mmff_create_data_int( n_pass_x_, null_int, 'n_pass_x', h_a12);
-    call mmff_create_data_int( n_pass_z_, null_int, 'n_pass_z', h_a13);
-    call mmff_create_data_int( ierr_, null_int, 'ierr', h_a14 );
+    call mmff_create_data_dbl( L_, null_dbl, 'L', h_a11 );
+    call mmff_create_data_dcp( amp_M_, null_dcp, 'amp_M', h_a12 );
+    call mmff_create_data_int( n_pass_x_, null_int, 'n_pass_x', h_a13);
+    call mmff_create_data_int( n_pass_z_, null_int, 'n_pass_z', h_a14);
+    call mmff_create_data_int( ierr_, null_int, 'ierr', h_a15 );
     call mmff_recv_data( h_q3 );
 
     !! data analysis and output
     open( 222, file = 'dat/data.dat' );
     do i_ts = 1, n_all_ts
-        write( 222, '(10(e15.8, 1x), 3(i2,1x))' ), &
+        write( 222, '(11(e15.8, 1x), 3(i2,1x))' ), &
               px_0_(i_ts), pz_0_(i_ts), &
               ts_(i_ts), &
               x_0_(i_ts), z_0_(i_ts), &
               px_inf_(i_ts), pz_inf_(i_ts), &
-              amp_M_(i_ts), &
+              L_(i_ts), amp_M_(i_ts), &
               n_pass_x_(i_ts), n_pass_z_(i_ts), &
               ierr_(i_ts);
     end do
@@ -127,10 +166,11 @@ subroutine console_master( mpi_info )
     call mmff_delete_data_dbl( z_0_, h_a8)
     call mmff_delete_data_dbl( px_inf_, h_a9 );
     call mmff_delete_data_dbl( pz_inf_, h_a10 );
-    call mmff_delete_data_dcp( amp_M_, h_a11 );
-    call mmff_delete_data_int( n_pass_x_, h_a12 );
-    call mmff_delete_data_int( n_pass_z_, h_a13 );
-    call mmff_delete_data_int( ierr_, h_a14 );
+    call mmff_delete_data_dbl( L_, h_a11 );
+    call mmff_delete_data_dcp( amp_M_, h_a12 );
+    call mmff_delete_data_int( n_pass_x_, h_a13 );
+    call mmff_delete_data_int( n_pass_z_, h_a14 );
+    call mmff_delete_data_int( ierr_, h_a15 );
 
     call mmff_final();
 

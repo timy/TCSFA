@@ -36,7 +36,7 @@ subroutine disp_one_traj( p0_x, p0_z, ts_guess )
     double precision, intent(in):: p0_x, p0_z
     double complex, intent(in):: ts_guess
     double complex:: ts, amp_M
-    double precision:: x0, z0, px_inf, pz_inf
+    double precision:: x0, z0, px_inf, pz_inf, L
     integer:: n_pass_x, n_pass_z, ierr
     integer:: fid = 6
 
@@ -47,16 +47,17 @@ subroutine disp_one_traj( p0_x, p0_z, ts_guess )
     
     call propagate_with_single_p0( &
           p0_x, p0_z, ts_guess, &
-          ts, amp_M, x0, z0, px_inf, pz_inf, &
+          ts, amp_M, x0, z0, px_inf, pz_inf, L, &
           n_pass_x, n_pass_z, ierr )    
 
-!!$    write(fid, '(a)'), 'Results'
-!!$    print*, 'ts', ts;
-!!$    print*, 'amp_M', amp_M
-!!$    print*, 'x0', x0, 'z0', z0
-!!$    print*, 'px', px_inf, 'pz', pz_inf
-!!$    print*, 'n_pass_x', n_pass_x, 'n_pass_z', n_pass_z
-!!$    print*, 'ierr', ierr;
+    write(fid, '(a)'), 'Results'
+    print*, 'ts', ts;
+    print*, 'amp_M', amp_M
+    print*, 'x0', x0, 'z0', z0
+    print*, 'px', px_inf, 'pz', pz_inf
+    print*, 'L', L
+    print*, 'n_pass_x', n_pass_x, 'n_pass_z', n_pass_z
+    print*, 'ierr', ierr;
 
     return;
     

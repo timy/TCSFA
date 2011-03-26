@@ -11,7 +11,7 @@ subroutine console_slave( mpi_info )
     implicit none;
     ! MPI_related
     type(T_mmff_mpi_info), intent(in):: mpi_info;
-    double precision, pointer:: px_0_(:), pz_0_(:), x_0_(:), z_0_(:), px_inf_(:), pz_inf_(:)
+    double precision, pointer:: px_0_(:), pz_0_(:), x_0_(:), z_0_(:), px_inf_(:), pz_inf_(:), L_(:)
     double complex, pointer:: amp_M_(:), ts_(:)
     integer, pointer:: n_ts_in_p0_(:), n_ts_in_proc(:), ierr_(:), n_pass_x_(:), n_pass_z_(:)
     integer, pointer:: a_task(:), n_ts(:)
@@ -19,7 +19,7 @@ subroutine console_slave( mpi_info )
     external:: null_dbl, null_int, null_dcp
     integer:: i_proc, i_p0, i_ts, count
     integer:: h_q1, h_q2, h_q3
-    integer:: h_a1, h_a2, h_a3, h_a4, h_a5, h_a6, h_a7, h_a8, h_a9, h_a10, h_a11, h_a12, h_a13, h_a14
+    integer:: h_a1, h_a2, h_a3, h_a4, h_a5, h_a6, h_a7, h_a8, h_a9, h_a10, h_a11, h_a12, h_a13, h_a14, h_a15
     integer:: n_data, n_proc, n_p0, n_all_ts
 
     ! CCSFA_related
@@ -66,7 +66,7 @@ subroutine console_slave( mpi_info )
     ! ============================================================
 
 
-    call set_pulse( E0, OM, NC, XI, PH );
+    call set_pulse( E0, OM, NC, XI );
     call set_pulse_t0( (1d0, 0d0) );
 
     allocate( a_ts_guess(n_p0, LMS_MAX_COUNT) );
@@ -102,10 +102,11 @@ subroutine console_slave( mpi_info )
     call mmff_create_data_dbl( z_0_, null_dbl, 'z_tp', h_a8 );
     call mmff_create_data_dbl( px_inf_, null_dbl, 'px_inf', h_a9 );
     call mmff_create_data_dbl( pz_inf_, null_dbl, 'pz_inf', h_a10 );
-    call mmff_create_data_dcp( amp_M_, null_dcp, 'W', h_a11 );
-    call mmff_create_data_int( n_pass_x_, null_int, 'n_pass_x', h_a12);
-    call mmff_create_data_int( n_pass_z_, null_int, 'n_pass_z', h_a13);
-    call mmff_create_data_int( ierr_, null_int, 'ierr', h_a14);
+    call mmff_create_data_dbl( L_, null_dbl, 'L', h_a11 );
+    call mmff_create_data_dcp( amp_M_, null_dcp, 'W', h_a12 );
+    call mmff_create_data_int( n_pass_x_, null_int, 'n_pass_x', h_a13);
+    call mmff_create_data_int( n_pass_z_, null_int, 'n_pass_z', h_a14);
+    call mmff_create_data_int( ierr_, null_int, 'ierr', h_a15);
 
     !! calculate px_inf, pz_inf, action_w
     ! ============================================================
@@ -121,7 +122,7 @@ subroutine console_slave( mpi_info )
                   a_ts_guess(i_p0, i_ts), &
                   ts_(count), amp_M_(count), &
                   x_0_(count), z_0_(count), &
-                  px_inf_(count), pz_inf_(count), &
+                  px_inf_(count), pz_inf_(count), L_(count), &
                   n_pass_x_(count), n_pass_z_(count), &
                   ierr_(count) );
 !            print*, 'rank', mpi_info%i_rank, 'n_ts', n_ts_in_p0_(i_p0), &
@@ -147,10 +148,11 @@ subroutine console_slave( mpi_info )
     call mmff_delete_data_dbl( z_0_, h_a8 );
     call mmff_delete_data_dbl( px_inf_, h_a9 );
     call mmff_delete_data_dbl( pz_inf_, h_a10 );
-    call mmff_delete_data_dcp( amp_M_, h_a11 );
-    call mmff_delete_data_int( n_pass_x_, h_a12 )
-    call mmff_delete_data_int( n_pass_z_, h_a13 )
-    call mmff_delete_data_int( ierr_, h_a14 );
+    call mmff_delete_data_dbl( L_, h_a11 );
+    call mmff_delete_data_dcp( amp_M_, h_a12 );
+    call mmff_delete_data_int( n_pass_x_, h_a13 )
+    call mmff_delete_data_int( n_pass_z_, h_a14 )
+    call mmff_delete_data_int( ierr_, h_a15 );
 
     call mmff_final();
 

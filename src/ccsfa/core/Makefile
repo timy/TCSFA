@@ -2,8 +2,8 @@ DIR_ROOT = ../../..
 include $(DIR_ROOT)/Makefile.cfg
 
 SRC	= \
+	coulomb_tail.f90 \
 	dbexp_int.f90 \
-	Kepler.f90 \
 	local_minima.f90 \
 	rk4_re.f90 \
 	crf.f90 \

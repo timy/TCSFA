@@ -1,6 +1,6 @@
 include ./Makefile.cfg
 
-ifeq ($(PARALLEL),1)
+ifeq ($(PARALLEL), 1)
 DIR_ENTRY	=	p_entry
 DIR_MMFF	=	./src/mmff
 else
@@ -15,8 +15,11 @@ all: $(SUBDIRS)
 	for subdir in $(SUBDIRS); do (cd $${subdir}; $(MAKE) $@); done 
 
 run:
+ifeq ($(PARALLEL), 1)
+	qsub run.sh -q opt.q
+else
 	./$(EXE_NAME)
-	#qsub run.sh  -q opt.q
+endif
 
 clean:
 	for subdir in $(SUBDIRS); do (cd $${subdir}; $(MAKE) $@); done
@@ -34,5 +37,5 @@ commit:
 	$(RM) ana/data/plot/*~
 	$(RM) ana/data/proc/app
 	git add .
-	git commit -a -m 'analyze_energy_spec.f90: a problem to decide the angle in different quadrants is found'
+	git commit -a -m '1. options for representation-dependent problem: new W-representation (Lagranian-based Coulomb correction) is added for discussion; 2. information output is explicitly controlled in the configure file; 3. too-close-to-core situation is raised, which may cause high-order term which spoil the spectra; one can control the radius-threshold to discard trajectories which are too close to the core, to somewhat alleviate the rampant artificial higher-order caustics, and to significantly speed up the computation'
 	git push origin master

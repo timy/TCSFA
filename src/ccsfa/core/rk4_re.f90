@@ -1,11 +1,11 @@
-#define RK4_PRNT_DATA
-!#define RK4_BOUND_WARNING
+!#define RK4_PRNT_DATA
 
 #include '../include/inc_rk4.h'
 #include '../include/inc_atom.h'
 #include '../include/inc_plot_rk4.h'
+#include '../include/inc_representation.h'
 
-subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, n_pass_x, n_pass_z )
+subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, L, n_pass_x, n_pass_z )
 
     implicit none;
     integer, parameter:: nt = RK4_NT
@@ -25,10 +25,11 @@ subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, n_p
     double complex, intent(out):: W
     double precision, intent(out):: pz, px
 
-    double precision, external:: asymptotic_angle;
-    double precision:: x, vx, z, vz, v2, r, energy, ang 
+    double precision:: x, vx, z, vz, v2, r, energy, ang, w_tail, L
+    double precision:: Ex, Ez, ax, az, t_sub
     double precision:: charge, Ip
     integer:: i;
+    double complex, external:: pulse_E_x, pulse_E_z
 
     integer:: n_pass_x, n_pass_z
 
@@ -66,9 +67,7 @@ subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, n_p
     else
         rk4_plot_file_name = RK4_TRAJ_PLOT_FILE_NAME;
     end if
-
     open( RK4_TRAJ_PLOT_FILE_ID, file = trim(rk4_plot_file_name) )
-
 
 #endif
 
@@ -120,7 +119,6 @@ subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, n_p
             ! at least two times of iterations are needed
             ! to verify the accuracy of the calculation
 
-
             p = 1d0;
             
             if( n_iter > 1 ) then
@@ -157,17 +155,43 @@ subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, n_p
                     vx = ( fy(2,i-1) + fy(2,i) ) / 2d0;
                     z = ( fy(3,i-1) + fy(3,i) ) / 2d0;
                     vz = ( fy(4,i-1) + fy(4,i) ) / 2d0;
-                    
                     v2 = vz*vz + vx*vx;
                     r = dsqrt( x*x + z*z );
-                    energy = 0.5d0 * v2 - charge / r;
+
+                    ! if the electron get too close to the core
+                    if( r < RK4_R_THRESHOLD ) then
+
+                        ierr = 4; ! high-order term we cannot handle currently
+                        return;
+
+                    end if
+
+                    if( REPRESENTATION_OPT == 'S' ) then
+
+                        energy = 0.5d0 * v2 - charge / r;
+
+                    elseif( REPRESENTATION_OPT == 'W' ) then
+
+                        t_sub = t(it-1) + (i-1.5d0) * h;
+                        Ex = dreal( pulse_E_x( dcmplx(t_sub) ) );
+                        Ez = dreal( pulse_E_z( dcmplx(t_sub) ) );
+                        ax = -Ex - charge * x / r**3;
+                        az = -Ez - charge * z / r**3;
+                        energy = 0.5d0 * v2 - charge / r + Ex * x + Ez * z + ax * x + az * z;
+
+                    end if
+
                     W = W + dcmplx( ( energy + Ip ) * h, 0d0 );
                 end do
+
                 exit
+
             else
+
                 h = h / 2d0;
                 n_sub = n_sub + n_sub - 1;
                 n_iter = n_iter + 1;
+
             end if
 
         end do
@@ -176,45 +200,25 @@ subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, n_p
 
         !write(*,*) 'actual iteration: ', n_iter - 1 ;
         y(:,it) = fy_old(:);
+
     end do
-
-
-
-
 
     x = y(1,nt);
     vx = y(2,nt);
     z = y(3,nt);
     vz = y(4,nt);
 
-    v2 = vz*vz + vx*vx;
-    r = dsqrt( x*x + z*z );
-    energy = 0.5d0 * v2 - charge / r;
-
-
-    if( energy < 0d0 ) then
-#ifdef RK4_BOUND_WARNING
-        print*, 'energy < 0!', energy;
-#endif
-        ierr = 2; ! still bound by the atomic field
-        return;
-    end if
-
-
     ! calculate asymptotic momentum
-    ang = asymptotic_angle( z, x, vz, vx, energy, charge );                    
-    
-    px = dsqrt( 2d0 * energy ) * dsin( ang );
-    pz = dsqrt( 2d0 * energy ) * dcos( ang );
+    call coulomb_tail( z, x, vz, vx, charge, L, pz, px, w_tail, ierr );
 
-    ierr = 0;
-
+    ! W_cen for the W-representation
+    if( REPRESENTATION_OPT == 'W' ) then
+        w = w + dcmplx(w_tail, 0d0);
+    end if
 
 #ifdef RK4_PLOT_TRAJ
     close( RK4_TRAJ_PLOT_FILE_ID );
 #endif
-
-
 
     return;
 end subroutine rk4_re
