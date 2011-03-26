@@ -40,5 +40,5 @@ cleanall: clean
 commit: cleanall
 	$(RM) ana/data/*.dat
 	git add .
-	git commit -a -m 'delete temporary files'
+	git commit -a -m 'bug fix'
 	git push origin master

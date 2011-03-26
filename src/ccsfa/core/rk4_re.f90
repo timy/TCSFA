@@ -2,8 +2,10 @@
 
 #include '../include/inc_rk4.h'
 #include '../include/inc_atom.h'
+#include '../include/inc_misc.h'
+#ifdef MISC_PLOT
 #include '../include/inc_plot_rk4.h'
-#include '../include/inc_representation.h'
+#endif
 
 subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, L, n_pass_x, n_pass_z )
 
@@ -57,7 +59,7 @@ subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, L, 
     n_pass_z = 0;
 
 #ifdef RK4_PLOT_TRAJ
-    
+
     inquire( file=RK4_TRAJ_QUEU_FILE_NAME, exist=file_e )
 
     if( file_e ) then

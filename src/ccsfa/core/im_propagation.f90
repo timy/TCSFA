@@ -1,5 +1,8 @@
 #include '../include/inc_atom.h'
+#include '../include/inc_misc.h'
+#ifdef MISC_PLOT
 #include '../include/inc_plot_im_integrand.h'
+#endif
 
 !#define IM_PROP_PRNT_DATA
 
@@ -238,11 +241,23 @@ double complex function action_W_im( ts )
     double complex:: t0;
     double precision, parameter:: Ip = IONIZATION_IP
     double precision:: p0x, p0z
+    integer:: i
+    double complex:: t
 
     t0 = dcmplx( dreal(ts), 0d0 );
     p0x = p0_x;
     p0z = p0_z;
     if ( dimag(ts)+1d-6 <= 0d0 ) stop 'error: Im[t] < 0';
+
+
+#ifdef IM_PLOT_INTEGRAND
+     open(IM_PLOT_FILE_ID, file=IM_PLOT_FILE_NAME)
+     do i = 1, IM_PLOT_N_PTS
+         t = dcmplx( dreal(ts), ( dimag(ts) + IM_PLOT_OFFSET ) / (IM_PLOT_N_PTS-1) * (i - 1) );
+         write(IM_PLOT_FILE_ID, '(3(e15.8,2x))'), dimag(t), v2_integrand( t ) + Ip;
+     end do
+     close(IM_PLOT_FILE_ID)
+#endif ! IM_PLOT_INTEGRAND
 
     action_W_im = Ip*t0 - Ip*ts + (64*om**3*p0x**2*t0 - 320*nc**2*om**3*p0x**2*t0 &
           + 256*nc**4*om**3*p0x**2*t0 - 64*om**3*p0x**2*ts + 320*nc**2*om**3*p0x**2*ts &

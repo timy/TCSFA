@@ -1,4 +1,7 @@
+#include '../include/inc_misc.h'
+#ifdef MISC_PLOT
 #include '../include/inc_plot_crf_map.h'
+#endif
 #ifdef  CRF_PLOT_MAP_FIX
 #include '../include/inc_ts_guess.h'
 #endif

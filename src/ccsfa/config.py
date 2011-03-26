@@ -149,16 +149,20 @@ with open( dir_inc+'inc_rk4.h', 'w' ) as f:
 
 ###################### REPRESENTATION ########################
 representation_opt = config.get( 'MISC', 'representation' )
-representation = [] 
-representation.append( def_key_val( 'REPRESENTATION_OPT', 's', representation_opt ) )
+plot = config.getint( 'MISC', 'plot' )
 
-with open( dir_inc+'inc_representation.h', 'w' ) as f:
-    for s in representation:
+misc = [] 
+misc.append( def_key_val( 'REPRESENTATION_OPT', 's', representation_opt ) )
+if plot == 1:
+    misc.append( def_key_val( 'MISC_PLOT', 'i', plot ) )
+
+with open( dir_inc+'inc_misc.h', 'w' ) as f:
+    for s in misc:
         f.write( s )
 
 
 ###################### ANALYSIS & PLOT #######################
-plot = config.getint('MISC', 'plot')
+
 
 if plot == 1: # verbose
 

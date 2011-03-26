@@ -1,5 +1,8 @@
-
+#include '../include/inc_misc.h'
+#ifdef MISC_PLOT
 #include '../include/inc_plot_crf_track.h'
+#endif
+
 !#define CRF_NORM_ADD
 
     
