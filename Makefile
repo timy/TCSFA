@@ -34,8 +34,8 @@ cleanall: clean
 
 commit:
 	$(RM) ana/data/*.dat
-	$(RM) ana/data/plot/*~
-	$(RM) ana/data/proc/app
+	$(RM) ana/plot/*~
+	$(RM) ana/proc/app
 	git add .
-	git commit -a -m '1. options for representation-dependent problem: new W-representation (Lagranian-based Coulomb correction) is added for discussion; 2. information output is explicitly controlled in the configure file; 3. too-close-to-core situation is raised, which may cause high-order term which spoil the spectra; one can control the radius-threshold to discard trajectories which are too close to the core, to somewhat alleviate the rampant artificial higher-order caustics, and to significantly speed up the computation'
+	git commit -a -m 'p_entry/console_slave.f90: set_pulse function have 5 parameters intead of 4'
 	git push origin master

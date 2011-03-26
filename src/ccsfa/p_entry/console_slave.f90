@@ -66,7 +66,7 @@ subroutine console_slave( mpi_info )
     ! ============================================================
 
 
-    call set_pulse( E0, OM, NC, XI );
+    call set_pulse( E0, OM, NC, XI, PH );
     call set_pulse_t0( (1d0, 0d0) );
 
     allocate( a_ts_guess(n_p0, LMS_MAX_COUNT) );
