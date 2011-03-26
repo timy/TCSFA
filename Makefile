@@ -31,11 +31,14 @@ cleanall: clean
 	$(RM) $(EXE_NAME)
 	$(RM) dat/*.dat
 	$(RM) LOG
-
-commit:
-	$(RM) ana/data/*.dat
+	$(RM) ana/data/*~
 	$(RM) ana/plot/*~
+	$(RM) ana/plot/*.pyc
 	$(RM) ana/proc/app
+	$(RM) doc/*~
+
+commit: cleanall
+	$(RM) ana/data/*.dat
 	git add .
-	git commit -a -m 'p_entry/console_slave.f90: set_pulse function have 5 parameters intead of 4'
+	git commit -a -m 'delete temporary files'
 	git push origin master
