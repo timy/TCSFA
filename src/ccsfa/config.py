@@ -150,11 +150,14 @@ with open( dir_inc+'inc_rk4.h', 'w' ) as f:
 ###################### REPRESENTATION ########################
 representation_opt = config.get( 'MISC', 'representation' )
 plot = config.getint( 'MISC', 'plot' )
+print_info = config.getint( 'MISC', 'print' )
 
 misc = [] 
 misc.append( def_key_val( 'REPRESENTATION_OPT', 's', representation_opt ) )
-if plot == 1:
-    misc.append( def_key_val( 'MISC_PLOT', 'i', plot ) )
+if plot > 0:
+    misc.append( def_key_val( 'MISC_PLOT ', 'i', plot ) )
+if print_info > 0:
+    misc.append( def_key_val( 'MISC_PRINT', 'i', print_info ) )
 
 with open( dir_inc+'inc_misc.h', 'w' ) as f:
     for s in misc:
@@ -164,7 +167,7 @@ with open( dir_inc+'inc_misc.h', 'w' ) as f:
 ###################### ANALYSIS & PLOT #######################
 
 
-if plot == 1: # verbose
+if plot > 0: # verbose
 
     # trace the complex root finding
     plot_crf_track = []

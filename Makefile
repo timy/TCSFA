@@ -39,6 +39,9 @@ cleanall: clean
 
 commit: cleanall
 	$(RM) ana/data/*.dat
+	$(RM) ana/data/*~
+	$(RM) ana/data/subset/*.dat
+	$(RM) ana/data/subset/*~
 	git add .
-	git commit -a -m 'update analysis module: analysis_spec.f90; new analysis module is added: analysis_subset.f90'
+	git commit -a -m 'control of printing information'
 	git push origin master

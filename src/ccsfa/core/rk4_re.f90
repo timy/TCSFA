@@ -1,5 +1,3 @@
-!#define RK4_PRNT_DATA
-
 #include '../include/inc_rk4.h'
 #include '../include/inc_atom.h'
 #include '../include/inc_misc.h'
@@ -38,8 +36,8 @@ subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, L, 
     character(len=200):: rk4_plot_file_name
     logical:: file_e;
 
-#ifdef RK4_PRNT_DATA
-    print*, 'Initialization of RK4'
+#ifdef MISC_PRINT
+    print*, 'rk4_re(): Initialization of RK4'
     print*, 't0_', t0_, 'tp_', tp_;
     print*, 'x0_', x0_, 'vx0_', vx0_;
     print*, 'z0_', z0_, 'vz0_', vz0_;
@@ -200,7 +198,10 @@ subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, L, 
         ! we have finished one desired interval in the array,
         ! then go to the next interval
 
-        !write(*,*) 'actual iteration: ', n_iter - 1 ;
+#if MISC_PRINT > 2
+        write(*,'(a,i6,a,i6)'), 'number of iteration for sub-step ', &
+              it, ': ', n_iter - 1 ;
+#endif
         y(:,it) = fy_old(:);
 
     end do
