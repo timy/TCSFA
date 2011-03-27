@@ -36,7 +36,7 @@ subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, L, 
     character(len=200):: rk4_plot_file_name
     logical:: file_e;
 
-#ifdef MISC_PRINT
+#if MISC_PRINT > 3
     print*, 'rk4_re(): Initialization of RK4'
     print*, 't0_', t0_, 'tp_', tp_;
     print*, 'x0_', x0_, 'vx0_', vx0_;
@@ -198,7 +198,7 @@ subroutine rk4_re( t0_, tp_, x0_, vx0_, z0_, vz0_, f, ierr, W, px, pz, x, z, L, 
         ! we have finished one desired interval in the array,
         ! then go to the next interval
 
-#if MISC_PRINT > 2
+#if MISC_PRINT > 4
         write(*,'(a,i6,a,i6)'), 'number of iteration for sub-step ', &
               it, ': ', n_iter - 1 ;
 #endif

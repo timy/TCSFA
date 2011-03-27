@@ -3,7 +3,7 @@
 
 #include '../include/inc_atom.h'
 #include '../include/inc_ts_guess.h'
-
+#include '../include/inc_misc.h'
 
 ! --------------------------------------------------------------------------------
 subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
@@ -24,9 +24,25 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     double complex:: W_im, W_re, action_W, DDW, amp_M
     double precision:: px_inf, pz_inf, xp, zp, L
 
+#if MISC_PRINT > 2
+    write(*,'(a)'), ''
+    write(*,'(a)'), repeat('#', 50)
+    write(*,'(a)'), 'propagate.f90: propagate_with_single_p0 '
+#endif
+
     call set_p0( p0_x, p0_z );
 
+#if MISC_PRINT > 2
+    write(*,'(a)'), ''
+    write(*,'(2x, a)'), '* start to solve ts '
+#endif
+
     ts = solve_ts_from_p0( ts_guess );    
+
+#if MISC_PRINT > 2
+    write(*,'(a)'), ''
+    write(*,'(2x, a)'), '* start to initial variables at tunnel exit '
+#endif
 
     x0_ = init_x0( ts );
     z0_ = init_z0( ts );
@@ -41,26 +57,55 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     vx0 = dreal( vx0_ );
     vz0 = dreal( vz0_ );
 
-#ifdef PROP_PRNT_INIT_DATA
-    print*, 'p0_x', p0_x;
-    print*, 'p0_z', p0_z;
-    print*, 'ts', ts;
-    print*, 'x0', x0;
-    print*, 'z0', z0;
-    print*, 'vx0', vx0;
-    print*, 'vz0', vz0;
+#if MISC_PRINT > 2
+
+    write(*,'(a)'), ''
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'ts        (', ts,           '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'x(ts)     (', x0_,          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'z(ts)     (', z0_,          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'vx(ts)    (', vx0_,         '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'vz(ts)    (', vz0_,         '  )'
+    write(*,'(4x, a, f15.8)'),                'tp        ', tp
+    write(*,'(2(4x, a, f15.8))'),             'x(t0)     ', x0,       'z(t0)     ', z0
+
 #endif
 
+#if MISC_PRINT > 2
+    write(*,'(a)'), ''
+    write(*,'(2x, a)'), '* start to calculate action for sub-barrier '
+#endif
 
     W_im = action_W_im( ts );
     
+#if MISC_PRINT > 2
+    write(*,'(a)'), ''
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_im      (', W_im,         '  )'
+#endif
+
     if( dimag(W_im) > 0 ) then
 !        ierr = 3;
 !        return;
     end if
 
+#if MISC_PRINT > 2
+    write(*,'(a)'), ''
+    write(*,'(2x, a)'), '* start to calculate W"(ts)'
+#endif
+
     DDW = action_DDW( ts );    
     
+#if MISC_PRINT > 2
+
+    write(*,'(a)'), ''
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'DDW       (', DDW,         '  )'
+
+#endif
+
+#if MISC_PRINT > 2
+    write(*,'(a)'), ''
+    write(*,'(2x, a)'), '* start to calculate real trajectory with rk4'
+#endif
+
     call rk4_re( t0, tp, x0, vx0, z0, vz0, &
           newton_equation_re, &
           ierr, W_re, px_inf, pz_inf, &
@@ -70,24 +115,20 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 
     amp_M = cdexp( -(0d0, 1d0) * action_W ) / DDW;
 
-    ! TEST
-!    if(ierr > 0) then
-!        print*, 'ierr', ierr
-!    end if
 
-#ifdef PROP_PRNT_RK4_DATA
-    print*, 'tp', tp
-    print*, 'ierr', ierr;
-    print*, 'W_re', W_re;
-    print*, 'px_inf',px_inf, 'pz_inf',pz_inf;
-    print*, 'xp', xp, 'zp', zp
-    print*, 'n_pass_x', n_pass_x, 'n_pass_z', n_pass_z
-    print*, 'W_im', W_im;
-    print*, 'W_re', W_re;
-    print*, 'W', action_W;
-    print*, 'DDW', DDW;
-    print*, 'M', amp_M;
-    print*, '----------------------------------------';
+#if MISC_PRINT > 2
+
+    write(*,'(a)'), ''
+    write(*,'(4x, a, 9x, i6)'),               'ierr      ', ierr;
+    write(*,'(2(4x, a, f15.8))'),             'px_inf    ', px_inf,   'pz_inf    ', pz_inf
+    write(*,'(2(4x, a, f15.8))'),             'x(tp)     ', xp,       'z(tp)     ', zp
+    write(*,'(2(4x, a, 9x, i6))'),            'n_pass_x  ', n_pass_x, 'n_pass_z  ', n_pass_z
+    write(*,'(4x, a, f15.8)'),                'L         ', L
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_im     (', W_im,        '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_re     (', W_re,        '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W        (', action_W,    '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'DDW      (', DDW,         '  )'
+    write(*,'(4x, a, e15.8, 2x, e15.8, a)'),  'Mp       (', amp_M,       '  )'
 
 #endif
 

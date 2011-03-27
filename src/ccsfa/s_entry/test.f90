@@ -50,6 +50,9 @@ subroutine disp_one_traj( p0_x, p0_z, ts_guess )
           ts, amp_M, x0, z0, px_inf, pz_inf, L, &
           n_pass_x, n_pass_z, ierr )    
 
+    write(*,'(a)'), ''
+    write(*,'(a)'), repeat('#', 50)   
+    write(*,'(a)'), 'test.f90: disp_one_traj() '
     write(fid, '(a)'), 'Results'
     print*, 'ts', ts;
     print*, 'amp_M', amp_M
