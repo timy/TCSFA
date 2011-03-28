@@ -20,7 +20,7 @@ def plot_dist( filename, normalized=False ):
     plt.hold(False);
 
 # ----------------------------------------------------------------------------
-def plot_pulse( filename="pulse.dat", option="t-Ez", normalized=False, norm=False ):
+def plot_pulse( filename="pulse.dat", option="t-Ez", normalized=False, norm=False, style='r.-' ):
     from pylab import plot
     import numpy as np
 
@@ -37,15 +37,15 @@ def plot_pulse( filename="pulse.dat", option="t-Ez", normalized=False, norm=Fals
     t, Az, Ax, Ez, Ex = data[:,0], data[:,1], data[:,2], data[:,3], data[:,4];
 
     if option == 'Ez-Ex':
-        return plot( Ez, Ex, 'r.-' );
+        return plot( Ez, Ex, style );
     elif option == 't-Ez':
-        return plot( t, Ez, 'r.-', label='electric field' );
+        return plot( t, Ez, style, label='electric field' );
     elif option == 't-Ex':
-        return plot( t, Ex, 'r.-' );
+        return plot( t, Ex, style );
     elif option == 't-Az':
-        return plot( t, Az, 'r.-' );
+        return plot( t, Az, style );
     elif option == 't-Ax':
-        return plot( t, Ax, 'r.-' );
+        return plot( t, Ax, style );
     else:
         print "Option not available!";
 

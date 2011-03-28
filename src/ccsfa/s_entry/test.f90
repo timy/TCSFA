@@ -16,9 +16,9 @@ program main
 
 !    call read_data_and_plot_traj()
 
-    p0_x = -0.42901813d0;
-    p0_z = -3.0137534d0;
-    ts_guess = ( 470.60866d0, 120.860932d0 );
+    p0_x = 0.42901813d0;
+    p0_z = -1.0137534d0;
+    ts_guess = ( 200.60866d0, 60.860932d0 );
 
     call disp_one_traj( p0_x, p0_z, ts_guess )
     
@@ -50,7 +50,7 @@ subroutine disp_one_traj( p0_x, p0_z, ts_guess )
           ts, amp_M, x0, z0, px_inf, pz_inf, L, &
           n_pass_x, n_pass_z, ierr )    
 
-    write(*,'(a)'), ''
+
     write(*,'(a)'), repeat('#', 50)   
     write(*,'(a)'), 'test.f90: disp_one_traj() '
     write(fid, '(a)'), 'Results'

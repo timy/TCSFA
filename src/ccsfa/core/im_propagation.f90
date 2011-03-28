@@ -46,7 +46,7 @@ double complex function solve_ts_from_p0( ts0 ) result(ts)
     double complex, external:: find_root
     integer:: ierr
 
-#ifdef IM_PROP_PRNT_DATA
+#if MISC_PRINT > 3
     double complex, external:: im_traj_x, im_traj_z, im_traj_vx, im_traj_vz
 #endif
 
@@ -58,7 +58,7 @@ double complex function solve_ts_from_p0( ts0 ) result(ts)
         return;
     end if
 
-#ifdef IM_PROP_PRNT_DATA
+#if MISC_PRINT > 3
     print*, 'ts:', ts
     print*, 'x(ts):', im_traj_x( ts, ts );
     print*, 'z(ts):', im_traj_z( ts, ts );

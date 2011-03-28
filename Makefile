@@ -43,5 +43,5 @@ commit: cleanall
 	$(RM) ana/data/subset/*.dat
 	$(RM) ana/data/subset/*~
 	git add .
-	git commit -a -m 'control of printing information'
+	git commit -a -m 'some documentation addition'
 	git push origin master

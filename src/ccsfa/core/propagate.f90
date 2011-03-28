@@ -15,7 +15,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     double complex, intent(in):: ts_guess
     double complex, external:: solve_ts_from_p0, &
           init_x0, init_z0, init_vx0, init_vz0, &
-          action_W_im, action_DDW
+          action_W_im, action_W_im_num, action_DDW
     double precision:: t0, tp, x0, z0, vx0, vz0
     double complex:: ts, x0_, z0_, vx0_, vz0_
     double precision, external:: get_tp
@@ -23,6 +23,10 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     integer:: ierr, n_pass_x, n_pass_z
     double complex:: W_im, W_re, action_W, DDW, amp_M
     double precision:: px_inf, pz_inf, xp, zp, L
+#if MISC_PRINT > 2
+    double complex, external:: pulse_E_z, pulse_E_x, pulse_A_z, pulse_A_x
+#endif
+
 
 #if MISC_PRINT > 2
     write(*,'(a)'), ''
@@ -41,7 +45,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 
 #if MISC_PRINT > 2
     write(*,'(a)'), ''
-    write(*,'(2x, a)'), '* start to initial variables at tunnel exit '
+    write(*,'(2x, a)'), '* start to obtain boundary values from ts '
 #endif
 
     x0_ = init_x0( ts );
@@ -61,12 +65,17 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 
     write(*,'(a)'), ''
     write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'ts        (', ts,           '  )'
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'x(ts)     (', x0_,          '  )'
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'z(ts)     (', z0_,          '  )'
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'vx(ts)    (', vx0_,         '  )'
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'vz(ts)    (', vz0_,         '  )'
     write(*,'(4x, a, f15.8)'),                'tp        ', tp
     write(*,'(2(4x, a, f15.8))'),             'x(t0)     ', x0,       'z(t0)     ', z0
+    write(*,'(2(4x, a, f15.8))'),             'vx(t0)    ', vx0,       'vz(t0)    ', vz0
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ez(ts)    (', pulse_E_z( ts ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ex(ts)    (', pulse_E_x( ts ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Az(ts)    (', pulse_A_z( ts ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ax(ts)    (', pulse_A_x( ts ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ez(t0)    (', pulse_E_z( dcmplx(t0,0d0) ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ex(t0)    (', pulse_E_x( dcmplx(t0,0d0) ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Az(t0)    (', pulse_A_z( dcmplx(t0,0d0) ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ax(t0)    (', pulse_A_x( dcmplx(t0,0d0) ),          '  )'
 
 #endif
 

@@ -13,18 +13,21 @@
 
   <\equation*>
     \<b-A\>\<cdot\><wide|\<b-z\>|^>=-<frac|E<rsub|0>|\<omega\><sqrt|1+\<xi\><rsup|2>>>
-    sin<rsup|2><around*|(|<frac|\<omega\> t|2 N>|)> sin<around*|(|\<omega\>
-    t|)>
+    sin<rsup|2><around*|(|<frac|\<omega\> t|2 N<rsub|c>>|)>
+    sin<around*|(|\<omega\> t+\<varphi\>|)>
   </equation*>
 
   <\equation*>
     \<b-A\>\<cdot\><wide|\<b-x\>|^>=-<frac|E<rsub|0>
     \<xi\>|\<omega\><sqrt|1+\<xi\><rsup|2>>>
-    sin<rsup|2><around*|(|<frac|\<omega\> t - \<pi\>/2|2 N>|)>
-    cos<around*|(|\<omega\> t|)>.
+    sin<rsup|2><around*|(|<frac|\<omega\> t - \<pi\>/2|2 N<rsub|c>>|)>
+    cos<around*|(|\<omega\> t+\<varphi\>|)>,
   </equation*>
 
-  When <math|\<xi\>=0>, it describes the linearly polarized field with the
+  where <math|E<rsub|0>> is the electric field amplitude, <math|\<omega\>> is
+  carrier frequency, <math|N<rsub|c>> is the number of optical cycles,
+  <math|\<varphi\>> is the phase, <math|\<xi\>> is the ellipticity. When
+  <math|\<xi\>=0>, it describes the linearly polarized field with the
   polarization direction along the <math|z>-axis.\ 
 
   <subsection|Organization of the TCSFA Package>
@@ -74,10 +77,23 @@
     <\itemize>
       <item><verbatim|proc>: post-process programs for analysis of the
       generated raw data
+
+      <item><verbatim|plot>: some easy-to-use python scripts for quick access
+      to visualization of results
+
+      <item><verbatim|data>: data results for visualization
     </itemize>
   </itemize>
 
   \;
+
+  <math|W<rsub|sub>> without Coulomb correction can be integrated numerically
+  with the function <verbatim|action_W_im_num> with the integrand
+  <verbatim|v2_integrand> from <math|t<rsub|s>> to <math|t<rsub|0>>; or it
+  can be obtained with the analytical expression with the function
+  <verbatim|action_W_im>. <math|W<rsub|mix>> (S-representation) or
+  <math|W<rsub|mix>+W<rsub|kep>> (W-representation) can be directly obtained
+  as an argument from function <verbatim|rk4_re> by numerical integration.
 </body>
 
 <\initial>
@@ -88,7 +104,21 @@
 
 <\references>
   <\collection>
-    <associate|auto-1|<tuple|1|?>>
-    <associate|auto-2|<tuple|1|?>>
+    <associate|auto-1|<tuple|1|1>>
+    <associate|auto-2|<tuple|1|1>>
   </collection>
 </references>
+
+<\auxiliary>
+  <\collection>
+    <\associate|toc>
+      <with|par-left|<quote|3fn>|1<space|2spc>Form of the Light Field
+      <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
+      <no-break><pageref|auto-1>>
+
+      <with|par-left|<quote|1.5fn>|1<space|2spc>Organization of the TCSFA
+      Package <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
+      <no-break><pageref|auto-2>>
+    </associate>
+  </collection>
+</auxiliary>
