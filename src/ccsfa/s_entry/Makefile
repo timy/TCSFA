@@ -9,7 +9,7 @@ DIR_CORE	= 	../core
 FC_FLAGS	+= 	-fpp
 INCLUDE		+= 	-I. -I$(DIR_CORE)
 LIBS		+= 	-L$(DIR_CORE)
-LK_FLAGS	+= 	-m64
+LK_FLAGS	+= 	#-m64
 
 
 %.o : %.f90
