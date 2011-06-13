@@ -34,6 +34,13 @@
 
   <subsection|Methods>
 
+  <subsubsection|Searching saddle point <math|t<rsub|s> >in the complex
+  plane>
+
+  <\equation*>
+    <around*|[|p<rsub|x>+A<rsub|x><around*|(|t<rsub|s>|)>|]><rsup|2>+<around*|[|p<rsub|z>+A<rsub|z><around*|(|t<rsub|s>|)>|]><rsup|2>=-2I<rsub|p>
+  </equation*>
+
   <subsubsection|Imaginary time propagation>
 
   The imaginary time propagation part does not include the sub-barrier
@@ -227,6 +234,7 @@
 <\initial>
   <\collection>
     <associate|page-type|letter>
+    <associate|sfactor|4>
   </collection>
 </initial>
 
@@ -237,7 +245,8 @@
     <associate|auto-3|<tuple|1.1|?>>
     <associate|auto-4|<tuple|1.2|?>>
     <associate|auto-5|<tuple|1.3|?>>
-    <associate|auto-6|<tuple|2|?>>
+    <associate|auto-6|<tuple|1.4|?>>
+    <associate|auto-7|<tuple|2|?>>
   </collection>
 </references>
 
@@ -248,9 +257,25 @@
       <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
       <no-break><pageref|auto-1>>
 
-      <with|par-left|<quote|1.5fn>|1<space|2spc>Organization of the TCSFA
-      Package <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
+      <with|par-left|<quote|1.5fn>|1<space|2spc>Methods
+      <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
       <no-break><pageref|auto-2>>
+
+      <with|par-left|<quote|3fn>|1.1<space|2spc>Imaginary time propagation
+      <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
+      <no-break><pageref|auto-3>>
+
+      <with|par-left|<quote|3fn>|1.2<space|2spc>Real time propagation
+      <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
+      <no-break><pageref|auto-4>>
+
+      <with|par-left|<quote|3fn>|1.3<space|2spc>Action terms
+      <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
+      <no-break><pageref|auto-5>>
+
+      <with|par-left|<quote|1.5fn>|2<space|2spc>Organization of the TCSFA
+      Package <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
+      <no-break><pageref|auto-6>>
     </associate>
   </collection>
 </auxiliary>
