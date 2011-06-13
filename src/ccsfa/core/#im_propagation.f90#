@@ -118,7 +118,7 @@ end function action_W_im_num
 
 
 
-! second-order derivative of the action W
+! second-order derivative of the action W for the imaginary time part
 double complex function action_DDW( ts )
     
     implicit none

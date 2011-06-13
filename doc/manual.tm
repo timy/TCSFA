@@ -1,4 +1,4 @@
-<TeXmacs|1.0.7.9>
+<TeXmacs|1.0.7.10>
 
 <style|article>
 
@@ -30,6 +30,133 @@
   <math|\<xi\>=0>, it describes the linearly polarized field with the
   polarization direction along the <math|z>-axis.\ 
 
+  \;
+
+  <subsection|Methods>
+
+  <subsubsection|Imaginary time propagation>
+
+  The imaginary time propagation part does not include the sub-barrier
+  Coulomb correction. Thus only the external field decides the equation of
+  motion.
+
+  <\itemize>
+    <item>acceleration
+
+    <\equation*>
+      a<rsub|z><around*|(|t|)>=-E<rsub|z><around*|(|t|)>
+    </equation*>
+
+    <\equation*>
+      a<rsub|x><around*|(|t|)>=-E<rsub|x><around*|(|t|)>
+    </equation*>
+  </itemize>
+
+  <\itemize>
+    <item>velocity
+
+    <\equation*>
+      v<rsub|z><around*|(|t|)>=A<rsub|z><around*|(|t|)>+p<rsub|z>
+    </equation*>
+
+    <\equation*>
+      v<rsub|x><around*|(|t|)>=A<rsub|x><around*|(|t|)>+p<rsub|x>
+    </equation*>
+  </itemize>
+
+  <\itemize>
+    <item>displacement
+
+    <\equation*>
+      z<around*|(|t|)>=\<alpha\><rsub|z><around*|(|t|)>+p<rsub|z>
+      t-Re<around*|[|\<alpha\><rsub|z><around*|(|t<rsub|s>|)>+p<rsub|z>
+      t<rsub|s>|]>
+    </equation*>
+
+    <\equation*>
+      x<around*|(|t|)>=\<alpha\><rsub|x><around*|(|t|)>+p<rsub|x>
+      t-Re<around*|[|\<alpha\><rsub|x><around*|(|t<rsub|s>|)>+p<rsub|x>
+      t<rsub|s>|]>
+    </equation*>
+
+    where
+
+    <\equation*>
+      \<alpha\><rsub|z><around*|(|t|)>=<big-around|\<int\>|<rsub|0><rsup|t>A<rsub|z><around*|(|t|)>
+      d t>
+    </equation*>
+
+    <\equation*>
+      \<alpha\><rsub|x><around*|(|t|)>=<big-around|\<int\>|<rsub|0><rsup|t>A<rsub|x><around*|(|t|)>
+      d t>
+    </equation*>
+
+    which can be analytically written down if the vector potential
+    <math|A<around*|(|t|)>> has a simple form.
+  </itemize>
+
+  <subsubsection|Real time propagation>
+
+  <\itemize>
+    <item>equation of motion
+
+    <\equation*>
+      a<rsub|z><around*|(|t|)>=-E<rsub|z><around*|(|t|)>-<frac|Z
+      z|<around*|(|<sqrt|x<rsup|2>+y<rsup|2>>|)><rsup|3>>
+    </equation*>
+
+    <\equation*>
+      a<rsub|x><around*|(|t|)>=-E<rsub|x><around*|(|t|)>-<frac|Z
+      x|<around*|(|<sqrt|x<rsup|2>+y<rsup|2>>|)><rsup|3>>
+    </equation*>
+
+    <item>initial conditions
+
+    <\equation*>
+      x<around*|(|t<rsub|0>|)>=\<alpha\><rsub|x><around*|(|t<rsub|0>|)>-Re
+      \<alpha\><rsub|x><around*|(|t<rsub|s>|)>
+    </equation*>
+
+    <\equation*>
+      z<around*|(|t<rsub|0>|)>=\<alpha\><rsub|z><around*|(|t<rsub|0>|)>-Re
+      \<alpha\><rsub|z><around*|(|t<rsub|s>|)>
+    </equation*>
+
+    <\equation*>
+      v<rsub|z><around*|(|t<rsub|0>|)>=A<rsub|z><around*|(|t<rsub|0>|)>+p<rsub|z>
+    </equation*>
+
+    <\equation*>
+      v<rsub|x><around*|(|t<rsub|0>|)>=A<rsub|x><around*|(|t<rsub|0>|)>+p<rsub|x>
+    </equation*>
+  </itemize>
+
+  <subsubsection|Action terms>
+
+  <\itemize>
+    <item>sub-barrier
+
+    <\equation*>
+      W<rsub|sub>=-<big-around|\<int\>|<rsub|t<rsub|s>><rsup|t<rsub|0>><around*|(|<frac|1|2><around*|(|p+A<around*|(|t|)><rsup|>|)><rsup|2>+I<rsub|p>
+      |)>d t>
+    </equation*>
+
+    <item>real time propagation
+
+    <\equation*>
+      W<rsub|real>=<big-around|\<int\>|<rsub|t<rsub|0>><rsup|\<infty\>><around*|(|<frac|1|2>v<rsup|2>-<frac|Z|<around*|\||r|\|>>+I<rsub|p>|)>
+      d t>
+    </equation*>
+
+    <item>total action
+
+    <\equation*>
+      W=W<rsub|sub>+W<rsub|real>
+    </equation*>
+  </itemize>
+
+  \;
+
   <subsection|Organization of the TCSFA Package>
 
   \;
@@ -38,7 +165,7 @@
     <item><verbatim|src>
 
     <\itemize>
-      <item><verbatim|ccsfa>: The main part of the source of the TCSFA
+      <item><verbatim|ccsfa>: The main directory for the source of the TCSFA
       package
 
       <\itemize>
@@ -58,9 +185,9 @@
           whatever.\ 
 
           <item><verbatim|data_proc.f90>: is used to reproduce a batch of
-          trajectories selected from the raw data with certain criteria.
-          Given a subset of the raw data <verbatim|select.dat> and filtering
-          critera, it generates the index of the data satisfying the critera
+          trajectories selected from the raw data with certain conditional
+          filter. Given a subset of the raw data <verbatim|select.dat> and
+          filter, it generates the index of the data satisfying the critera
           <verbatim|filter.dat> and the corresponding transition amplitude
           <verbatim|traj_m.dat>.
         </itemize>
@@ -70,6 +197,7 @@
       </itemize>
 
       <item><verbatim|mmff>: MPI Framework for Fortran
+      (https://github.com/timy/MMFF)
     </itemize>
 
     <item>ana
@@ -106,6 +234,10 @@
   <\collection>
     <associate|auto-1|<tuple|1|1>>
     <associate|auto-2|<tuple|1|1>>
+    <associate|auto-3|<tuple|1.1|?>>
+    <associate|auto-4|<tuple|1.2|?>>
+    <associate|auto-5|<tuple|1.3|?>>
+    <associate|auto-6|<tuple|2|?>>
   </collection>
 </references>
 
