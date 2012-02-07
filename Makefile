@@ -1,15 +1,8 @@
 include ./Makefile.cfg
 
-ifeq ($(PARALLEL), 1)
-DIR_ENTRY	=	p_entry
-DIR_MMFF	=	./src/mmff
-else
-DIR_ENTRY	=	s_entry
-DIR_MMFF	=	
-endif
+DIR_ENTRY	=	main
 
-SUBDIRS = $(DIR_MMFF) $(DIR_MAIN)/$(DIR_ENTRY) 
-
+SUBDIRS = $(DIR_MAIN)/$(DIR_ENTRY) 
 
 all: $(SUBDIRS)
 	for subdir in $(SUBDIRS); do (cd $${subdir}; $(MAKE) $@); done 
@@ -24,24 +17,22 @@ endif
 clean:
 	for subdir in $(SUBDIRS); do (cd $${subdir}; $(MAKE) $@); done
 	$(RM) *~ 
-	$(RM) ccsfa_traj.* 
+	$(RM) traj.* 
 
 cleanall: clean
 	for subdir in $(SUBDIRS); do (cd $${subdir}; $(MAKE) $@); done
 	$(RM) $(EXE_NAME)
 	$(RM) dat/*.dat
 	$(RM) LOG
-	$(RM) ana/data/*~
+	$(RM) ana/dat/*~
 	$(RM) ana/plot/*~
 	$(RM) ana/plot/*.pyc
 	$(RM) ana/proc/app
 	$(RM) doc/*~
 
 commit: cleanall
-	$(RM) ana/data/*.dat
-	$(RM) ana/data/*~
-	$(RM) ana/data/subset/*.dat
-	$(RM) ana/data/subset/*~
+	$(RM) ana/dat/*.dat
+	$(RM) ana/dat/*~
 	git add .
-	git commit -a -m 'some documentation addition'
+	git commit -a -m 'Simplification of the whole program'
 	git push origin master

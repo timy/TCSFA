@@ -1,70 +1,34 @@
-import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-from matplotlib import colors, ticker
-from pylab import *
+import numpy as np
 
-file_name = 'spec_qtm_all_10'
-data = np.loadtxt('../data/'+file_name+'.dat')
+file_name = 'spec_qtm_all.dat'
+file_dir = '../dat/'
+nz, nx = 800, 200
+grid_lower_x, grid_upper_x = 0.0, 1.0
+grid_lower_z, grid_upper_z = -2.0, 2.0
+orders = 4.0
+
+
+data = np.loadtxt( file_dir + file_name )
 data_pz = data[:,0]
 data_px = data[:,1]
-data_hi = data[:,2]
+data_w = data[:,2]
 
-n_grid_x = 1000
-n_grid_y = 500
-grid_lower_x = -2.0
-grid_upper_x = 2.0
-grid_lower_y = -1.0
-grid_upper_y = 1.0
-
-arry_pz = data_pz.reshape(n_grid_y, n_grid_x)
-arry_px = data_px.reshape(n_grid_y, n_grid_x)
-arry_hi = data_hi.reshape(n_grid_y, n_grid_x)
-ratio = amax(arry_hi)
-print 'minimum: ', amin(arry_hi)
-print 'maximum: ', amax(arry_hi)
-#arry_hi = arry_hi / ratio
-arry_hi = log10( arry_hi )
-
-#arry_hi = arry_hi / ratio
-#print amax(arry_hi)
+pz = data_pz.reshape( nx, nz )
+px = data_px.reshape( nx, nz )
+w = data_w.reshape( nx, nz )
+w_max = np.amax(w)
+w_lower_limit = np.log10(w_max) - orders
+i_too_small = np.where( w < 10 ** w_lower_limit )
+w[i_too_small] = 10 ** w_lower_limit
+w = np.log10(w)
 
 
-
-#levels = arange(-3, 2, 0.2)
-#cset1 = contourf(arry_re, arry_im, arry_hi, levels,
-#                        cmap=cm.get_cmap('jet', len(levels)-1)
-fig = plt.figure(figsize=(16, 6), frameon = False )
+fig = plt.figure(figsize=(16,6), frameon = False )
 ax = fig.add_subplot(111, aspect='equal')
 fig.patch.set_alpha(0.0)
-plt.imshow(arry_hi, interpolation='bilinear', 
-           origin='lower', #cmap=cm.gray,
-           extent=[grid_lower_x, grid_upper_x,
-                   grid_lower_y, grid_upper_y] )
-
-
-#ax = gca()
-
-#for tick in ax.xaxis.get_major_ticks():
-#    tick.label1.set_fontsize(18)
-#for tick in ax.yaxis.get_major_ticks():
-#    tick.label1.set_fontsize(18)
-for tick in ax.xaxis.get_major_ticks():
-    tick.label1On = True
-    tick.label2On = False
-
-
-xlim(-2, 2)
-ylim(-1, 1)
-clim(-10, -2)
-#clim(250, 500)
-
-#pcolor(arry_pz, arry_px, arry_hi)
-
-colorbar()
-grid()
-
-
-
-savefig('/home/timy/Desktop/fig/'+file_name+'.svg')
+plt.imshow( w, interpolation='bilinear',
+            origin='lower', #cmap=cm.gray,
+            extent=[grid_lower_z, grid_upper_z, grid_lower_x, grid_upper_x] )
+plt.grid()
 plt.show()

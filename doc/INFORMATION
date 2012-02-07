@@ -1,0 +1,11 @@
+
+* to switch between flip-flop and sin^2 envelop, modify the files pulse.f90 (substitute the function name, modify tp = 2d0 * (nc + n_tail)* 2*pi/om (also the config.py) ) and im_propagation.f90 (comment/uncomment in the function im_action_W)
+* to use complete random distribution modify the file "slave.f90"
+
+
+
+* error messsage
+** 1: cannot find saddle point
+** 2: too many steps for rk4 to find convergent trajectory
+** 3: final energy is less than 0
+** 4: get too closed to the core

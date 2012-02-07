@@ -1,0 +1,3 @@
+The file main_mpi.f90 is supposed to implement the parallel calculation for the spectra. Unfortunately, it seems to have no improvement for the performance. I guess it is due to the I/O bottleneck, both the parallel version and the serial version need to read files from the same storage media, which can not be parallelized :-(
+
+so, sticking to the file spec_single.f90 is fine enough; the file spec_mpi.f90 is not necessarily needed.

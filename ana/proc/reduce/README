@@ -1,0 +1,14 @@
+This procedure is used to study the phase variation of 4 types of trajectories
+
+Firstly, we use the files
+"read_info.f90, read_traj.f90 and reduce.f90"
+to create a reduced set of data "../../dat/reduced_data.dat"
+the criteria is simply
+|M_p|^2 > 1e-10
+
+Then we use the file
+"partition.f90" to create a grid of the size 1600x400
+output the result in the format
+w1 w2 w3 w4 phi_1 phi_2 phi_3 phi_4
+with z-direction running faster than x-direction
+to the file "../../dat/phase.dat"
