@@ -159,7 +159,7 @@ subroutine plot_pulse()
     do i = 1, PULSE_NT
 
         t = dcmplx( (i - 1d0) * dt, 0d0 );
-        write( PULSE_FILE_ID, '(7(e15.8,2x))'), dreal(t), &
+        write( PULSE_FILE_ID, '(7(e15.8,1x))'), dreal(t), &
               dreal(pulse_A_z(t)), dreal(pulse_A_x(t)), &
               dreal(pulse_E_z(t)), dreal(pulse_E_x(t)), &
               dreal(pulse_alpha_z(t)), dreal(pulse_alpha_x(t))!, &

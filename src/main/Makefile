@@ -8,10 +8,12 @@ SRC		= 	main.single.f90
 endif
 OUT		=	$(DIR_ROOT)/$(EXE_NAME)
 DIR_CORE	= 	../core
+DIR_PULSE =	$(DIR_CORE)/pulse
 
 FC_FLAGS	+= 	-fpp
-INCLUDE		+= 	-I. -I$(DIR_CORE)
-LIBS		+= 	-L$(DIR_CORE)
+INCLUDE	+= 	-I. -I$(DIR_CORE) -I$(DIR_PULSE)
+LIBS		+=
+#LIBS		+= 	-L$(DIR_CORE) -L$(DIR_PULSE)
 LK_FLAGS	+= 	#-m64 
 
 %.o : %.f90
@@ -20,10 +22,8 @@ LK_FLAGS	+= 	#-m64
 %.o : %.f
 	$(FC) $(FC_FLAGS) $(INCLUDE) $< -c -o $@ 
 
-OBJ_ENTRY	= $(SRC:.f90=.o)
-OBJ_CORE	= $(DIR_CORE)/*.o
-
-SUBDIRS = $(DIR_CORE)
+OBJ_ENTRY	=	$(SRC:.f90=.o)
+OBJ_CORE		+=	$(DIR_CORE)/*.o $(DIR_PULSE)/*.o
 
 all: build
 
@@ -36,7 +36,7 @@ build_core:
 	cd $(DIR_CORE) && $(MAKE) build
 
 build_entry: $(OBJ_ENTRY)
-	$(FC) $(LK_FLAGS) $(OBJ_ENTRY) $(OBJ_CORE) $(LIBS) -o $(OUT)
+	$(FC) $(LK_FLAGS) $(OBJ_ENTRY) $(OBJ_CORE) $(LIBS) -o $(OUT)	
 
 clean:
 	cd $(DIR_CORE) && $(MAKE) $@
