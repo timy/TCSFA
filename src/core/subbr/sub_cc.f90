@@ -1,4 +1,4 @@
-#include '../include/inc_atom.h'
+#include '../../include/inc_atom.h'
 
 ! ////////////////////////////////////////////////////////////////////////////////
 ! the action correction due to the Coulomb influence on the sub-barrier trajectory 

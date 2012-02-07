@@ -6,14 +6,14 @@ SRC		= 	slave.f90 main.f90
 else
 SRC		= 	main.single.f90
 endif
-OUT		=	$(DIR_ROOT)/$(EXE_NAME)
-DIR_CORE	= 	../core
-DIR_PULSE =	$(DIR_CORE)/pulse
+OUT			=	$(DIR_ROOT)/$(EXE_NAME)
+DIR_CORE		= 	../core
+DIR_PULSE		=	$(DIR_CORE)/pulse
+DIR_SUBBR	=	$(DIR_CORE)/subbr
 
 FC_FLAGS	+= 	-fpp
-INCLUDE	+= 	-I. -I$(DIR_CORE) -I$(DIR_PULSE)
+INCLUDE	+= 	-I. -I$(DIR_CORE) -I$(DIR_PULSE) -I$(DIR_SUBBR)
 LIBS		+=
-#LIBS		+= 	-L$(DIR_CORE) -L$(DIR_PULSE)
 LK_FLAGS	+= 	#-m64 
 
 %.o : %.f90
@@ -23,7 +23,7 @@ LK_FLAGS	+= 	#-m64
 	$(FC) $(FC_FLAGS) $(INCLUDE) $< -c -o $@ 
 
 OBJ_ENTRY	=	$(SRC:.f90=.o)
-OBJ_CORE		+=	$(DIR_CORE)/*.o $(DIR_PULSE)/*.o
+OBJ_CORE		+=	$(DIR_CORE)/*.o $(DIR_PULSE)/*.o $(DIR_SUBBR)/*.o
 
 all: build
 

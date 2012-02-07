@@ -1,4 +1,4 @@
-#include '../include/inc_atom.h'
+#include '../../include/inc_atom.h'
 
 ! ////////////////////////////////////////////////////////////////////////////////
 ! Two modules for the following calculation

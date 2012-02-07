@@ -34,5 +34,5 @@ commit: cleanall
 	$(RM) ana/dat/*.dat
 	$(RM) ana/dat/*~
 	git add .
-	git commit -a -m 'Simplification of the whole program'
+	git commit -a -m "Create \'subbr\' (sub-barrier) directory and re-write the Makefile accordingly."
 	git push origin master

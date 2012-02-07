@@ -13,18 +13,13 @@ SRC	= \
 	im_propagation.f90 \
 	spline.f90 \
 	action_bak.f90 \
-	sub_integrate.f90 \
-	sub_traj_ptb_1.f90 \
-	sub_cc.f90 \
 	propagate.f90
 
 OBJ	= $(SRC:.f90=.o)
 
-DIR_PULSE	=	./pulse
-FC_FLAGS	+=	-fpp 
-INCLUDE	+=	-I$(DIR_PULSE)
-
-
+SUBDIRS		=	./pulse ./subbr 
+FC_FLAGS		+=	-fpp 
+INCLUDE		+=	-I./pulse -I./subbr
 
 %.o : %.f90
 	$(FC) $(FC_FLAGS) $(INCLUDE)  $< -c -o $*.o 
@@ -34,14 +29,16 @@ INCLUDE	+=	-I$(DIR_PULSE)
 
 all: build
 
-build: build_pulse $(OBJ)
+build: build_subdir $(OBJ)
 
-build_pulse:
-	cd $(DIR_PULSE) && $(MAKE) build
-
-clean:
-	cd $(DIR_PULSE) && $(MAKE) $@
+clean: clean_subdir
 	rm -rf ./*.o 
 	rm -rf *.mod 
 	rm -rf *~
 	rm -rf *genmod.f90
+
+build_subdir: $(SUBDIRS)
+	for subdir in $(SUBDIRS); do (cd $${subdir}; $(MAKE) build); done
+
+clean_subdir: $(SUBDIRS)
+	for subdir in $(SUBDIRS); do (cd $${subdir}; $(MAKE) clean); done
