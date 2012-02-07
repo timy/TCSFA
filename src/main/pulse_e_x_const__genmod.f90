@@ -1,9 +1,0 @@
-        !COMPILER-GENERATED INTERFACE MODULE: Tue Feb  7 17:21:03 2012
-        MODULE PULSE_E_X_CONST__genmod
-          INTERFACE 
-            FUNCTION PULSE_E_X_CONST(T) RESULT(E_X)
-              COMPLEX(KIND=8), INTENT(IN) :: T
-              COMPLEX(KIND=8) :: E_X
-            END FUNCTION PULSE_E_X_CONST
-          END INTERFACE 
-        END MODULE PULSE_E_X_CONST__genmod

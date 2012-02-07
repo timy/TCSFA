@@ -43,6 +43,7 @@ clean:
 	$(RM) ./*.o
 	$(RM) *.mod 
 	$(RM) *~ 
+	$(RM) *genmod.f90
 
 cleanall: clean
 	$(RM) ../include/*.h
