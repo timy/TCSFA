@@ -1,6 +1,7 @@
 #include '../include/inc_rk4.h'
 #include '../include/inc_atom.h'
 #include '../include/inc_misc.h'
+#include '../include/inc_field.h'
 
 subroutine rk4_prop( t0, tp, x0, vx0, z0, vz0, ierr, w, px, pz, L, n_near_core, tag )
 
@@ -196,7 +197,7 @@ double complex function action_W_re( h, t, y_old, y )
     double precision, parameter:: charge = ATOM_CHARGE_Z;
     double precision, intent(in):: h, t, y_old(ne), y(ne)
     double precision:: x, z, vx, vz, ax, az, Ex, Ez, v2, r, energy, t_mid
-    double complex, external:: pulse_E_x, pulse_E_z
+    double complex, external:: PULSE_E_X, PULSE_E_Z
 
 
     x = 0.5d0 * ( y_old(1) + y(1) )
@@ -216,8 +217,8 @@ double complex function action_W_re( h, t, y_old, y )
     elseif( REPRESENTATION_OPT == 'W' ) then
         
         t_mid = t - 0.5 * h;
-        Ex = dreal( pulse_E_x( dcmplx(t_mid) ) );
-        Ez = dreal( pulse_E_z( dcmplx(t_mid) ) );
+        Ex = dreal( PULSE_E_X( dcmplx(t_mid) ) );
+        Ez = dreal( PULSE_E_Z( dcmplx(t_mid) ) );
         ax = -Ex - charge * x / r**3;
         az = -Ez - charge * z / r**3;
         energy = 0.5d0 * v2 - charge / r + Ex * x + Ez * z + ax * x + az * z;

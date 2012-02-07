@@ -70,12 +70,13 @@ with open(dir_inc+'inc_grid_boundary.h', 'w') as f:
         f.write( s )
 
 ########################## FIELD #################################
+# field parameters
 E0    = config.getfloat( 'FIELD', 'E0' )
 om    = config.getfloat( 'FIELD', 'om' )
 nc    = config.getfloat( 'FIELD', 'nc' )
 xi    = config.getfloat( 'FIELD', 'xi' )
 ph    = config.getfloat( 'FIELD', 'ph' )
-
+envelope = config.get( 'FIELD', 'envelope' )
 
 field = []
 field.append( def_key_val( 'E0', 'f', E0 ) )
@@ -83,9 +84,40 @@ field.append( def_key_val( 'OM', 'f', om ) )
 field.append( def_key_val( 'NC', 'f', nc ) )
 field.append( def_key_val( 'XI', 'f', xi ) )
 field.append( def_key_val( 'PH', 'f', ph ) )
+field.append( def_key_val( 'Tp', 'f', 2*pi*nc/om))
 
+if envelope=='sin2':
+    field.append("#define PULSE_A_Z\t\t\tpulse_A_z_sin2\n")
+    field.append("#define PULSE_E_Z\t\t\tpulse_E_z_sin2\n")
+    field.append("#define PULSE_ALPHA_Z\tpulse_alpha_z_sin2\n")
+    field.append("#define PULSE_ALPHA2_Z\tpulse_alpha2_z_sin2\n")
+    field.append("#define PULSE_A_X\t\t\tpulse_A_x_sin2\n")
+    field.append("#define PULSE_E_X\t\t\tpulse_E_x_sin2\n")
+    field.append("#define PULSE_ALPHA_X\tpulse_alpha_x_sin2\n")
+    field.append("#define PULSE_ALPHA2_X\tpulse_alpha2_x_sin2\n")
+elif envelope=='const':
+    field.append("#include \'./pulse/pulse_const.f90\'\n")
+    field.append("#define PULSE_A_Z\t\t\tpulse_A_z_const\n")
+    field.append("#define PULSE_E_Z\t\t\tpulse_E_z_const\n")
+    field.append("#define PULSE_ALPHA_Z\tpulse_alpha_z_const\n")
+    field.append("#define PULSE_ALPHA2_Z\tpulse_alpha2_z_const\n")
+    field.append("#define PULSE_A_X\t\t\tpulse_A_x_const\n")
+    field.append("#define PULSE_E_X\t\t\tpulse_E_x_const\n")
+    field.append("#define PULSE_ALPHA_X\tpulse_alpha_x_const\n")
+    field.append("#define PULSE_ALPHA2_X\tpulse_alpha2_x_const\n")
 
 with open( dir_inc+'inc_field.h', 'w' ) as f:
+    for s in field:
+        f.write( s )
+
+# field functions
+field = []
+if envelope == 'sin2':
+    field.append("#include \'./pulse/pulse_sin2.f90\'\n")
+elif envelop == 'const':
+    field.append("#include \'./pulse/pulse_const.f90\'\n")
+
+with open( dir_inc+'inc_field_func.h', 'w' ) as f:
     for s in field:
         f.write( s )
 
@@ -226,3 +258,11 @@ if plot > 0: # verbose
     with open( dir_inc+'inc_plot_im_integrand.h', 'w' ) as f:
         for s in plot_im_integrand:
             f.write( s )
+
+###################### CONSTANT  ########################
+const = [] 
+const.append( def_key_val( 'PI', 'f', pi ) )
+
+with open( dir_inc+'inc_const.h', 'w' ) as f:
+    for s in const:
+        f.write( s )

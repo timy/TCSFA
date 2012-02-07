@@ -4,7 +4,8 @@
 #include '../include/inc_atom.h'
 #include '../include/inc_ts_guess.h'
 #include '../include/inc_misc.h'
-
+#include '../include/inc_field.h'
+#include '../include/inc_field_func.h'
 ! --------------------------------------------------------------------------------
 subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
       ts, amp_M, x0, z0, px_inf, pz_inf, L, n_pass_x, n_pass_z, n_near_core, ierr, tag )
@@ -17,15 +18,14 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     double complex, external:: solve_ts_from_p0, &
           init_x0, init_z0, init_vx0, init_vz0, &
           action_W_im, action_W_im_num, action_DDW
-    double precision:: t0, tp, x0, z0, vx0, vz0
+    double precision:: t0, x0, z0, vx0, vz0
     double complex:: ts, x0_, z0_, vx0_, vz0_
-    double precision, external:: get_tp
     external:: newton_equation_re
     integer:: ierr, n_near_core, n_pass_x, n_pass_z
     double complex:: W_im, W_re, action_W, DDW, amp_M, action_S_sub
     double precision:: px_inf, pz_inf, L
 !#if MISC_PRINT > 2
-    double complex, external:: pulse_E_z, pulse_E_x, pulse_A_z, pulse_A_x
+    double complex, external:: PULSE_E_Z, PULSE_E_X, PULSE_A_Z, PULSE_A_X
 !#endif
 
 #if MISC_PRINT > 2
@@ -56,7 +56,6 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     vz0_ = init_vz0( ts );
 
     t0 = dreal( ts );
-    tp = get_tp();
 
     x0 = dreal( x0_ );
     z0 = dreal( z0_ );
@@ -67,17 +66,17 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 
     write(*,'(a)'), ''
     write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'ts        (', ts,           '  )'
-    write(*,'(4x, a, f15.8)'),                'tp        ', tp
+    write(*,'(4x, a, f15.8)'),                'tp        ', Tp
     write(*,'(2(4x, a, f15.8))'),             'x(t0)     ', x0,       'z(t0)     ', z0
     write(*,'(2(4x, a, f15.8))'),             'vx(t0)    ', vx0,       'vz(t0)    ', vz0
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ez(ts)    (', pulse_E_z( ts ),          '  )'
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ex(ts)    (', pulse_E_x( ts ),          '  )'
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Az(ts)    (', pulse_A_z( ts ),          '  )'
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ax(ts)    (', pulse_A_x( ts ),          '  )'
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ez(t0)    (', pulse_E_z( dcmplx(t0,0d0) ),          '  )'
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ex(t0)    (', pulse_E_x( dcmplx(t0,0d0) ),          '  )'
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Az(t0)    (', pulse_A_z( dcmplx(t0,0d0) ),          '  )'
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ax(t0)    (', pulse_A_x( dcmplx(t0,0d0) ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ez(ts)    (', PULSE_E_Z( ts ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ex(ts)    (', PULSE_E_X( ts ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Az(ts)    (', PULSE_A_Z( ts ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ax(ts)    (', PULSE_A_X( ts ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ez(t0)    (', PULSE_E_Z( dcmplx(t0,0d0) ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ex(t0)    (', PULSE_E_X( dcmplx(t0,0d0) ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Az(t0)    (', PULSE_A_Z( dcmplx(t0,0d0) ),          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'Ax(t0)    (', PULSE_A_X( dcmplx(t0,0d0) ),          '  )'
 
 #endif
 
@@ -117,7 +116,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     write(*,'(2x, a)'), '* start to calculate real trajectory with rk4'
 #endif
 
-    call rk4_prop( t0, tp, x0, vx0, z0, vz0, ierr, W_re, px_inf, pz_inf, L, n_near_core, tag );
+    call rk4_prop( t0, Tp, x0, vx0, z0, vz0, ierr, W_re, px_inf, pz_inf, L, n_near_core, tag );
 
     n_pass_x = 0
     n_pass_z = 0
@@ -127,7 +126,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
         ! this one is for 1s state
         amp_M = cdexp( -dcmplx(0d0, 1d0) * action_W ) / DDW;
         ! this one is for 2p state
-!        amp_M = ((pulse_A_z(ts)+p0_z)/dsqrt(2d0*IONIZATION_IP)) * cdexp( -dcmplx(0d0, 1d0) * action_W ) / DDW
+!        amp_M = ((PULSE_A_z(ts)+p0_z)/dsqrt(2d0*IONIZATION_IP)) * cdexp( -dcmplx(0d0, 1d0) * action_W ) / DDW
         
         ! this one is for sub-barrier Coulomb correction:
         amp_M = amp_M * cdexp( dcmplx(0d0, 1d0) * action_S_sub(ts) )
@@ -186,7 +185,7 @@ subroutine newton_equation_re( ne, t, y, dy )
     integer, intent(in):: ne;
     double precision, intent(in):: t, y(ne);
     double precision, intent(out):: dy(ne);
-    double complex, external:: pulse_E_z, pulse_E_x;
+    double complex, external:: PULSE_E_Z, PULSE_E_X;
     double precision:: r, r3, charge;
 
     !double precision, parameter:: alpha = 5.0
@@ -199,11 +198,11 @@ subroutine newton_equation_re( ne, t, y, dy )
     r3 = r * r * r;
     !effective_pot_term = -( 1d0 + dexp(-r*alpha) * ( charge - 1d0 ) * ( 1d0 + alpha*r ) ) / r3
     dy(1) = y(2); 
-    dy(2) = - dreal( pulse_E_x( dcmplx(t) ) ) - y(1) * charge / r3;
-    !dy(2) = -dreal( pulse_E_x( dcmplx(t) ) ) + y(1) * effective_pot_term
+    dy(2) = - dreal( PULSE_E_X( dcmplx(t) ) ) - y(1) * charge / r3;
+    !dy(2) = -dreal( PULSE_E_X( dcmplx(t) ) ) + y(1) * effective_pot_term
     dy(3) = y(4);
-    dy(4) = - dreal( pulse_E_z( dcmplx(t) ) ) - y(3) * charge / r3;
-    !dy(4) = -dreal( pulse_E_z( dcmplx(t) ) ) + y(3) * effective_pot_term
+    dy(4) = - dreal( PULSE_E_Z( dcmplx(t) ) ) - y(3) * charge / r3;
+    !dy(4) = -dreal( PULSE_E_Z( dcmplx(t) ) ) + y(3) * effective_pot_term
 
     return;
 end subroutine Newton_equation_re
@@ -214,11 +213,11 @@ double complex function init_x0( ts )
 
     implicit none;
     double complex, intent(in):: ts;
-    double complex, external:: pulse_alpha_x;
+    double complex, external:: PULSE_ALPHA_X;
     double complex:: t0;
 
     t0 = dcmplx( dreal( ts ), 0d0 );
-    init_x0 = pulse_alpha_x( t0 ) - dreal( pulse_alpha_x( ts ) );
+    init_x0 = PULSE_ALPHA_X( t0 ) - dreal( PULSE_ALPHA_X( ts ) );
 
     return;
 end function init_x0
@@ -228,11 +227,11 @@ double complex function init_z0( ts )
 
     implicit none;
     double complex, intent(in):: ts;
-    double complex, external:: pulse_alpha_z;
+    double complex, external:: PULSE_ALPHA_Z;
     double complex:: t0;
 
     t0 = dcmplx( dreal( ts ), 0d0 );
-    init_z0 = pulse_alpha_z( t0 ) - dreal( pulse_alpha_z( ts ) );
+    init_z0 = PULSE_ALPHA_Z( t0 ) - dreal( PULSE_ALPHA_Z( ts ) );
 
     return;
 end function init_z0
@@ -243,11 +242,11 @@ double complex function init_vx0( ts )
 
     implicit none;
     double complex, intent(in):: ts;
-    double complex, external:: pulse_A_x;
+    double complex, external:: PULSE_A_X;
     double complex:: t0;
 
     t0 = dcmplx( dreal( ts ), 0d0 );
-    init_vx0 = p0_x + pulse_A_x( t0 );
+    init_vx0 = p0_x + PULSE_A_X( t0 );
 
     return;
 end function init_vx0
@@ -258,11 +257,11 @@ double complex function init_vz0( ts )
 
     implicit none;
     double complex, intent(in):: ts;
-    double complex, external:: pulse_A_z;
+    double complex, external:: PULSE_A_Z;
     double complex:: t0;
 
     t0 = dcmplx( dreal( ts ), 0d0 );
-    init_vz0 = p0_z + pulse_A_z( t0 );
+    init_vz0 = p0_z + PULSE_A_Z( t0 );
 
     return;
 end function init_vz0

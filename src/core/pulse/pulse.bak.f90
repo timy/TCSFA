@@ -67,69 +67,69 @@ end module mod_pulse
 
 
 
-double complex function pulse_A_z(t) result(A_z)
-    implicit none
-    double complex, intent(in):: t
-    double complex, external:: pulse_A_z_sin2
-    A_z = pulse_A_z_sin2(t)
-    return
-end function pulse_A_z
+! double complex function pulse_A_z(t) result(A_z)
+!     implicit none
+!     double complex, intent(in):: t
+!     double complex, external:: pulse_A_z_sin2
+!     A_z = pulse_A_z_sin2(t)
+!     return
+! end function pulse_A_z
     
-double complex function pulse_A_x(t) result(A_x)
-    implicit none
-    double complex, intent(in):: t
-    double complex, external:: pulse_A_x_sin2
-    A_x = pulse_A_x_sin2(t)
-    return
-end function pulse_A_x
-
-double complex function pulse_E_z(t) result(E_z)
-    implicit none
-    double complex, intent(in):: t
-    double complex, external:: pulse_E_z_sin2
-    E_z = pulse_E_z_sin2(t)
-    return
-end function pulse_E_z
-
-double complex function pulse_E_x(t) result(E_x)
-    implicit none
-    double complex, intent(in):: t
-    double complex, external:: pulse_E_x_sin2
-    E_x = pulse_E_x_sin2(t)
-    return
-end function pulse_E_x
-
-double complex function pulse_alpha_z(t) result(alpha_z)
-    implicit none
-    double complex, intent(in):: t
-    double complex, external:: pulse_alpha_z_sin2
-    alpha_z = pulse_alpha_z_sin2(t)
-    return
-end function pulse_alpha_z
-
-double complex function pulse_alpha_x(t) result(alpha_x)
-    implicit none
-    double complex, intent(in):: t
-    double complex, external:: pulse_alpha_x_sin2
-    alpha_x = pulse_alpha_x_sin2(t)
-    return
-end function pulse_alpha_x
-
-! double complex function pulse_alpha2_z(t) result(alpha2_z)
+! double complex function pulse_A_x(t) result(A_x)
 !     implicit none
 !     double complex, intent(in):: t
-!     double complex, external:: pulse_alpha2_z_sin2
-!     alpha2_z = pulse_alpha2_z_sin2(t)
+!     double complex, external:: pulse_A_x_sin2
+!     A_x = pulse_A_x_sin2(t)
 !     return
-! end function pulse_alpha2_z
+! end function pulse_A_x
 
-! double complex function pulse_alpha2_x(t) result(alpha2_x)
+! double complex function pulse_E_z(t) result(E_z)
 !     implicit none
 !     double complex, intent(in):: t
-!     double complex, external:: pulse_alpha2_x_sin2
-!     alpha2_x = pulse_alpha2_x_sin2(t)
+!     double complex, external:: pulse_E_z_sin2
+!     E_z = pulse_E_z_sin2(t)
 !     return
-! end function pulse_alpha2_x
+! end function pulse_E_z
+
+! double complex function pulse_E_x(t) result(E_x)
+!     implicit none
+!     double complex, intent(in):: t
+!     double complex, external:: pulse_E_x_sin2
+!     E_x = pulse_E_x_sin2(t)
+!     return
+! end function pulse_E_x
+
+! double complex function pulse_alpha_z(t) result(alpha_z)
+!     implicit none
+!     double complex, intent(in):: t
+!     double complex, external:: pulse_alpha_z_sin2
+!     alpha_z = pulse_alpha_z_sin2(t)
+!     return
+! end function pulse_alpha_z
+
+! double complex function pulse_alpha_x(t) result(alpha_x)
+!     implicit none
+!     double complex, intent(in):: t
+!     double complex, external:: pulse_alpha_x_sin2
+!     alpha_x = pulse_alpha_x_sin2(t)
+!     return
+! end function pulse_alpha_x
+
+! ! double complex function pulse_alpha2_z(t) result(alpha2_z)
+! !     implicit none
+! !     double complex, intent(in):: t
+! !     double complex, external:: pulse_alpha2_z_sin2
+! !     alpha2_z = pulse_alpha2_z_sin2(t)
+! !     return
+! ! end function pulse_alpha2_z
+
+! ! double complex function pulse_alpha2_x(t) result(alpha2_x)
+! !     implicit none
+! !     double complex, intent(in):: t
+! !     double complex, external:: pulse_alpha2_x_sin2
+! !     alpha2_x = pulse_alpha2_x_sin2(t)
+! !     return
+! ! end function pulse_alpha2_x
 
 
 double precision function get_tp()

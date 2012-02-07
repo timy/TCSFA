@@ -4,8 +4,7 @@ include $(DIR_ROOT)/Makefile.cfg
 SRC	= \
 	pulse.f90 \
 	pulse_ramp.f90 \
-	pulse_const.f90 \
-	pulse_sin2_old.f90
+#	pulse_sin2_old.f90
 
 FC_FLAGS	+= -fpp
 

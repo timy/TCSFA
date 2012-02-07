@@ -1,5 +1,6 @@
+include '../../include/inc_field.h'
+
 double complex function pulse_A_z_sin2( t ) result(f)
-    use mod_pulse;
     implicit none;
     double complex, intent(in):: t;
     double precision:: t_
@@ -7,7 +8,7 @@ double complex function pulse_A_z_sin2( t ) result(f)
     if( t_ <= 0d0 ) then
         f = dcmplx(0d0)
     else if( t_ > 0d0 .and. t_ < Tp ) then
-        f = -((E0*cdsin(om*t)*cdsin((om*t)/(2.*nc))**2)/om)
+        f = -((E0*cdsin(OM*t)*cdsin((OM*t)/(2.*NC))**2)/OM)
     else if( t_ > Tp) then
         f = dcmplx(0d0)
     end if
@@ -18,8 +19,6 @@ end function pulse_A_z_sin2
 
 
 double complex function pulse_A_x_sin2( t ) result(f)
-    use mod_pulse;
-
     implicit none;
     double complex, intent(in):: t;
     f = dcmplx(0d0)
@@ -30,8 +29,6 @@ end function pulse_A_x_sin2
 
 
 double complex function pulse_E_z_sin2( t ) result(f)
-    use mod_pulse;
-
     implicit none;
     double complex, intent(in):: t;
     double precision:: t_
@@ -40,7 +37,7 @@ double complex function pulse_E_z_sin2( t ) result(f)
         f = dcmplx(0d0)
     else if( t_ > 0d0 .and. t_ < Tp ) then
 !        f = (E0*(nc*cdcos(om*t)*(-1 + cdcos((om*t)/nc)) + cdsin(om*t)*cdsin((om*t)/nc)))/(2.*nc)
-        f = (E0*cdsin((om*t)/(2.*nc))*(cdcos((om*t)/(2.*nc))*cdsin(om*t) + nc*cdcos(om*t)*cdsin((om*t)/(2.*nc))))/nc;
+        f = (E0*cdsin((OM*t)/(2.*NC))*(cdcos((OM*t)/(2.*NC))*cdsin(OM*t) + NC*cdcos(OM*t)*cdsin((OM*t)/(2.*NC))))/NC;
     else if( t_ > Tp) then
         f = dcmplx(0d0)
     end if
@@ -53,8 +50,6 @@ end function pulse_E_z_sin2
 
 
 double complex function pulse_E_x_sin2( t ) result(f)
-    use mod_pulse;
-
     implicit none;
     double complex, intent(in):: t;
     f = dcmplx(0d0)
@@ -65,8 +60,6 @@ end function pulse_E_x_sin2
 
 
 double complex function pulse_alpha_z_sin2( t ) result(f)
-    use mod_pulse;
-
     implicit none;
     double complex, intent(in):: t;
     double precision:: t_
@@ -74,9 +67,9 @@ double complex function pulse_alpha_z_sin2( t ) result(f)
     if( t_ <= 0d0 ) then
         f = dcmplx(0d0)
     else if( t_ > 0d0 .and. t_ < Tp ) then
-        f = -(E0*(-1 + cdcos(om*t)*(1 - nc**2 + nc**2*cdcos((om*t)/nc)) + nc*cdsin(om*t)*cdsin((om*t)/nc)))/(2.*(-1 + nc**2)*om**2)
+        f = -(E0*(-1 + cdcos(OM*t)*(1 - NC**2 + NC**2*cdcos((OM*t)/NC)) + NC*cdsin(OM*t)*cdsin((OM*t)/NC)))/(2.*(-1 + NC**2)*OM**2)
     else if( t_ > Tp) then
-        f = dcmplx(-(E0*(-1 + dcos(om*Tp)*(1 - nc**2 + nc**2*dcos((om*Tp)/nc)) + nc*dsin(om*Tp)*dsin((om*Tp)/nc)))/(2.*(-1 + nc**2)*om**2))
+        f = dcmplx(-(E0*(-1 + dcos(OM*Tp)*(1 - NC**2 + NC**2*dcos((OM*Tp)/NC)) + NC*dsin(OM*Tp)*dsin((OM*Tp)/NC)))/(2.*(-1 + NC**2)*OM**2))
     end if
 
 
@@ -87,8 +80,6 @@ end function pulse_alpha_z_sin2
 
 
 double complex function pulse_alpha_x_sin2( t ) result(f)
-    use mod_pulse;
-
     implicit none;
     double complex, intent(in):: t;
     f = dcmplx(0d0)
@@ -98,8 +89,6 @@ end function pulse_alpha_x_sin2
 
 
 double complex function pulse_alpha2_z_sin2( t ) result(f)
-    use mod_pulse;
-
     implicit none;
     double complex, intent(in):: t;
     double precision:: t_
@@ -107,9 +96,9 @@ double complex function pulse_alpha2_z_sin2( t ) result(f)
     if( t_ <= 0d0 ) then
         f = dcmplx(0d0)
     else if( t_ > 0d0 .and. t_ < Tp ) then
-        f = (E0**2*(12*om*t - 6*cdsin(2*om*t) + nc*((8*cdsin((2 + 1/nc)*om*t))/(1 + 2*nc) - 16*cdsin((om*t)/nc) + 2*cdsin((2*om*t)/nc) - cdsin((2*(-1 + nc)*om*t)/nc)/(-1 + nc) - cdsin((2*(1 + nc)*om*t)/nc)/(1 + nc) + (8*cdsin(((-1 + 2*nc)*om*t)/nc))/(-1 + 2*nc))))/(64.*om**3)
+        f = (E0**2*(12*OM*t - 6*cdsin(2*OM*t) + NC*((8*cdsin((2 + 1/NC)*OM*t))/(1 + 2*NC) - 16*cdsin((OM*t)/NC) + 2*cdsin((2*OM*t)/NC) - cdsin((2*(-1 + NC)*OM*t)/NC)/(-1 + NC) - cdsin((2*(1 + NC)*OM*t)/NC)/(1 + NC) + (8*cdsin(((-1 + 2*NC)*OM*t)/NC))/(-1 + 2*NC))))/(64.*OM**3)
     else if( t_ > Tp) then
-        f = dcmplx((E0**2*(12*om*Tp - 6*dsin(2*om*Tp) + nc*((8*dsin((2 + 1/nc)*om*Tp))/(1 + 2*nc) - 16*dsin((om*Tp)/nc) + 2*dsin((2*om*Tp)/nc) - dsin((2*(-1 + nc)*om*Tp)/nc)/(-1 + nc) - dsin((2*(1 + nc)*om*Tp)/nc)/(1 + nc) + (8*dsin(((-1 + 2*nc)*om*Tp)/nc))/(-1 + 2*nc))))/(64.*om**3))
+        f = dcmplx((E0**2*(12*OM*Tp - 6*dsin(2*OM*Tp) + NC*((8*dsin((2 + 1/NC)*OM*Tp))/(1 + 2*NC) - 16*dsin((OM*Tp)/NC) + 2*dsin((2*OM*Tp)/NC) - dsin((2*(-1 + NC)*OM*Tp)/NC)/(-1 + NC) - dsin((2*(1 + NC)*OM*Tp)/NC)/(1 + NC) + (8*dsin(((-1 + 2*NC)*OM*Tp)/NC))/(-1 + 2*NC))))/(64.*OM**3))
     end if
 
 
@@ -120,8 +109,6 @@ end function pulse_alpha2_z_sin2
 
 
 double complex function pulse_alpha2_x_sin2( t ) result(f)
-    use mod_pulse;
-
     implicit none;
     double complex, intent(in):: t;
     double precision:: t_

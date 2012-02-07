@@ -4,7 +4,6 @@
 #include '../include/inc_grid_size.h'
 
 program main
-    use mod_pulse
     implicit none
     double precision:: px, pz
     double precision:: x0, z0, px_inf, pz_inf, L
@@ -24,9 +23,9 @@ program main
     print*, 'XI', XI;
     print*, 'PH', PH;
 
-    call set_pulse( E0, OM, NC, XI, PH )
-    call set_pulse_t0( ( 1d0, 0d0 ) )
-    call plot_pulse()
+    ! call set_pulse( E0, OM, NC, XI, PH )
+    ! call set_pulse_t0( ( 1d0, 0d0 ) )
+    ! call plot_pulse()
 
     call set_p0( px, pz )
 

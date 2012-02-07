@@ -23,7 +23,7 @@ LK_FLAGS	+= 	#-m64
 	$(FC) $(FC_FLAGS) $(INCLUDE) $< -c -o $@ 
 
 OBJ_ENTRY	=	$(SRC:.f90=.o)
-OBJ_CORE		+=	$(DIR_CORE)/*.o $(DIR_PULSE)/*.o $(DIR_SUBBR)/*.o
+OBJ_CORE		+=	$(DIR_CORE)/*.o $(DIR_SUBBR)/*.o
 
 all: build
 

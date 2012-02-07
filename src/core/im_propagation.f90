@@ -1,5 +1,6 @@
 #include '../include/inc_atom.h'
 #include '../include/inc_misc.h'
+#include '../include/inc_field.h'
 #ifdef MISC_PLOT
 #include '../include/inc_plot_im_integrand.h'
 #endif
@@ -69,10 +70,10 @@ double complex function SPE( t ) ! saddle point equation
     implicit none;
     double complex, intent(in):: t;
     double precision, parameter:: Ip = IONIZATION_IP;
-    double complex, external:: pulse_A_x, pulse_A_z;
+    double complex, external:: PULSE_A_X, PULSE_A_Z;
 
     
-    SPE = ( p0_x + pulse_A_x(t) )**2 + ( p0_z + pulse_A_z(t) )**2 + 2d0 * Ip;
+    SPE = ( p0_x + PULSE_A_X(t) )**2 + ( p0_z + PULSE_A_Z(t) )**2 + 2d0 * Ip;
 
     return;
 end function SPE
@@ -120,12 +121,12 @@ double complex function action_DDW( ts )
     implicit none
     double complex, intent(in):: ts
     double complex:: vzs, vxs, azs, axs
-    double complex, external:: pulse_E_z, pulse_E_x, im_traj_vz, im_traj_vx
+    double complex, external:: PULSE_E_Z, PULSE_E_X, im_traj_vz, im_traj_vx
 
     vzs = im_traj_vz( ts );
     vxs = im_traj_vx( ts );
-    azs = - pulse_E_z( ts );
-    axs = - pulse_E_x( ts );
+    azs = - PULSE_E_Z( ts );
+    axs = - PULSE_E_X( ts );
     action_DDW = vzs * azs + vxs * axs;
     
     return;
@@ -170,10 +171,10 @@ double complex function im_traj_x( t, ts )
 
     implicit none;
     double complex, intent(in):: t, ts
-    double complex, external:: pulse_alpha_x
+    double complex, external:: PULSE_ALPHA_X
 
-    im_traj_x = pulse_alpha_x( t ) + p0_x * t - &
-          dreal( pulse_alpha_x( ts ) + p0_x * ts );
+    im_traj_x = PULSE_ALPHA_X( t ) + p0_x * t - &
+          dreal( PULSE_ALPHA_X( ts ) + p0_x * ts );
 
     return;
 end function im_traj_x
@@ -184,10 +185,10 @@ double complex function im_traj_z( t, ts )
 
     implicit none;
     double complex, intent(in):: t, ts;
-    double complex, external:: pulse_alpha_z;
+    double complex, external:: PULSE_ALPHA_Z;
 
-    im_traj_z = pulse_alpha_z( t ) + p0_z * t - &
-          dreal( pulse_alpha_z( ts ) + p0_z * ts );
+    im_traj_z = PULSE_ALPHA_Z( t ) + p0_z * t - &
+          dreal( PULSE_ALPHA_Z( ts ) + p0_z * ts );
 
     return;
 end function im_traj_z
@@ -198,9 +199,9 @@ double complex function im_traj_vx( t )
 
     implicit none;
     double complex, intent(in):: t;
-    double complex, external:: pulse_A_x;
+    double complex, external:: PULSE_A_X;
 
-    im_traj_vx = p0_x + pulse_A_x( t );
+    im_traj_vx = p0_x + PULSE_A_X( t );
 
     return;
 end function im_traj_vx
@@ -211,9 +212,9 @@ double complex function im_traj_vz( t )
 
     implicit none;
     double complex, intent(in):: t;
-    double complex, external:: pulse_A_z;
+    double complex, external:: PULSE_A_Z;
 
-    im_traj_vz = p0_z + pulse_A_z( t );
+    im_traj_vz = p0_z + PULSE_A_Z( t );
 
     return;
 end function im_traj_vz
