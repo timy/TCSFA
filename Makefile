@@ -34,5 +34,5 @@ commit: cleanall
 	$(RM) ana/dat/*.dat
 	$(RM) ana/dat/*~
 	git add .
-	git commit -a -m "A general form of the action for the sub-barrier trajectory."
+	git commit -a -m "pulse_plot.f90"
 	git push origin master
