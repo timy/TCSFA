@@ -1,4 +1,4 @@
-include '../../include/inc_field.h'
+#include '../../include/inc_field.h'
 
 double complex function pulse_A_z_sin2( t ) result(f)
     implicit none;

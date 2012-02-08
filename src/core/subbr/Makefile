@@ -10,7 +10,7 @@ OBJ	= $(SRC:.f90=.o)
 
 #DIR_PULSE	=	./pulse
 FC_FLAGS	+=	-fpp
-INCLUDE	+=	./. ../../include
+INCLUDE	+=
 
 %.o : %.f90
 	$(FC) $(FC_FLAGS) $(INCLUDE)  $< -c -o $*.o 

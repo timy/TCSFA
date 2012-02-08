@@ -167,18 +167,6 @@ end subroutine propagate_with_single_p0
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 subroutine newton_equation_re( ne, t, y, dy )
     
     implicit none;
