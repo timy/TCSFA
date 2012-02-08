@@ -16,7 +16,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     integer, intent(in):: tag
     double complex, external:: solve_ts_from_p0, &
           init_x0, init_z0, init_vx0, init_vz0, &
-          action_W_im, action_W_im_num, action_DDW
+          action_W_im, action_W_im_num, action_DDW, action_W_im_0_traj_0
     double precision:: t0, x0, z0, vx0, vz0
     double complex:: ts, x0_, z0_, vx0_, vz0_
     external:: newton_equation_re
@@ -84,8 +84,8 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     write(*,'(2x, a)'), '* start to calculate action for sub-barrier '
 #endif
 
-    W_im = action_W_im( ts );
-    
+    W_im = action_W_im_0_traj_0(ts)
+
 #if MISC_PRINT > 2
     write(*,'(a)'), ''
     write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_im      (', W_im,         '  )'
@@ -123,7 +123,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     if( ierr == 0 ) then
         action_W = W_im + W_re;
         ! this one is for 1s state
-        amp_M = cdexp( -dcmplx(0d0, 1d0) * action_W ) / DDW;
+        amp_M = cdexp( dcmplx(0d0, 1d0) * action_W ) / DDW;
         ! this one is for 2p state
 !        amp_M = ((PULSE_A_z(ts)+p0_z)/dsqrt(2d0*IONIZATION_IP)) * cdexp( -dcmplx(0d0, 1d0) * action_W ) / DDW
         

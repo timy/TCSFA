@@ -12,13 +12,6 @@
 
 ! in this file, saddle_point equation should be defined
 
-
-module mod_p0
-    implicit none;
-    double precision:: p0_x;
-    double precision:: p0_z;
-end module mod_p0
-
 subroutine set_p0( p0_x_, p0_z_ )
     use mod_p0
     

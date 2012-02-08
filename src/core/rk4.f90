@@ -225,6 +225,6 @@ double complex function action_W_re( h, t, y_old, y )
 
     end if
     
-    action_W_re =  dcmplx( ( energy + Ip ) * h, 0d0 );
+    action_W_re =  -dcmplx( ( energy + Ip ) * h, 0d0 );
 
 end function action_W_re
