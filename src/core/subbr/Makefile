@@ -4,6 +4,7 @@ include $(DIR_ROOT)/Makefile.cfg
 SRC	= \
 	sub_p0.f90 \
 	sub_integrate.f90 \
+	sub_traj_ptb_0.f90 \
 	sub_traj_ptb_1.f90 \
 	sub_cc.f90 \
 	sub_action_0.f90

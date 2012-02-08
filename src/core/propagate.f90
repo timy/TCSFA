@@ -16,12 +16,12 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     integer, intent(in):: tag
     double complex, external:: solve_ts_from_p0, &
           init_x0, init_z0, init_vx0, init_vz0, &
-          action_W_im, action_W_im_num, action_DDW, action_W_im_0_traj_0
+          action_DDW, action_W_sub_0_traj_0, action_W_sub_r_rcpr
     double precision:: t0, x0, z0, vx0, vz0
     double complex:: ts, x0_, z0_, vx0_, vz0_
     external:: newton_equation_re
     integer:: ierr, n_near_core, n_pass_x, n_pass_z
-    double complex:: W_im, W_re, action_W, DDW, amp_M, action_S_sub
+    double complex:: W_im, W_re, action_W, DDW, amp_M
     double precision:: px_inf, pz_inf, L
 !#if MISC_PRINT > 2
     double complex, external:: PULSE_E_Z, PULSE_E_X, PULSE_A_Z, PULSE_A_X
@@ -84,7 +84,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     write(*,'(2x, a)'), '* start to calculate action for sub-barrier '
 #endif
 
-    W_im = action_W_im_0_traj_0(ts)
+    W_im = action_W_sub_0_traj_0(ts)
 
 #if MISC_PRINT > 2
     write(*,'(a)'), ''
@@ -128,7 +128,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 !        amp_M = ((PULSE_A_z(ts)+p0_z)/dsqrt(2d0*IONIZATION_IP)) * cdexp( -dcmplx(0d0, 1d0) * action_W ) / DDW
         
         ! this one is for sub-barrier Coulomb correction:
-        amp_M = amp_M * cdexp( dcmplx(0d0, 1d0) * action_S_sub(ts) )
+        amp_M = amp_M * cdexp( dcmplx(0d0, 1d0) * action_W_sub_r_rcpr(ts) )
  
         
 

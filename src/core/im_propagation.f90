@@ -35,7 +35,7 @@ double complex function solve_ts_from_p0( ts0, ierr ) result(ts)
     integer:: ierr
 
 #if MISC_PRINT > 3
-    double complex, external:: im_traj_x, im_traj_z, im_traj_vx, im_traj_vz
+    double complex, external:: sub_traj_x_0, sub_traj_z_0, sub_traj_vx_0, sub_traj_vz_0
 #endif
 
     ts = find_root( ts0, SPE, CRF_STEP_LENGTH, ierr );
@@ -46,10 +46,10 @@ double complex function solve_ts_from_p0( ts0, ierr ) result(ts)
 
 #if MISC_PRINT > 3
     print*, 'ts:', ts
-    print*, 'x(ts):', im_traj_x( ts, ts );
-    print*, 'z(ts):', im_traj_z( ts, ts );
-    print*, 'vx(ts):', im_traj_vx( ts );
-    print*, 'vz(ts):', im_traj_vz( ts );
+    print*, 'x(ts):', sub_traj_x_0( ts, ts );
+    print*, 'z(ts):', sub_traj_z_0( ts, ts );
+    print*, 'vx(ts):', sub_traj_vx_0( ts );
+    print*, 'vz(ts):', sub_traj_vz_0( ts );
 #endif
 
 end function solve_ts_from_p0
@@ -114,10 +114,10 @@ double complex function action_DDW( ts )
     implicit none
     double complex, intent(in):: ts
     double complex:: vzs, vxs, azs, axs
-    double complex, external:: PULSE_E_Z, PULSE_E_X, im_traj_vz, im_traj_vx
+    double complex, external:: PULSE_E_Z, PULSE_E_X, sub_traj_vz_0, sub_traj_vx_0
 
-    vzs = im_traj_vz( ts );
-    vxs = im_traj_vx( ts );
+    vzs = sub_traj_vz_0( ts );
+    vxs = sub_traj_vx_0( ts );
     azs = - PULSE_E_Z( ts );
     axs = - PULSE_E_X( ts );
     action_DDW = vzs * azs + vxs * axs;
@@ -130,84 +130,14 @@ double complex function v2_integrand( t )
 
     implicit none
     double complex, intent(in):: t
-    double complex, external:: im_traj_x, im_traj_z, im_traj_vx, im_traj_vz
+    double complex, external:: sub_traj_x_0, sub_traj_z_0, sub_traj_vx_0, sub_traj_vz_0
     double complex:: vz, vx, v2
     
-    vz = im_traj_vz( t );
-    vx = im_traj_vx( t );
+    vz = sub_traj_vz_0( t );
+    vx = sub_traj_vx_0( t );
     v2 = vz * vz + vx * vx;
 
     v2_integrand = 0.5d0 * v2
     
     return;
 end function v2_integrand
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-double complex function im_traj_x( t, ts )
-    use mod_p0
-
-    implicit none;
-    double complex, intent(in):: t, ts
-    double complex, external:: PULSE_ALPHA_X
-
-    im_traj_x = PULSE_ALPHA_X( t ) + p0_x * t - &
-          dreal( PULSE_ALPHA_X( ts ) + p0_x * ts );
-
-    return;
-end function im_traj_x
-
-
-double complex function im_traj_z( t, ts )
-    use mod_p0
-
-    implicit none;
-    double complex, intent(in):: t, ts;
-    double complex, external:: PULSE_ALPHA_Z;
-
-    im_traj_z = PULSE_ALPHA_Z( t ) + p0_z * t - &
-          dreal( PULSE_ALPHA_Z( ts ) + p0_z * ts );
-
-    return;
-end function im_traj_z
-
-
-double complex function im_traj_vx( t )
-    use mod_p0;
-
-    implicit none;
-    double complex, intent(in):: t;
-    double complex, external:: PULSE_A_X;
-
-    im_traj_vx = p0_x + PULSE_A_X( t );
-
-    return;
-end function im_traj_vx
-
-
-double complex function im_traj_vz( t )
-    use mod_p0;
-
-    implicit none;
-    double complex, intent(in):: t;
-    double complex, external:: PULSE_A_Z;
-
-    im_traj_vz = p0_z + PULSE_A_Z( t );
-
-    return;
-end function im_traj_vz

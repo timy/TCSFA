@@ -60,6 +60,15 @@
 
 \begin_body
 
+\begin_layout Title
+The Sub-barrier Coulomb correction in the TCSFA
+\end_layout
+
+\begin_layout Author
+Tian-Min Yan, Sergey V.
+ Popruzhenko and Dieter Bauer
+\end_layout
+
 \begin_layout Standard
 The transition amplitude is
 \end_layout
@@ -87,23 +96,42 @@ W_{I_{p},\boldsymbol{p}}(t_{s}^{(\alpha)})=-\int_{t_{s}^{(\alpha)}}^{\infty}\lef
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Section
-0th order
-\end_layout
-
-\begin_layout Standard
-The 0th order action for the sub-barrier trajectory is simply for the plain
- SFA with electrons moving under the pure electric field, without corrections
- due to the Coulomb influence,
+with the sub-barrier part 
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-W_{I_{p},\boldsymbol{p}}^{(\mathrm{sub})}(t_{s}^{(\alpha)})=-\int_{t_{s}^{(\alpha)}}^{t_{0}^{(\alpha)}}\left[\frac{1}{2}\left(\boldsymbol{p}+\boldsymbol{A}(t)\right)^{2}+I_{p}\right]dt
+W_{I_{p},\boldsymbol{p}}^{(\mathrm{sub})}(t_{s}^{(\alpha)})=-\int_{t_{s}^{(\alpha)}}^{t_{0}^{(\alpha)}}\left(\frac{1}{2}\boldsymbol{v}^{2}(t)-\frac{1}{|\boldsymbol{r}(t)|}+I_{p}\right)dt
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Action for the 0th-order trajectory without 
+\begin_inset Formula $-1/r$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The action without 
+\begin_inset Formula $-1/r$
+\end_inset
+
+ derived from the 0th-order sub-barrier trajectory is the plain SFA with
+ electrons moving under the pure electric field, without any correction
+ influenced by the Coulomb field,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+W_{I_{p},\boldsymbol{p}}^{(\mathrm{sub})}(t_{s}^{(\alpha)})\simeq W_{I_{p},\boldsymbol{p}}^{(0,0)}(t_{s}^{(\alpha)})=-\int_{t_{s}^{(\alpha)}}^{t_{0}^{(\alpha)}}\left[\frac{1}{2}\left(\boldsymbol{p}+\boldsymbol{A}(t)\right)^{2}+I_{p}\right]dt
 \]
 
 \end_inset
@@ -145,7 +173,7 @@ W_{I_{p},\boldsymbol{p}}^{(\mathrm{sub})}(t_{s}^{(\alpha)})=-\int_{t_{s}^{(\alph
 \end_layout
 
 \begin_layout Standard
-where
+where the excursion
 \end_layout
 
 \begin_layout Standard
@@ -164,7 +192,199 @@ and
 
 \end_inset
 
+The action is implemented in the function 
+\begin_inset ERT
+status open
 
+\begin_layout Plain Layout
+
+
+\backslash
+verb|sub_action_0.f90:action_W_sub_0_traj_0(ts)|
+\end_layout
+
+\end_inset
+
+, with 
+\begin_inset Formula $\boldsymbol{\alpha}$
+\end_inset
+
+ given by 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+verb|pulse.f90:PULSE_ALPHA_Z(t)|
+\end_layout
+
+\end_inset
+
+ for the linearly polarized field, 
+\begin_inset Formula $\alpha_{2}$
+\end_inset
+
+ by 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+verb|pulse.f90:PULSE_ALPHA2_Z(t)|
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Action correction for 
+\begin_inset Formula $1/r$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The contribution of 
+\begin_inset Formula $1/r$
+\end_inset
+
+ to the action is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+W_{I_{p},\boldsymbol{p}}^{(1,0)}(t_{s}^{(\alpha)})=-\int_{t_{s}^{(\alpha)}}^{t_{0}^{(\alpha)}}\left[-\frac{1}{|\boldsymbol{r}(t)|}\right]dt.
+\]
+
+\end_inset
+
+If a straight path in the complex plane is selected for the integration
+ from 
+\begin_inset Formula $t_{s}$
+\end_inset
+
+ to 
+\begin_inset Formula $t_{0}$
+\end_inset
+
+, 
+\begin_inset Formula $t=t_{0}+i\tau$
+\end_inset
+
+ with the variable 
+\begin_inset Formula $\tau$
+\end_inset
+
+, the above action is reduced to
+\begin_inset Formula 
+\[
+W_{I_{p},\boldsymbol{p}}^{(1,0)}(t_{s}^{(\alpha)})=i\int_{0}^{t_{i}^{(\alpha)}}\left[-\frac{1}{\left(\boldsymbol{r}(t_{0}+i\tau)^{2}\right)^{1/2}}\right]d\tau,
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $t_{i}=\mathrm{Im}\left[t_{s}\right]$
+\end_inset
+
+.
+ The term describes the contribution from 
+\begin_inset Formula $1/r$
+\end_inset
+
+, which is implemented in the function 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+verb|sub_cc.f90:action_W_sub_r_rcpr(ts)|
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Direct correction based on the 0th-order trajectory
+\end_layout
+
+\begin_layout Standard
+Since the force of the electric field is large than the force imposed by
+ the binding potential, the simplest correction is based on the 0th-order
+ trajectory in the pure electric field, 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+W_{I_{p},\boldsymbol{p}}^{(1,0)}(t_{s}^{(\alpha)})=i\int_{0}^{t_{i}^{(\alpha)}}\left[-\frac{1}{\left(\boldsymbol{r}_{0}(t_{0}+i\tau)^{2}\right)^{1/2}}\right]d\tau,
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\boldsymbol{r}_{0}(t)$
+\end_inset
+
+ is analytically available
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\boldsymbol{r}_{0}(t)=\int^{t}\boldsymbol{A}(t')dt'+\boldsymbol{p}t-\mathrm{Re}\left[\int^{t_{s}}\boldsymbol{A}(t')dt'+\boldsymbol{p}t_{s}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+=\boldsymbol{\alpha}(t)+\boldsymbol{p}t-\mathrm{Re}\left[\boldsymbol{\alpha}(t_{s})+\boldsymbol{p}t_{s}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Perturbation method with matching procedure
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+verb|sub_cc.f90:action_W_sub_sergey(ts)|
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Correction with 1st-order trajectory using perturbation method
 \end_layout
 
 \end_body

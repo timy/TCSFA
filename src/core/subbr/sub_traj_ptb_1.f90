@@ -24,18 +24,18 @@ double complex function perturb_fx(t, ts)
     implicit none
     double precision, intent(in):: t
     double complex, intent(in):: ts
-    double complex, external:: im_traj_x, im_traj_z
+    double complex, external:: sub_traj_x_0, sub_traj_z_0
     double complex:: x_0, z_0
     double precision:: t0
     t0 = dreal(ts)
-    x_0 = im_traj_x( dcmplx(t0, t), ts )
-    z_0 = im_traj_z( dcmplx(t0, t), ts )
+    x_0 = sub_traj_x_0( dcmplx(t0, t), ts )
+    z_0 = sub_traj_z_0( dcmplx(t0, t), ts )
     perturb_fx = - ATOM_CHARGE_Z * x_0 / ( x_0 * x_0  + z_0 * z_0 ) ** (1.5)
     return
 end function perturb_fx
 
 ! ////////////////////////////////////////////////////////////////////////////////
-! generate the interpolation info for the im_traj_vx with perturbation method
+! generate the interpolation info for the sub_traj_vx with perturbation method
 subroutine generate_perturb_vx(ts)
     use mod_interp_vx, only: n_samp, samp_dt, samp_t, samp_vx, b, c, d
     implicit none
@@ -58,8 +58,8 @@ subroutine generate_perturb_vx(ts)
 end subroutine generate_perturb_vx
 
 ! ////////////////////////////////////////////////////////////////////////////////
-! the final interpolation function for the im_traj_vx with perturbation method
-double complex function interp_perturb_vx(t, ts)
+! the final interpolation function for the sub_traj_vx with perturbation method
+double complex function sub_traj_vx_1(t, ts)
     use mod_interp_vx, only: samp_dt, samp_t, samp_vx, b, c, d
     implicit none
     double precision, intent(in):: t
@@ -67,44 +67,44 @@ double complex function interp_perturb_vx(t, ts)
     integer:: index
     index = ceiling( t / samp_dt )
     if(index .eq. 0) index = 1
-    interp_perturb_vx = samp_vx(index) + b(index) * ( t - samp_t(index) ) + &
+    sub_traj_vx_1 = samp_vx(index) + b(index) * ( t - samp_t(index) ) + &
          c(index) * ( t - samp_t(index) )**2 + d(index) * ( t - samp_t(index) )**3
-end function interp_perturb_vx
+end function sub_traj_vx_1
 
 ! ////////////////////////////////////////////////////////////////////////////////
-! generate the interpolation info for the im_traj_x with perturbation method
+! generate the interpolation info for the sub_traj_x with perturbation method
 subroutine generate_perturb_x(ts)
     use mod_interp_x, only: n_samp, samp_dt, samp_t, samp_x, b, c, d
     implicit none
     double complex, intent(in):: ts
     double precision:: ti
     double complex:: c2
-    double complex, external:: interp_perturb_vx, simpson_sub
+    double complex, external:: sub_traj_vx_1, simpson_sub
     double complex, parameter:: eye = dcmplx(0d0, 1d0)
     integer:: i
     ti = dimag(ts)
     samp_dt = (ti - 0d0) / (n_samp - 1d0)
-    c2 = - eye*dimag( simpson_sub( ti, 0d0, 1000, ts, interp_perturb_vx ) )
+    c2 = - eye*dimag( simpson_sub( ti, 0d0, 1000, ts, sub_traj_vx_1 ) )
     forall(i = 1:n_samp) samp_t(i) = 0d0 + samp_dt * (i - 1d0)
     do i = 1, n_samp
-        samp_x(i) = simpson_sub(ti, samp_t(i), 1000, ts, interp_perturb_vx) + c2
+        samp_x(i) = simpson_sub(ti, samp_t(i), 1000, ts, sub_traj_vx_1) + c2
     end do
     call spline(n_samp, samp_t, samp_x, b, c, d)
     return
 end subroutine generate_perturb_x
 
 ! ////////////////////////////////////////////////////////////////////////////////
-! the final interpolation function for the im_traj_x with perturbation method
-double complex function interp_perturb_x(t)
+! the final interpolation function for the sub_traj_x with perturbation method
+double complex function sub_traj_x_1(t)
     use mod_interp_x, only: samp_dt, samp_t, samp_x, b, c, d
     implicit none
     double precision, intent(in):: t
     integer:: index
     index = ceiling( t / samp_dt )
     if(index .eq. 0) index = 1
-    interp_perturb_x = samp_x(index) + b(index) * ( t - samp_t(index) ) + &
+    sub_traj_x_1 = samp_x(index) + b(index) * ( t - samp_t(index) ) + &
          c(index) * ( t - samp_t(index) )**2 + d(index) * ( t - samp_t(index) )**3
-end function interp_perturb_x
+end function sub_traj_x_1
 
 ! ////////////////////////////////////////////////////////////////////////////////
 ! plot the sub-barrier trajectories with the perturbation method
@@ -114,7 +114,7 @@ subroutine plot_sub_traj_ptb_1_interp(ts)
     integer:: i
     integer, parameter:: n_samp = 200
     double precision:: ti, dt, t
-    double complex, external:: perturb_fx, interp_perturb_vx, interp_perturb_x
+    double complex, external:: perturb_fx, sub_traj_vx_1, sub_traj_x_1
 
     ti = dimag(ts)-1e-6
     dt = ( ti - 0d0 ) / ( n_samp - 1d0 )
@@ -123,7 +123,7 @@ subroutine plot_sub_traj_ptb_1_interp(ts)
     do i = 1, n_samp
         t = 0d0 + ( i - 1d0 ) * dt
         write(101, '(7(e15.8,1x))'), t, perturb_fx(t, ts),  &
-             interp_perturb_vx(t, ts), interp_perturb_x(t)
+             sub_traj_vx_1(t, ts), sub_traj_x_1(t)
     end do
     close(101)
 
@@ -140,18 +140,18 @@ subroutine plot_sub_traj_ptb_1_samp(ts)
     double complex, intent(in):: ts
     double precision:: ti, dt, t(n_samp)
     double complex:: c1, c2, vx(n_samp), x(n_samp)
-    double complex, external:: perturb_fx, interp_perturb_vx, simpson_sub
+    double complex, external:: perturb_fx, sub_traj_vx_1, simpson_sub
     double complex, parameter:: eye = dcmplx(0d0, 1d0)
     integer:: i
 
     ti = dimag(ts)
     dt = (ti - 0d0) / (n_samp - 1d0)
     c1 = - eye * dimag( eye * simpson_sub( ti, 0d0, 1000, ts, perturb_fx ) )
-    c2 = - eye * dimag( simpson_sub( ti, 0d0, 1000, ts, interp_perturb_vx ) )
+    c2 = - eye * dimag( simpson_sub( ti, 0d0, 1000, ts, sub_traj_vx_1 ) )
     forall(i = 1:n_samp) t(i) = 0d0 + dt * (i - 1d0)
     do i = 1, n_samp
         vx(i) = eye * simpson_sub(ti, t(i), 1000, ts, perturb_fx) + c1
-        x(i) = simpson_sub(ti, t(i), 1000, ts, interp_perturb_vx) + c2
+        x(i) = simpson_sub(ti, t(i), 1000, ts, sub_traj_vx_1) + c2
     end do
 
     open(101, file="dat/sub_traj_samp.dat")
