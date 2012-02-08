@@ -1,7 +1,0 @@
-#include '../../include/inc_field.h'
-
-subroutine pulse_plot
-    implicit none
-    double complex, external:: PULSE_A_Z, PULSE_A_X, PULSE_E_Z, PULSE_E_X, &
-         PULSE_ALPHA_Z, PULSE_ALPHA_X, PULSE_ALPHA2_Z, PULSE_ALPHA2_X
-end program

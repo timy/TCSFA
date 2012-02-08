@@ -34,5 +34,5 @@ commit: cleanall
 	$(RM) ana/dat/*.dat
 	$(RM) ana/dat/*~
 	git add .
-	git commit -a -m "pulse_plot.f90"
+	git commit -a -m "pulse_plot.f90 -> pulse.f90"
 	git push origin master

@@ -1,5 +1,6 @@
 #include '../../include/inc_field.h'
-
+! ////////////////////////////////////////////////////////////////////////////////
+! the vector potential in z-direction
 double complex function pulse_A_z_sin2( t ) result(f)
     implicit none;
     double complex, intent(in):: t;
@@ -15,9 +16,8 @@ double complex function pulse_A_z_sin2( t ) result(f)
     return;
 end function pulse_A_z_sin2
 
-
-
-
+! ////////////////////////////////////////////////////////////////////////////////
+! the vector potential in x-direction
 double complex function pulse_A_x_sin2( t ) result(f)
     implicit none;
     double complex, intent(in):: t;
@@ -25,9 +25,8 @@ double complex function pulse_A_x_sin2( t ) result(f)
     return;
 end function pulse_A_x_sin2
 
-
-
-
+! ////////////////////////////////////////////////////////////////////////////////
+! the electric field in z-direction
 double complex function pulse_E_z_sin2( t ) result(f)
     implicit none;
     double complex, intent(in):: t;
@@ -41,14 +40,11 @@ double complex function pulse_E_z_sin2( t ) result(f)
     else if( t_ > Tp) then
         f = dcmplx(0d0)
     end if
-
-
     return;
 end function pulse_E_z_sin2
 
-
-
-
+! ////////////////////////////////////////////////////////////////////////////////
+! the electric field in x-direction
 double complex function pulse_E_x_sin2( t ) result(f)
     implicit none;
     double complex, intent(in):: t;
@@ -56,9 +52,8 @@ double complex function pulse_E_x_sin2( t ) result(f)
     return;
 end function pulse_E_x_sin2
 
-
-
-
+! ////////////////////////////////////////////////////////////////////////////////
+! the alpha in z-direction
 double complex function pulse_alpha_z_sin2( t ) result(f)
     implicit none;
     double complex, intent(in):: t;
@@ -71,14 +66,11 @@ double complex function pulse_alpha_z_sin2( t ) result(f)
     else if( t_ > Tp) then
         f = dcmplx(-(E0*(-1 + dcos(OM*Tp)*(1 - NC**2 + NC**2*dcos((OM*Tp)/NC)) + NC*dsin(OM*Tp)*dsin((OM*Tp)/NC)))/(2.*(-1 + NC**2)*OM**2))
     end if
-
-
     return;
 end function pulse_alpha_z_sin2
 
-
-
-
+! ////////////////////////////////////////////////////////////////////////////////
+! the alpha in x-direction
 double complex function pulse_alpha_x_sin2( t ) result(f)
     implicit none;
     double complex, intent(in):: t;
@@ -86,8 +78,8 @@ double complex function pulse_alpha_x_sin2( t ) result(f)
     return;
 end function pulse_alpha_x_sin2
 
-
-
+! ////////////////////////////////////////////////////////////////////////////////
+! the alpha^2 in z-direction
 double complex function pulse_alpha2_z_sin2( t ) result(f)
     implicit none;
     double complex, intent(in):: t;
@@ -105,9 +97,8 @@ double complex function pulse_alpha2_z_sin2( t ) result(f)
     return;
 end function pulse_alpha2_z_sin2
 
-
-
-
+! ////////////////////////////////////////////////////////////////////////////////
+! the alpha^2 in x-direction
 double complex function pulse_alpha2_x_sin2( t ) result(f)
     implicit none;
     double complex, intent(in):: t;

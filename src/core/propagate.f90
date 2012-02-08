@@ -5,7 +5,6 @@
 #include '../include/inc_ts_guess.h'
 #include '../include/inc_misc.h'
 #include '../include/inc_field.h'
-#include '../include/inc_field_func.h'
 ! --------------------------------------------------------------------------------
 subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
       ts, amp_M, x0, z0, px_inf, pz_inf, L, n_pass_x, n_pass_z, n_near_core, ierr, tag )

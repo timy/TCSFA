@@ -1,4 +1,4 @@
-#include '../../include/inc_field.h'
+#include '../../include/inc_field_func.h'
 
 subroutine pulse_plot
     implicit none
@@ -7,8 +7,10 @@ subroutine pulse_plot
     double complex, external:: PULSE_E_Z, PULSE_E_X
     double complex, external:: PULSE_ALPHA_Z, PULSE_ALPHA_X
     double complex, external:: PULSE_ALPHA2_Z, PULSE_ALPHA2_X
-    double complex:: dt, t
+    double complex:: t
+    double precision:: dt
     double precision:: A_z, A_x, E_z, E_x, alpha_z, alpha_x, alpha2_z, alpha2_x
+    integer:: i
 
     dt = (Tp -  0d0) / (n_samp - 1d0)
     open(FID_PULSE, file=FNM_PULSE)

@@ -96,7 +96,6 @@ if envelope=='sin2':
     field.append("#define PULSE_ALPHA_X\tpulse_alpha_x_sin2\n")
     field.append("#define PULSE_ALPHA2_X\tpulse_alpha2_x_sin2\n")
 elif envelope=='const':
-    field.append("#include \'./pulse/pulse_const.f90\'\n")
     field.append("#define PULSE_A_Z\t\t\tpulse_A_z_const\n")
     field.append("#define PULSE_E_Z\t\t\tpulse_E_z_const\n")
     field.append("#define PULSE_ALPHA_Z\tpulse_alpha_z_const\n")
@@ -113,9 +112,12 @@ with open( dir_inc+'inc_field.h', 'w' ) as f:
 # field functions
 field = []
 if envelope == 'sin2':
-    field.append("#include \'./pulse/pulse_sin2.f90\'\n")
+    field.append("#include \'../pulse/pulse_sin2.f90\'\n")
 elif envelop == 'const':
-    field.append("#include \'./pulse/pulse_const.f90\'\n")
+    field.append("#include \'../pulse/pulse_const.f90\'\n")
+
+field.append( def_key_val( 'FID_PULSE', 'i', get_lun() ) )
+field.append( def_key_val( 'FNM_PULSE', 's', "./dat/pulse.dat") )
 
 with open( dir_inc+'inc_field_func.h', 'w' ) as f:
     for s in field:

@@ -17,8 +17,8 @@ SRC	= \
 
 OBJ	= $(SRC:.f90=.o)
 
-SUBDIRS		=	./subbr 
-FC_FLAGS		+=	-fpp 
+SUBDIRS		=	./pulse ./subbr 
+FC_FLAGS		+=	-fpp
 INCLUDE		+=	-I./subbr
 
 %.o : %.f90
