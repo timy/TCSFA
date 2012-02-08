@@ -1,4 +1,5 @@
 #include '../../include/inc_field.h'
+
 ! ////////////////////////////////////////////////////////////////////////////////
 ! the vector potential in z-direction
 double complex function pulse_A_z_sin2( t ) result(f)
@@ -92,8 +93,6 @@ double complex function pulse_alpha2_z_sin2( t ) result(f)
     else if( t_ > Tp) then
         f = dcmplx((E0**2*(12*OM*Tp - 6*dsin(2*OM*Tp) + NC*((8*dsin((2 + 1/NC)*OM*Tp))/(1 + 2*NC) - 16*dsin((OM*Tp)/NC) + 2*dsin((2*OM*Tp)/NC) - dsin((2*(-1 + NC)*OM*Tp)/NC)/(-1 + NC) - dsin((2*(1 + NC)*OM*Tp)/NC)/(1 + NC) + (8*dsin(((-1 + 2*NC)*OM*Tp)/NC))/(-1 + 2*NC))))/(64.*OM**3))
     end if
-
-
     return;
 end function pulse_alpha2_z_sin2
 

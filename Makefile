@@ -34,5 +34,5 @@ commit: cleanall
 	$(RM) ana/dat/*.dat
 	$(RM) ana/dat/*~
 	git add .
-	git commit -a -m "* the definition of W agrees with the description in paper - reverse the sign;\n* the universal form of the sub-barrier action without Coulomb correction is used, instead of the specific form for sin^2"
+	git commit -a -m "clean up"
 	git push origin master
