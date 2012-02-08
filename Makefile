@@ -34,5 +34,5 @@ commit: cleanall
 	$(RM) ana/dat/*.dat
 	$(RM) ana/dat/*~
 	git add .
-	git commit -a -m "Remove the un-used INCLUDE path in Makefile of 'subbr', avoiding the warning information #10147 for ifort."
+	git commit -a -m "A general form of the action for the sub-barrier trajectory."
 	git push origin master
