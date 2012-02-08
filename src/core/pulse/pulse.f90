@@ -24,7 +24,7 @@ subroutine pulse_plot
         alpha_x = dreal( PULSE_ALPHA_X( t ) )
         alpha2_z = dreal( PULSE_ALPHA2_Z( t ) )
         alpha2_x = dreal( PULSE_ALPHA2_X( t ) )
-        write(FID_PULSE, '(8(f15.8,1x))'), A_z, A_x, E_z, E_x, &
+        write(FID_PULSE, '(9(f15.8,1x))'), dreal(t), A_z, A_x, E_z, E_x, &
              alpha_z, alpha_x, alpha2_z, alpha2_x
     end do
     close(FID_PULSE)

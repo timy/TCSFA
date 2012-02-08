@@ -27,6 +27,7 @@ program main
     ! call set_pulse_t0( ( 1d0, 0d0 ) )
     ! call plot_pulse()
 
+    call pulse_plot()
     call set_p0( px, pz )
 
     allocate( ts_guess( LMS_MAX_COUNT ) )
