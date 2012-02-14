@@ -34,5 +34,5 @@ commit: cleanall
 	$(RM) ana/dat/*.dat
 	$(RM) ana/dat/*~
 	git add .
-	git commit -a -m "test commit from cluster"
+	git commit -a -m "cleanup"
 	git push origin master
