@@ -5,7 +5,6 @@
 #include '../include/inc_rk4.h'
 
 subroutine slave_thread( n_node, rank )
-    use mod_pulse
     implicit none
 
     integer, intent(in):: n_node, rank
@@ -57,10 +56,6 @@ subroutine slave_thread( n_node, rank )
         px(index) = PX_BEGIN + (PX_END - PX_BEGIN) * rand_px_0
         pz(index) = PZ_BEGIN + (PZ_END - PZ_BEGIN) * rand_pz_0
 
-
-!        px(index) = 0.375108648503d0    
-!        pz(index) = 0.115438116627d0
-
     end do
 
     ! output px, pz
@@ -71,13 +66,9 @@ subroutine slave_thread( n_node, rank )
     end do
     close( 102 )
 
-    ! set laser pulse
-    call set_pulse( E0, OM, NC, XI, PH )
-    call set_pulse_t0( (1d0, 0d0) )
     if( rank .eq. 0 ) then
-        call plot_pulse()
+        call pulse_plot
     end if
-
     
     ! estimate number of trajectories
     allocate( ts_guess( n_p0, LMS_MAX_COUNT ) )

@@ -34,5 +34,5 @@ commit: cleanall
 	$(RM) ana/dat/*.dat
 	$(RM) ana/dat/*~
 	git add .
-	git commit -a -m "cleanup"
+	git commit -a -m "slave.f90 for MPI: remove obsolete functions"
 	git push origin master
