@@ -84,10 +84,10 @@ subroutine generate_perturb_x(ts)
     integer:: i
     ti = dimag(ts)
     samp_dt = (ti - 0d0) / (n_samp - 1d0)
-    c2 = - eye*dimag( simpson_sub( ti, 0d0, 1000, ts, sub_traj_vx_1 ) )
+    c2 = - eye*dimag( eye * simpson_sub( ti, 0d0, 1000, ts, sub_traj_vx_1 ) )
     forall(i = 1:n_samp) samp_t(i) = 0d0 + samp_dt * (i - 1d0)
     do i = 1, n_samp
-        samp_x(i) = simpson_sub(ti, samp_t(i), 1000, ts, sub_traj_vx_1) + c2
+        samp_x(i) = eye * simpson_sub(ti, samp_t(i), 1000, ts, sub_traj_vx_1) + c2
     end do
     call spline(n_samp, samp_t, samp_x, b, c, d)
     return

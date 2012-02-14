@@ -153,7 +153,7 @@ W_{I_{p},\boldsymbol{p}}^{(\mathrm{sub})}(t_{s}^{(\alpha)})\simeq W_{I_{p},\bold
 \begin_layout Standard
 \begin_inset Formula 
 \[
-=-\int_{t_{s}^{(\alpha)}}^{t_{0}^{(\alpha)}}\left(\frac{1}{2}\boldsymbol{p}^{2}+I_{p}\right)dt-\boldsymbol{p}\cdot\int_{t_{s}^{(\alpha)}}^{t_{0}^{(\aleph)}}\boldsymbol{A}(t)dt-\frac{1}{2}\int_{t_{s}^{(\alpha)}}^{t_{0}^{(\alpha)}}\boldsymbol{A}(t)^{2}dt
+=-\int_{t_{s}^{(\alpha)}}^{t_{0}^{(\alpha)}}\left(\frac{1}{2}\boldsymbol{p}^{2}+I_{p}\right)dt-\boldsymbol{p}\cdot\int_{t_{s}^{(\alpha)}}^{t_{0}^{(\alpha)}}\boldsymbol{A}(t)dt-\frac{1}{2}\int_{t_{s}^{(\alpha)}}^{t_{0}^{(\alpha)}}\boldsymbol{A}(t)^{2}dt
 \]
 
 \end_inset
@@ -316,29 +316,121 @@ verb|sub_cc.f90:action_W_sub_r_rcpr(ts)|
 .
 \end_layout
 
-\begin_layout Subsection
-Direct correction based on the 0th-order trajectory
-\end_layout
-
 \begin_layout Standard
-Since the force of the electric field is large than the force imposed by
- the binding potential, the simplest correction is based on the 0th-order
- trajectory in the pure electric field, 
+The barrier trajectory 
+\begin_inset Formula $\boldsymbol{r}(t)$
+\end_inset
+
+ must be solved for the action.
+ As the Coulomb potential is switched on, the sub-barrier electronic motion
+ should be solved in the combined fields.
+ The full form of the equation of motion is
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-W_{I_{p},\boldsymbol{p}}^{(1,0)}(t_{s}^{(\alpha)})=i\int_{0}^{t_{i}^{(\alpha)}}\left[-\frac{1}{\left(\boldsymbol{r}_{0}(t_{0}+i\tau)^{2}\right)^{1/2}}\right]d\tau,
+\ddot{\boldsymbol{r}}(t)=-\boldsymbol{E}(t)-\frac{Z\boldsymbol{r}(t)}{\left(\boldsymbol{r}^{2}\right)^{3/2}}
 \]
 
 \end_inset
 
-where 
+with the boundary conditions
+\begin_inset Formula 
+\[
+\mathrm{Re}\boldsymbol{r}(t_{s})=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\mathrm{Im}\boldsymbol{r}(t_{0})=0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\mathrm{Re}\dot{\boldsymbol{r}}(t_{s})=\boldsymbol{p}_{0}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathrm{Im}\dot{\boldsymbol{r}}(t_{0})=0
+\]
+
+\end_inset
+
+The implementation of the code considers the 2D problem with linearly polarized
+ field along the z-axis.
+ The equations reduces to the form for components
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ddot{z}(t)=-E(t)-\frac{Zz(t)}{\left(z(t)^{2}+x(t)^{2}\right)^{3/2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ddot{x}(t)=-\frac{Zx(t)}{\left(z(t)^{2}+x(t)^{2}\right)^{3/2}}.
+\]
+
+\end_inset
+
+As a coupled equation with BVP in the complex plane, this EOM is still difficult
+ to solve.
+ Several different approximations can be employed to overcome the technical
+ obstacle and we are able to improve the agreement with the 
+\emph on
+ab initio
+\emph default
+ result.
+\end_layout
+
+\begin_layout Subsection
+Direct correction based on the 0th-order trajectory
+\end_layout
+
+\begin_layout Standard
+Since the force of the electric field is larger than the force imposed by
+ the binding potential, the simplest correction is based on the 0th-order
+ trajectory in the pure electric field, 
+\begin_inset Formula $\boldsymbol{r}\simeq\boldsymbol{r}_{0}$
+\end_inset
+
+, where 
 \begin_inset Formula $\boldsymbol{r}_{0}(t)$
 \end_inset
 
- is analytically available
+ is the solution to the EOM (the boundary conditions are reserved)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\ddot{\boldsymbol{r}}_{0}(t)=-\boldsymbol{E}(t)\label{eq:EOM_r0}
+\end{equation}
+
+\end_inset
+
+The solution is analytically available
 \end_layout
 
 \begin_layout Standard
@@ -354,9 +446,9 @@ where
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-=\boldsymbol{\alpha}(t)+\boldsymbol{p}t-\mathrm{Re}\left[\boldsymbol{\alpha}(t_{s})+\boldsymbol{p}t_{s}\right]
-\]
+\begin{equation}
+=\boldsymbol{\alpha}(t)+\boldsymbol{p}t-\mathrm{Re}\left[\boldsymbol{\alpha}(t_{s})+\boldsymbol{p}t_{s}\right]\label{eq:traj_r0}
+\end{equation}
 
 \end_inset
 
@@ -385,6 +477,464 @@ verb|sub_cc.f90:action_W_sub_sergey(ts)|
 
 \begin_layout Subsection
 Correction with 1st-order trajectory using perturbation method
+\end_layout
+
+\begin_layout Standard
+For linearly polarized field, Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:traj_r0"
+
+\end_inset
+
+) leads to on-axis (along the polarization direction 
+\begin_inset Formula $z$
+\end_inset
+
+-axis) trajectory, which is too rough to be true.
+ For the motion in the polarization direction, since the force imposed by
+ the electric field is much larger that the central Coulomb field, it is
+ reasonable to neglect the Coulomb force in 
+\begin_inset Formula $z$
+\end_inset
+
+-direction; while in the transversal direction, the transversal component
+ of the Coulomb force should be incorporated.
+ Thus, the EOM for components reads
+\begin_inset Formula 
+\begin{equation}
+\ddot{z}(t)=-E(t)\label{eq:EOM_z1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\ddot{x}(t)=-\frac{Zx(t)}{\left(z(t)^{2}+x(t)^{2}\right)^{3/2}}.\label{eq:EOM_x1}
+\end{equation}
+
+\end_inset
+
+The solution to Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:EOM_z1"
+
+\end_inset
+
+) is (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:traj_r0"
+
+\end_inset
+
+) which is decided analytically.
+ One needs to solve Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:EOM_x1"
+
+\end_inset
+
+) after the substitution of the found 
+\begin_inset Formula $z(t)$
+\end_inset
+
+.
+ In the followings, the perturbation method is used to find out the solution.
+\end_layout
+
+\begin_layout Standard
+Assume 
+\begin_inset Formula $x(t)=x_{0}(t)+x_{1}(t)$
+\end_inset
+
+, with 
+\begin_inset Formula $x_{0}(t)$
+\end_inset
+
+ the solution Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:traj_r0"
+
+\end_inset
+
+).
+ 
+\begin_inset Formula $x_{1}(t)$
+\end_inset
+
+ is a small quantity, representing a small variation from the 
+\begin_inset Formula $x_{0}(t)$
+\end_inset
+
+.
+ Thus, Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:EOM_x1"
+
+\end_inset
+
+) becomes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ddot{x}_{0}(t)+\ddot{x}_{1}(t)=-Z\frac{x_{0}(t)+x_{1}(t)}{\left(x_{0}(t)^{2}+2x_{0}(t)x_{1}(t)+z_{0}(t)^{2}\right)^{3/2}}.
+\]
+
+\end_inset
+
+With 
+\begin_inset Formula $\ddot{x}_{0}(t)=0$
+\end_inset
+
+ by the definition of 0th-order trajectory 
+\begin_inset Formula $x_{0}(t)$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ddot{x}_{1}(t)=-\frac{Z}{\left(x_{0}(t)^{2}+z_{0}(t)^{2}\right)^{3/2}}\left[\frac{x_{0}(t)}{\left(1+\frac{2x_{0}(t)x_{1}(t)}{x_{0}(t)^{2}+z_{0}(t)^{2}}\right)^{3/2}}+\frac{x_{1}(t)}{\left(1+\frac{2x_{0}(t)x_{1}(t)}{x_{0}(t)^{2}+z_{0}(t)^{2}}\right)^{3/2}}\right].
+\]
+
+\end_inset
+
+Since 
+\begin_inset Formula $\left|\frac{2x_{0}(t)x_{1}(t)}{x_{0}(t)^{2}+z_{0}(t)^{2}}\right|\ll1$
+\end_inset
+
+ as 
+\begin_inset Formula $\left|x_{1}(t)\right|\ll\left|x_{0}(t)\right|,\left|z_{0}(t)\right|$
+\end_inset
+
+, the fraction can be expanded with Taylor's series,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{1}{\left(1+\frac{2x_{0}(t)x_{1}(t)}{x_{0}(t)^{2}+z_{0}(t)^{2}}\right)^{3/2}}\simeq1-\frac{3x_{0}(t)x_{1}(t)}{x_{0}(t)^{2}+z_{0}(t)^{2}}
+\]
+
+\end_inset
+
+Thus,
+\begin_inset Formula 
+\[
+\ddot{x}_{1}(t)\simeq-\frac{Z}{\left(x_{0}(t)^{2}+z_{0}(t)^{2}\right)^{3/2}}\left[x_{0}(t)-\frac{3x_{0}(t)^{2}}{x_{0}(t)^{2}+z_{0}(t)^{2}}x_{1}(t)+x_{1}(t)-\frac{3x_{0}(t)}{x_{0}(t)^{2}+z_{0}(t)^{2}}x_{1}(t)^{2}\right].
+\]
+
+\end_inset
+
+Neglect the 
+\begin_inset Formula $x_{1}(t)^{2}$
+\end_inset
+
+ term,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ddot{x}_{1}(t)\simeq-\frac{Z}{\left(x_{0}(t)^{2}+z_{0}(t)^{2}\right)^{3/2}}\left[x_{0}(t)+\left(1-\frac{3x_{0}(t)^{2}}{x_{0}(t)^{2}+z_{0}(t)^{2}}\right)x_{1}(t)\right].
+\]
+
+\end_inset
+
+A further approximation can be made by neglecting 
+\begin_inset Formula $x_{1}(t)$
+\end_inset
+
+ in the RHS, since 
+\begin_inset Formula $\frac{x_{0}(t)^{2}}{x_{0}(t)^{2}+z_{0}(t)^{2}}\sim1$
+\end_inset
+
+ and 
+\begin_inset Formula $x_{1}(t)\ll x_{0}(t)$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+\boxed{\ddot{x}_{1}(t)\simeq f_{1}(t)\equiv-\frac{Zx_{0}(t)}{\left(x_{0}(t)^{2}+z_{0}(t)^{2}\right)^{3/2}}},
+\]
+
+\end_inset
+
+The ODE becomes a trivial integration.
+\end_layout
+
+\begin_layout Subsubsection
+Velocity
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\dot{x}_{1}(t)\equiv v_{x1}(t)=\int_{t_{s}}^{t}f(t')dt'+c_{1},
+\]
+
+\end_inset
+
+The boundary conditions for the velocity are 
+\begin_inset Formula $\mathrm{Re}\left[v_{x1}(t_{s})\right]=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathrm{Im}\left[v_{x1}(t_{0})\right]=0$
+\end_inset
+
+ leads to
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+c_{1}=-i\mathrm{Im}\left[\int_{t_{s}}^{t_{0}}f(t')dt'\right].
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Implementation
+\end_layout
+
+\begin_layout Standard
+The integration in the complex plane is carried out along the assigned integrati
+on path 
+\begin_inset Formula $t=t_{0}+it'$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\int_{t_{s}}^{t}f(t')dt'=\int_{t_{0}+it_{i}}^{t_{0}+i\tau}f(t_{0}+it')d(t_{0}+it')=i\int_{t_{i}}^{\tau}f(t_{0}+it')dt'.
+\]
+
+\end_inset
+
+If the variable of the function is the imaginary part of the time, i.e., 
+\begin_inset Formula $x_{1}(t_{0}+it)\equiv\tilde{x}_{1}(t)$
+\end_inset
+
+, 
+\begin_inset Formula $v_{x1}(t_{0}+it)\equiv\tilde{v}_{x1}(t)$
+\end_inset
+
+, the above velocity becomes
+\begin_inset Formula 
+\[
+\boxed{v_{x1}(t_{0}+it)=\tilde{v}_{x1}(t)=i\int_{t_{i}}^{t}f(t_{0}+it')dt'+\tilde{c}_{1}}.
+\]
+
+\end_inset
+
+To satisfy the the boundary condition 
+\begin_inset Formula $\mathrm{Re}\left[v_{x1}(t_{0}+it_{i})\right]=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathrm{Im}\left[v_{x1}(t_{0})\right]=0$
+\end_inset
+
+, i.e.,
+\begin_inset Formula 
+\[
+\mathrm{Re}\left[i\int_{t_{i}}^{t_{i}}f(t_{0}+i\tau)d\tau+\tilde{c}_{1}\right]=0
+\]
+
+\end_inset
+
+and
+\begin_inset Formula 
+\[
+\mathrm{Im}\left[i\int_{t_{i}}^{0}f(t_{0}+i\tau)d\tau+\tilde{c}_{1}\right]=0
+\]
+
+\end_inset
+
+we have
+\begin_inset Formula 
+\[
+\mathrm{Re}\left[\tilde{c}_{1}\right]=0
+\]
+
+\end_inset
+
+and
+\begin_inset Formula 
+\[
+\mathrm{Im}\left[\tilde{c}_{1}\right]=-\mathrm{Im}\left[i\int_{t_{i}}^{0}f(t_{0}+i\tau)d\tau\right].
+\]
+
+\end_inset
+
+Thus,
+\begin_inset Formula 
+\[
+\boxed{\tilde{c}_{1}=-i\mathrm{Im}\left[i\int_{t_{i}}^{0}f(t_{0}+it')dt'\right]}.
+\]
+
+\end_inset
+
+Note 
+\begin_inset Formula $\dot{\tilde{x}}_{1}(t)\ne\tilde{v}_{x1}(t)$
+\end_inset
+
+.
+ In fact, 
+\begin_inset Formula $\frac{dx_{1}(t_{0}+it')}{dt'}=\frac{d\tilde{x}_{1}(t')}{dt'}=\dot{\tilde{x}}_{1}(t')=i\dot{x}(t)=iv_{x1}(t)=iv_{x1}(t_{0}+it')=i\tilde{v}_{x1}(t')$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+\dot{\tilde{x}}_{1}(t')=i\tilde{v}_{x1}(t').
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Displacement
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x_{1}(t)=\int_{t_{s}}^{t}v_{x1}(t')dt'+c_{2},
+\]
+
+\end_inset
+
+The boundary conditions for the displacement 
+\begin_inset Formula $\mathrm{Re}\left[x_{1}(t_{s})\right]=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathrm{Im}\left[x_{1}(t_{0})\right]=0$
+\end_inset
+
+ leads to
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+c_{2}=-i\mathrm{Im}\left[\int_{t_{s}}^{t_{0}}v_{x1}(t')dt'\right].
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Implementation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x_{1}(t_{0}+it)=\tilde{x}_{1}(t)=\int_{t_{0}+it_{i}}^{t_{0}+it}v_{x1}(t_{0}+it')d(t_{0}+it')+\tilde{c}_{2}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+=i\int_{t_{i}}^{t}v_{x1}(t_{0}+it')dt'+\tilde{c}_{2}=i\int_{t_{i}}^{t}\tilde{v}_{x1}(t')dt'+\tilde{c}_{2}
+\]
+
+\end_inset
+
+Thus we have
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\boxed{\tilde{x}_{1}(t)=i\int_{t_{i}}^{t}\tilde{v}_{x1}(t')dt'+\tilde{c}_{2}}.
+\]
+
+\end_inset
+
+The boundary conditions 
+\begin_inset Formula $\mathrm{Re}\left[x_{1}(t_{s})\right]=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathrm{Im}\left[x_{1}(t_{0})\right]=0$
+\end_inset
+
+ require
+\begin_inset Formula 
+\[
+\mathrm{Re}\left[i\int_{t_{i}}^{t_{i}}\tilde{v}_{x1}(t')dt'+\tilde{c}_{2}\right]=0
+\]
+
+\end_inset
+
+and
+\begin_inset Formula 
+\[
+\mathrm{Im}\left[i\int_{t_{i}}^{0}\tilde{v}_{x1}(t')dt'+\tilde{c}_{2}\right]=0.
+\]
+
+\end_inset
+
+i.e.,
+\begin_inset Formula 
+\[
+\mathrm{Re}\left[\tilde{c}_{2}\right]=0
+\]
+
+\end_inset
+
+and
+\begin_inset Formula 
+\[
+\mathrm{Im}\left[\tilde{c}_{2}\right]=-\mathrm{Im}\left[i\int_{t_{i}}^{0}\tilde{v}_{x1}(t')dt'\right].
+\]
+
+\end_inset
+
+Thus we have
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\boxed{\tilde{c}_{2}=-i\mathrm{Im}\left[i\int_{t_{i}}^{0}\tilde{v}_{x1}(t')dt'\right]}.
+\]
+
+\end_inset
+
+
 \end_layout
 
 \end_body

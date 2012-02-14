@@ -34,5 +34,5 @@ commit: cleanall
 	$(RM) ana/dat/*.dat
 	$(RM) ana/dat/*~
 	git add .
-	git commit -a -m "rename of variables and some documentation work for sub-barrier trajectory."
+	git commit -a -m "modify the tunnel exit as an initial condition for the real propagation."
 	git push origin master

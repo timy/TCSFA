@@ -21,7 +21,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     double complex:: ts, x0_, z0_, vx0_, vz0_
     external:: newton_equation_re
     integer:: ierr, n_near_core, n_pass_x, n_pass_z
-    double complex:: W_im, W_re, action_W, DDW, amp_M
+    double complex:: W_sub, W_re, action_W, DDW, amp_M
     double precision:: px_inf, pz_inf, L
 !#if MISC_PRINT > 2
     double complex, external:: PULSE_E_Z, PULSE_E_X, PULSE_A_Z, PULSE_A_X
@@ -35,6 +35,8 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 
     call set_p0( p0_x, p0_z );
 
+! --------------------------------------------------------------------------------
+! saddle point  ts
 #if MISC_PRINT > 2
     write(*,'(a)'), ''
     write(*,'(2x, a)'), '* start to solve ts '
@@ -44,12 +46,51 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     if( ierr > 0 ) then ! cannot find the saddle point
         return
     end if
+
+! --------------------------------------------------------------------------------
+! W_sub and sub-barrier trajectory
+#if MISC_PRINT > 2
+    write(*,'(a)'), ''
+    write(*,'(2x, a)'), '* start to calculate action for sub-barrier '
+#endif
+
+    W_sub = action_W_sub_0_traj_0(ts)
+
+#if MISC_PRINT > 2
+    write(*,'(a)'), ''
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_sub      (', W_sub,         '  )'
+#endif
+
+    if( dimag(W_sub) > 0 ) then
+!        ierr = 3;
+!        return;
+    end if
+
+    ! add the contribution from 1/r 
+    W_sub = W_sub + action_W_sub_r_rcpr(ts)
+! --------------------------------------------------------------------------------
+! DDW
+#if MISC_PRINT > 2
+    write(*,'(a)'), ''
+    write(*,'(2x, a)'), '* start to calculate DDW"(ts)'
+#endif
+
+    DDW = action_DDW( ts );    
+
+#if MISC_PRINT > 2
+    write(*,'(a)'), ''
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'DDW       (', DDW,         '  )'
+#endif
+
+! --------------------------------------------------------------------------------
+! initial conditions for real propagation
 #if MISC_PRINT > 2
     write(*,'(a)'), ''
     write(*,'(2x, a)'), '* start to obtain boundary values from ts '
 #endif
 
     x0_ = init_x0( ts );
+    print*, "im here!"
     z0_ = init_z0( ts );
     vx0_ = init_vx0( ts );
     vz0_ = init_vz0( ts );
@@ -79,37 +120,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 
 #endif
 
-#if MISC_PRINT > 2
-    write(*,'(a)'), ''
-    write(*,'(2x, a)'), '* start to calculate action for sub-barrier '
-#endif
-
-    W_im = action_W_sub_0_traj_0(ts)
-
-#if MISC_PRINT > 2
-    write(*,'(a)'), ''
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_im      (', W_im,         '  )'
-#endif
-
-    if( dimag(W_im) > 0 ) then
-!        ierr = 3;
-!        return;
-    end if
-
-#if MISC_PRINT > 2
-    write(*,'(a)'), ''
-    write(*,'(2x, a)'), '* start to calculate W"(ts)'
-#endif
-
-    DDW = action_DDW( ts );    
-    
-#if MISC_PRINT > 2
-
-    write(*,'(a)'), ''
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'DDW       (', DDW,         '  )'
-
-#endif
-
+! --------------------------------------------------------------------------------
 #if MISC_PRINT > 2
     write(*,'(a)'), ''
     write(*,'(2x, a)'), '* start to calculate real trajectory with rk4'
@@ -121,17 +132,12 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     n_pass_z = 0
 
     if( ierr == 0 ) then
-        action_W = W_im + W_re;
+        action_W = W_sub + W_re;
         ! this one is for 1s state
         amp_M = cdexp( dcmplx(0d0, 1d0) * action_W ) / DDW;
         ! this one is for 2p state
 !        amp_M = ((PULSE_A_z(ts)+p0_z)/dsqrt(2d0*IONIZATION_IP)) * cdexp( -dcmplx(0d0, 1d0) * action_W ) / DDW
-        
-        ! this one is for sub-barrier Coulomb correction:
-        amp_M = amp_M * cdexp( dcmplx(0d0, 1d0) * action_W_sub_r_rcpr(ts) )
  
-        
-
 ! if you want to check the sub-barrier trajectory of the 1st order
 !        call plot_sub_traj_ptb_1(ts)
 ! end sub-barrier trajectory demo
@@ -148,7 +154,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 !    write(*,'(2(4x, a, f15.8))'),             'x(tp)     ', xp,       'z(tp)     ', zp
 !    write(*,'(2(4x, a, 9x, i6))'),            'n_pass_x  ', n_pass_x, 'n_pass_z  ', n_pass_z
     write(*,'(4x, a, f15.8)'),                'L         ', L
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_im     (', W_im,        '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_sub     (', W_sub,        '  )'
     write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_re     (', W_re,        '  )'
     write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W        (', action_W,    '  )'
     write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'DDW      (', DDW,         '  )'
@@ -158,11 +164,6 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 
     return;
 end subroutine propagate_with_single_p0
-
-
-
-
-
 
 
 
@@ -198,14 +199,11 @@ end subroutine Newton_equation_re
 
 double complex function init_x0( ts )
 
-    implicit none;
-    double complex, intent(in):: ts;
-    double complex, external:: PULSE_ALPHA_X;
-    double complex:: t0;
+    implicit none
+    double complex, intent(in):: ts
+    double complex, external:: sub_traj_x_0, sub_traj_x_1
 
-    t0 = dcmplx( dreal( ts ), 0d0 );
-    init_x0 = PULSE_ALPHA_X( t0 ) - dreal( PULSE_ALPHA_X( ts ) );
-
+    init_x0 = sub_traj_x_0( dcmplx( dreal(ts), 0d0 ), ts ) + sub_traj_x_1( 0d0 )
     return;
 end function init_x0
 
@@ -229,12 +227,9 @@ double complex function init_vx0( ts )
 
     implicit none;
     double complex, intent(in):: ts;
-    double complex, external:: PULSE_A_X;
-    double complex:: t0;
+    double complex, external:: sub_traj_vx_0, sub_traj_vx_1;
 
-    t0 = dcmplx( dreal( ts ), 0d0 );
-    init_vx0 = p0_x + PULSE_A_X( t0 );
-
+    init_vx0 = sub_traj_vx_0( dcmplx(dreal(ts), 0d0) ) + sub_traj_vx_1( 0d0, ts )
     return;
 end function init_vx0
 
