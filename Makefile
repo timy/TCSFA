@@ -34,5 +34,5 @@ commit: cleanall
 	$(RM) ana/dat/*.dat
 	$(RM) ana/dat/*~
 	git add .
-	git commit -a -m "modify the tunnel exit as an initial condition for the real propagation."
+	git commit -a -m "clean up"
 	git push origin master

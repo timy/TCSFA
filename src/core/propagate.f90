@@ -21,7 +21,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     double complex:: ts, x0_, z0_, vx0_, vz0_
     external:: newton_equation_re
     integer:: ierr, n_near_core, n_pass_x, n_pass_z
-    double complex:: W_sub, W_re, action_W, DDW, amp_M
+    double complex:: W_sub, W_sub_r_rcpr, W_re, action_W, DDW, amp_M
     double precision:: px_inf, pz_inf, L
 !#if MISC_PRINT > 2
     double complex, external:: PULSE_E_Z, PULSE_E_X, PULSE_A_Z, PULSE_A_X
@@ -58,16 +58,18 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 
 #if MISC_PRINT > 2
     write(*,'(a)'), ''
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_sub      (', W_sub,         '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_sub                 (', W_sub,                    ' )'
 #endif
 
-    if( dimag(W_sub) > 0 ) then
-!        ierr = 3;
-!        return;
-    end if
-
     ! add the contribution from 1/r 
-    W_sub = W_sub + action_W_sub_r_rcpr(ts)
+    W_sub_r_rcpr = action_W_sub_r_rcpr(ts)
+
+#if MISC_PRINT > 2
+    write(*,'(a)'), ''
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_sub_r_rcpr      (', W_sub_r_rcpr,         '  )'
+#endif
+
+    W_sub = W_sub + W_sub_r_rcpr
 ! --------------------------------------------------------------------------------
 ! DDW
 #if MISC_PRINT > 2
@@ -90,7 +92,6 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 #endif
 
     x0_ = init_x0( ts );
-    print*, "im here!"
     z0_ = init_z0( ts );
     vx0_ = init_vx0( ts );
     vz0_ = init_vz0( ts );
@@ -155,10 +156,10 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 !    write(*,'(2(4x, a, 9x, i6))'),            'n_pass_x  ', n_pass_x, 'n_pass_z  ', n_pass_z
     write(*,'(4x, a, f15.8)'),                'L         ', L
     write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_sub     (', W_sub,        '  )'
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_re     (', W_re,        '  )'
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W        (', action_W,    '  )'
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'DDW      (', DDW,         '  )'
-    write(*,'(4x, a, e15.8, 2x, e15.8, a)'),  'Mp       (', amp_M,       '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_re       (', W_re,          '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W            (', action_W,    '  )'
+    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'DDW       (', DDW,          '  )'
+    write(*,'(4x, a, e15.8, 2x, e15.8, a)'),  'Mp         (', amp_M,        '  )'
 
 #endif
 
