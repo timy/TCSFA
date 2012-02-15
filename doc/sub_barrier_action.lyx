@@ -107,6 +107,34 @@ W_{I_{p},\boldsymbol{p}}^{(\mathrm{sub})}(t_{s}^{(\alpha)})=-\int_{t_{s}^{(\alph
 
 \end_inset
 
+If a straight path in the complex plane is selected for the integration
+ from 
+\begin_inset Formula $t_{s}$
+\end_inset
+
+ to 
+\begin_inset Formula $t_{0}$
+\end_inset
+
+, 
+\begin_inset Formula $t=t_{0}+i\tau$
+\end_inset
+
+ with the variable 
+\begin_inset Formula $\tau$
+\end_inset
+
+, the above action is reduced to
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+W_{I_{p},\boldsymbol{p}}^{(\mathrm{sub})}(t_{s}^{(\alpha)})=i\int_{0}^{t_{i}^{(\alpha)}}\left(\frac{1}{2}\boldsymbol{v}^{2}(t_{0}+i\tau)-\frac{1}{|\boldsymbol{r}(t_{0}+i\tau)|}+I_{p}\right)d\tau
+\]
+
+\end_inset
+
 
 \end_layout
 

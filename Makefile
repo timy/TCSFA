@@ -35,5 +35,5 @@ commit: cleanall
 	$(RM) ana/dat/*~
 	$(RM) ana/rank.info
 	git add .
-	git commit -a -m "Add sub_action_cc to incorporate the correction to the kinetic energy."
+	git commit -a -m "documentation"
 	git push origin master
