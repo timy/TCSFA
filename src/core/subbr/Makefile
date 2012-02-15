@@ -6,8 +6,9 @@ SRC	= \
 	sub_integrate.f90 \
 	sub_traj_ptb_0.f90 \
 	sub_traj_ptb_1.f90 \
-	sub_cc.f90 \
-	sub_action_0.f90
+	sub_cc_rcpr.f90 \
+	sub_action_0.f90 \
+	sub_action_cc.f90
 
 OBJ	= $(SRC:.f90=.o)
 

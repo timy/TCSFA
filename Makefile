@@ -33,6 +33,7 @@ cleanall: clean
 commit: cleanall
 	$(RM) ana/dat/*.dat
 	$(RM) ana/dat/*~
+	$(RM) ana/rank.info
 	git add .
-	git commit -a -m "slave.f90 for MPI: remove obsolete functions"
+	git commit -a -m "Add sub_action_cc to incorporate the correction to the kinetic energy."
 	git push origin master

@@ -16,7 +16,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     integer, intent(in):: tag
     double complex, external:: solve_ts_from_p0, &
           init_x0, init_z0, init_vx0, init_vz0, &
-          action_DDW, action_W_sub_0_traj_0, action_W_sub_r_rcpr
+          action_DDW, action_W_sub_0_traj_0, action_W_sub_r_rcpr, action_W_sub
     double precision:: t0, x0, z0, vx0, vz0
     double complex:: ts, x0_, z0_, vx0_, vz0_
     external:: newton_equation_re
@@ -54,7 +54,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     write(*,'(2x, a)'), '* start to calculate action for sub-barrier '
 #endif
 
-    W_sub = action_W_sub_0_traj_0(ts)
+!    W_sub = action_W_sub_0_traj_0(ts)
 
 #if MISC_PRINT > 2
     write(*,'(a)'), ''
@@ -62,14 +62,15 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 #endif
 
     ! add the contribution from 1/r 
-    W_sub_r_rcpr = action_W_sub_r_rcpr(ts)
+!    W_sub_r_rcpr = action_W_sub_r_rcpr(ts)
 
 #if MISC_PRINT > 2
     write(*,'(a)'), ''
     write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_sub_r_rcpr      (', W_sub_r_rcpr,         '  )'
 #endif
 
-    W_sub = W_sub + W_sub_r_rcpr
+ !   W_sub = W_sub + W_sub_r_rcpr
+    W_sub = action_W_sub(ts)
 ! --------------------------------------------------------------------------------
 ! DDW
 #if MISC_PRINT > 2
@@ -230,7 +231,7 @@ double complex function init_vx0( ts )
     double complex, intent(in):: ts;
     double complex, external:: sub_traj_vx_0, sub_traj_vx_1;
 
-    init_vx0 = sub_traj_vx_0( dcmplx(dreal(ts), 0d0) ) + sub_traj_vx_1( 0d0, ts )
+    init_vx0 = sub_traj_vx_0( dcmplx(dreal(ts), 0d0) ) !+ sub_traj_vx_1( 0d0, ts )
     return;
 end function init_vx0
 
