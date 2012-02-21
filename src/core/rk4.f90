@@ -32,8 +32,7 @@ subroutine rk4_prop( t0, tp, x0, vx0, z0, vz0, ierr, w, px, pz, L, n_near_core, 
     y0(1) = x0; y0(2) = vx0; y0(3) = z0; y0(4) = vz0
 
 
-#ifdef MISC_PLOT
-
+#ifdef MISC_PLOT_TRAJ
     call rk4_plot_init(tag)
     call rk4_plot_open_file()
 #endif
@@ -92,7 +91,7 @@ subroutine rk4_prop( t0, tp, x0, vx0, z0, vz0, ierr, w, px, pz, L, n_near_core, 
         w = w + action_W_re( h, t, y_old, y )
 
 
-#ifdef MISC_PLOT
+#ifdef MISC_PLOT_TRAJ
         call rk4_plot_write( n_step, t, y, h, n_substep )
 #endif
         n_substep = 0
@@ -146,7 +145,7 @@ subroutine rk4_prop( t0, tp, x0, vx0, z0, vz0, ierr, w, px, pz, L, n_near_core, 
         w = w + dcmplx( w_tail, 0d0 );
     end if
 
-#ifdef MISC_PLOT
+#ifdef MISC_PLOT_TRAJ
     call rk4_plot_close_file()
 #endif
  

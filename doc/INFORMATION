@@ -1,11 +1,63 @@
+* to switch between flip-flop and sin^2 envelop
+  + modify the file pulse.f90
+    :: substitute the function name, modify tp = 2d0 * (nc + n_tail)* 2*pi/om (also the config.py) 
+  + modify the file im_propagation.f90
+    :: comment/uncomment in the function im_action_W
 
-* to switch between flip-flop and sin^2 envelop, modify the files pulse.f90 (substitute the function name, modify tp = 2d0 * (nc + n_tail)* 2*pi/om (also the config.py) ) and im_propagation.f90 (comment/uncomment in the function im_action_W)
 * to use complete random distribution modify the file "slave.f90"
+  
+  
+
+* Error messsage
+  1. cannot find saddle point ts
+  2. too many steps for rk4 to find convergent trajectory
+  3. final energy is below 0
+  4. too close to the core
 
 
+* Workflow of the TCSFA
+** raw data
+   modify the parameter.cfg;
+   build the program under the parallel mode;
+   submit the job;
+   run until the job is done
 
-* error messsage
-** 1: cannot find saddle point
-** 2: too many steps for rk4 to find convergent trajectory
-** 3: final energy is less than 0
-** 4: get too closed to the core
+** generate spectra
+   :: raw data are needed
+   + enter ana/proc/spec, modify main.single.f90
+   + build and run spec
+   + generate spec_*_*.dat under ana/dat
+
+** visualize spectra and select spectra feature of interest
+   :: spec_*_*.dat  are needed
+     + enter ana/plot, modify plot_selc.py
+     + python plot_selc.py. The spectra is visualized
+     + select points of interests with mouse and keyboard.
+     + press 'g' to generate:
+       - the head file including data for selected points: ana/proc/selc/sample.f
+       - the record as a figure: ana/fig/selc.png
+
+** extract raw data from selected points
+   :: ana/proc/selc/sample.f is needed
+   + enter ana/proc/selc and modify selc.f90
+   + build and run selc
+   + raw data are partitioned into small files in ana/dat/selc_*.dat
+
+** histogram and hexagonal binning analysis
+   :: prerequisite: the ready selc*.dat file(s) are needed.
+   + enter ana/plot/, try
+     + plot_hist.py for 1D analysis
+     + plot_hexbin.py for 2D correlation analysis
+
+** reproduce trajectories from the selected points
+   :: prerequisite: the ready selc*.dat file(s) are needed.
+   + enter ana/proc/traj and modify main.f90
+     :: modify "file_index = i" to select selc_i.dat for the ith point in the spectra
+     :: modify "n_traj" to specify the maximum number of trajectories desired
+     :: specify the criteria to setup the filter in the middle block of the code
+   + build traj and run, "traj_*.dat" and "info.dat" are generated
+
+** visualize trajectories from the selected points
+   + enter ana/plot and modify plot_re_traj.py
+     :: modify n_traj_plot to specifiy the number of trajectories plotted - agree with the number of files under the directory ana/dat/traj - 1
+** TODO all plots for a single trajectory

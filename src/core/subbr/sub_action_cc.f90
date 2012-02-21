@@ -31,7 +31,7 @@ double complex function integrand_sub_1st( t, ts ) result(integrand)
     ti = dimag(ts)
     tau = t0 + eye*t
     vz = sub_traj_vz_0( tau )
-    vx = sub_traj_vx_0( tau ) + sub_traj_vx_1( t, ts )
+    vx = sub_traj_vx_0( tau ) !+ sub_traj_vx_1( t, ts )
     v2 = vz * vz + vx * vx
     z = sub_traj_z_0(tau, ts)
     x = sub_traj_x_0(tau, ts) + sub_traj_x_1(t)

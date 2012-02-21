@@ -1,4 +1,6 @@
 import ConfigParser
+import sys
+import os
 from math import pi
 
 def def_key_val( key_str, key_type, key_val ):
@@ -24,7 +26,7 @@ config = ConfigParser.RawConfigParser()
 config.read('../parameter.cfg')
 
 dir_inc = './include/'
-dir_dat = 'dat/'
+dir_dat = os.getcwd() + '/../ana/dat/'
 
 ######################### GRID ##################################
 n_px     = config.getint('GRID', 'n_px')
@@ -117,7 +119,9 @@ elif envelop == 'const':
     field.append("#include \'../pulse/pulse_const.f90\'\n")
 
 field.append( def_key_val( 'FID_PULSE', 'i', get_lun() ) )
-field.append( def_key_val( 'FNM_PULSE', 's', "./dat/pulse.dat") )
+if not os.path.exists(dir_dat+'pulse/'):
+    os.makedirs(dir_dat+'pulse/')
+field.append( def_key_val( 'FNM_PULSE', 's', dir_dat+"pulse/pulse.dat") )
 
 with open( dir_inc+'inc_field_func.h', 'w' ) as f:
     for s in field:
@@ -193,73 +197,78 @@ with open( dir_inc+'inc_rk4.h', 'w' ) as f:
 
 ###################### REPRESENTATION ########################
 representation_opt = config.get( 'MISC', 'representation' )
-plot = config.getint( 'MISC', 'plot' )
-print_info = config.getint( 'MISC', 'print' )
 
 misc = [] 
 misc.append( def_key_val( 'REPRESENTATION_OPT', 's', representation_opt ) )
-if plot > 0:
-    misc.append( def_key_val( 'MISC_PLOT ', 'i', plot ) )
-if print_info > 0:
-    misc.append( def_key_val( 'MISC_PRINT', 'i', print_info ) )
+
+
+###################### ANALYSIS & PLOT #######################
+if len( sys.argv ) > 1:
+    if sys.argv[1] == 're_traj':
+        print 're_traj mode is selected'
+        misc.append( def_key_val( 'MISC_PLOT_TRAJ ', 'i', 1 ) )
+        if not os.path.exists(dir_dat+'traj/'):
+            os.makedirs(dir_dat+'traj/')
+        # plot the real-space quantum trajectory/ies
+        plot_rk4 = []
+        plot_rk4.append( def_key_val( 'RK4_PLOT_TRAJ', 's', '') )
+        plot_rk4.append( def_key_val( 'RK4_TRAJ_QUEU_FILE_ID', 'i', get_lun() ) )
+        plot_rk4.append( def_key_val( 'RK4_TRAJ_QUEU_FILE_NAME', 's', dir_dat+'traj/temp') )
+        plot_rk4.append( def_key_val( 'RK4_TRAJ_PLOT_FILE_ID', 'i', get_lun() ) )
+        plot_rk4.append( def_key_val( 'RK4_TRAJ_PLOT_FILE_NAME', 's', dir_dat+'traj/traj') )
+        
+        with open( dir_inc+'inc_plot_rk4.h', 'w' ) as f:
+            for s in plot_rk4:
+                f.write( s )
+
+    if sys.argv[1] == 'crf':
+        print "crf mode is selected"
+        misc.append( def_key_val( 'MISC_PLOT_CRF ', 'i', 1 ) )
+        # trace the complex root finding
+        plot_crf_track = []
+        plot_crf_track.append( def_key_val( 'CRF_PLOT_STEP   ', 's', '' ) )
+        plot_crf_track.append( def_key_val( 'CRF_PLOT_FILE_ID', 'i', get_lun() ) )
+        plot_crf_track.append( def_key_val( 'CRF_PLOT_FILE_NAME', 's', dir_dat+'crf_track.dat' ) )
+
+        with open( dir_inc+'inc_plot_crf_track.h', 'w' ) as f:
+            for s in plot_crf_track:
+                f.write( s )
+
+        # contour in the complex plane of sub-barrier region
+        plot_crf_map = []
+        plot_crf_map.append( def_key_val( 'CRF_PLOT_FILE_ID ', 'i', get_lun() ) )
+        plot_crf_map.append( def_key_val( 'CRF_PLOT_N_GRID_X', 'i', lms_nx ) )
+        plot_crf_map.append( def_key_val( 'CRF_PLOT_N_GRID_Y', 'i', lms_ny ) )
+        plot_crf_map.append( def_key_val( 'CRF_PLOT_MAP', 's', '' ) )
+        plot_crf_map.append( def_key_val( 'CRF_PLOT_MAP_FIX', 's', '' ) )
+        plot_crf_map.append( def_key_val( 'CRF_PLOT_MAP_FILE_NAME', 's', dir_dat+'crf_map.dat') )
+
+        with open( dir_inc+'inc_plot_crf_map.h', 'w' ) as f:
+            for s in plot_crf_map:
+                f.write( s )
+
+    if sys.argv[1] == 'im_traj':
+        print "im_traj mode is selected"
+        misc.append( def_key_val( 'MISC_PLOT_SUB ', 'i', 1 ) )
+        # trace the integrand of the action
+        plot_im_integrand = []
+        plot_im_integrand.append( def_key_val( 'IM_PLOT_INTEGRAND  ', 's', '') )
+        plot_im_integrand.append( def_key_val( 'IM_PLOT_FILE_ID', 'i', get_lun() ) )
+        plot_im_integrand.append( def_key_val( 'IM_PLOT_FILE_NAME', 's', dir_dat+'im_integrand.dat') )
+        plot_im_integrand.append( def_key_val( 'IM_PLOT_N_PTS', 'i', 200 ) )
+        plot_im_integrand.append( def_key_val( 'IM_PLOT_OFFSET', 'f', 40.0) )
+        
+        with open( dir_inc+'inc_plot_im_integrand.h', 'w' ) as f:
+            for s in plot_im_integrand:
+                f.write( s )
+
+    if sys.argv[1] == 'print':
+        print_info = 1
+        misc.append( def_key_val( 'MISC_PRINT', 'i', 1 ) )
 
 with open( dir_inc+'inc_misc.h', 'w' ) as f:
     for s in misc:
         f.write( s )
-
-
-###################### ANALYSIS & PLOT #######################
-
-
-if plot > 0: # verbose
-
-    # trace the complex root finding
-    plot_crf_track = []
-    plot_crf_track.append( def_key_val( 'CRF_PLOT_STEP   ', 's', '' ) )
-    plot_crf_track.append( def_key_val( 'CRF_PLOT_FILE_ID', 'i', get_lun() ) )
-    plot_crf_track.append( def_key_val( 'CRF_PLOT_FILE_NAME', 's', dir_dat+'crf_track.dat' ) )
-
-    with open( dir_inc+'inc_plot_crf_track.h', 'w' ) as f:
-        for s in plot_crf_track:
-            f.write( s )
-
-
-    # contour in the complex plane of sub-barrier region
-    plot_crf_map = []
-    plot_crf_map.append( def_key_val( 'CRF_PLOT_FILE_ID ', 'i', get_lun() ) )
-    plot_crf_map.append( def_key_val( 'CRF_PLOT_N_GRID_X', 'i', lms_nx ) )
-    plot_crf_map.append( def_key_val( 'CRF_PLOT_N_GRID_Y', 'i', lms_ny ) )
-    plot_crf_map.append( def_key_val( 'CRF_PLOT_MAP', 's', '' ) )
-    plot_crf_map.append( def_key_val( 'CRF_PLOT_MAP_FIX', 's', '' ) )
-    plot_crf_map.append( def_key_val( 'CRF_PLOT_MAP_FILE_NAME', 's', dir_dat+'crf_map.dat') )
-
-    with open( dir_inc+'inc_plot_crf_map.h', 'w' ) as f:
-        for s in plot_crf_map:
-            f.write( s )
-
-    # plot the real-space quantum trajectory/ies
-    plot_rk4 = []
-    plot_rk4.append( def_key_val( 'RK4_PLOT_TRAJ', 's', '') )
-    plot_rk4.append( def_key_val( 'RK4_TRAJ_QUEU_FILE_ID', 'i', get_lun() ) )
-    plot_rk4.append( def_key_val( 'RK4_TRAJ_QUEU_FILE_NAME', 's', dir_dat+'temp') )
-    plot_rk4.append( def_key_val( 'RK4_TRAJ_PLOT_FILE_ID', 'i', get_lun() ) )
-    plot_rk4.append( def_key_val( 'RK4_TRAJ_PLOT_FILE_NAME', 's', dir_dat+'traj.dat') )
-
-    with open( dir_inc+'inc_plot_rk4.h', 'w' ) as f:
-        for s in plot_rk4:
-            f.write( s )
-
-    # trace the integrand of the action
-    plot_im_integrand = []
-    plot_im_integrand.append( def_key_val( 'IM_PLOT_INTEGRAND  ', 's', '') )
-    plot_im_integrand.append( def_key_val( 'IM_PLOT_FILE_ID', 'i', get_lun() ) )
-    plot_im_integrand.append( def_key_val( 'IM_PLOT_FILE_NAME', 's', dir_dat+'im_integrand.dat') )
-    plot_im_integrand.append( def_key_val( 'IM_PLOT_N_PTS', 'i', 200 ) )
-    plot_im_integrand.append( def_key_val( 'IM_PLOT_OFFSET', 'f', 40.0) )
-
-    with open( dir_inc+'inc_plot_im_integrand.h', 'w' ) as f:
-        for s in plot_im_integrand:
-            f.write( s )
 
 ###################### CONSTANT  ########################
 const = [] 
@@ -268,3 +277,5 @@ const.append( def_key_val( 'PI', 'f', pi ) )
 with open( dir_inc+'inc_const.h', 'w' ) as f:
     for s in const:
         f.write( s )
+
+

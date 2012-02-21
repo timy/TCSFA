@@ -3,7 +3,7 @@ import numpy as np
 
 file_name = 'spec_qtm_all.dat'
 file_dir = '../dat/'
-nz, nx = 800, 200
+nz, nx = 1600, 400
 grid_lower_x, grid_upper_x = 0.0, 1.0
 grid_lower_z, grid_upper_z = -2.0, 2.0
 orders = 4.0

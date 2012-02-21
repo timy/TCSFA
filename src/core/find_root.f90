@@ -1,5 +1,5 @@
 #include '../include/inc_misc.h'
-#ifdef MISC_PLOT
+#ifdef MISC_PLOT_CRF
 #include '../include/inc_plot_crf_map.h'
 #endif
 #ifdef  CRF_PLOT_MAP_FIX

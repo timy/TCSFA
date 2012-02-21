@@ -1,15 +1,18 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
-traj_dir = '../../dat/'
-n_traj_plot = 400
+traj_dir = '../dat/traj/'
+n_traj_plot = len([f for f in os.listdir(traj_dir) 
+                   if f.startswith('traj') ])
+print n_traj_plot
 
 
 # read the info file
 info = np.loadtxt( traj_dir + "info.dat" )
 
 # map the weight to the line width
-w = info[:,2]
+w = info[:,1]
 w_max = np.log10( np.amax(w) )
 w_min = np.log10( np.amin(w) )
 lw = 6.0 * ( np.log10( w ) - w_min ) / ( w_max - w_min ) + 0.1
@@ -18,7 +21,7 @@ print("imax = %d" % imax)
 
 
 # map the type to color
-i_type = info[:,3]
+i_type = info[:,2]
 cl = []
 for i in range(n_traj_plot):
     if i_type[i] == 1:
@@ -37,8 +40,8 @@ ax = plt.subplot( 111, frameon=True )
 plt.hold( True )
 
 for i in range(n_traj_plot):
-    data = np.loadtxt( traj_dir + "re_traj%5d.dat"%i )
+    data = np.loadtxt( traj_dir + "traj%5d.dat"%(i+1) )
     plt.plot(data[:,2], data[:,3], lw=lw[i], label="%d"%i, c=cl[i] )
+    plt.plot(data[0,2], data[0,3], 'd', c='r')
 
 plt.show()
-

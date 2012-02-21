@@ -1,5 +1,5 @@
 #include '../include/inc_misc.h'
-#ifdef MISC_PLOT
+#ifdef MISC_PLOT_TRAJ
 #include '../include/inc_plot_rk4.h'
 
 module mod_rk4_plot
@@ -7,7 +7,7 @@ module mod_rk4_plot
     implicit none
 
     integer:: os
-    character(len=64):: file_name
+    character(len=256):: file_name
 
 end module mod_rk4_plot
 
@@ -19,6 +19,7 @@ subroutine rk4_plot_init(i)
 
     os = RK4_TRAJ_PLOT_FILE_ID + i - 1
     write( file_name, '(a,i5,a)' ), RK4_TRAJ_PLOT_FILE_NAME, i, '.dat'
+    write( *, '(a, a)' ),  're_traj is written to ', file_name
     return
 end subroutine rk4_plot_init
 
