@@ -1,7 +1,7 @@
 #include '../include/inc_atom.h'
 #include '../include/inc_misc.h'
 #include '../include/inc_field.h'
-#ifdef MISC_PLOT
+#ifdef MISC_PLOT_SUB
 #include '../include/inc_plot_im_integrand.h'
 #endif
 

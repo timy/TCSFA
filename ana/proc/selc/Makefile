@@ -1,7 +1,7 @@
 FC	=	ifort
 F_OPT	=	-warn -O3
 L_OPT	=
-SRC	=	read_info.f90 read_traj.f90 point.f90 selc.f90
+SRC	=	read_info.f90 read_traj.f90 selc.f90
 OBJ	=	$(SRC:.f90=.o)
 TARGET	=	selc
 

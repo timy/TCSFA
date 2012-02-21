@@ -5,7 +5,7 @@ program spec
     integer, parameter:: nx = 400
     integer, parameter:: nz = 1600
     integer, parameter:: n_type = 5
-    integer, parameter:: n_rank = 401
+    integer, parameter:: n_rank = 501
     double precision, parameter:: grid_lower_x = 0d0
     double precision, parameter:: grid_upper_x = 1d0
     double precision, parameter:: grid_lower_z = -2d0

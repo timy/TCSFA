@@ -1,11 +1,11 @@
 program selc
     implicit none
-    integer, parameter:: n_sel = 40
+    integer, parameter:: n_sel = 6
     double precision:: z0(n_sel)
     double precision:: x0(n_sel)
     double precision:: r0(n_sel)
     integer:: fid_selc(n_sel), selc_count, selc_count_total
-    integer, parameter:: n_rank = 401
+    integer, parameter:: n_rank = 501
     integer:: n_traj(n_rank), time_cost(n_rank), i_rank, i_s
     character(*), parameter:: dir_dat = "../../dat/"
     character(len=64):: filename
@@ -38,3 +38,25 @@ program selc
     write(*,'(a,i)'), 'hasta la vista'
 
 end program selc
+
+
+subroutine sample_points( z0, x0, r0, n )
+
+    implicit none
+    integer, intent(in):: n
+    double precision:: z0(n), x0(n), r0(n)
+    integer:: i
+
+    include 'sample.f'
+    write(*, '(a)'), "Trajectories corresponding to the following points will be extracted"
+    do i = 0, n
+        write(*, '(f15.8, f15.8)'), z0(i), x0(i)
+    end do
+
+    ! the radius
+    do i = 0, n
+        r0(i) = 0.005d0;
+    end do
+
+    return
+end subroutine sample_points

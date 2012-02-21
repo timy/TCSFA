@@ -1,6 +1,6 @@
 program stat
     implicit none
-    integer, parameter:: i_selc = 40
+    integer, parameter:: i_selc = 6
     integer:: n_traj
     character(*), parameter:: dir_dat = "../../dat/"
     character(len=64):: filename
