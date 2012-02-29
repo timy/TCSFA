@@ -44,4 +44,6 @@ for i in range(n_traj_plot):
     plt.plot(data[:,2], data[:,3], lw=lw[i], label="%d"%i, c=cl[i] )
     plt.plot(data[0,2], data[0,3], 'd', c='r')
 
+plt.grid(True)
+plt.savefig( '../fig/traj.png' )
 plt.show()
