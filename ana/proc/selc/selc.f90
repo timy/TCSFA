@@ -1,13 +1,13 @@
 program selc
     implicit none
-    integer, parameter:: n_sel = 6
+    include 'sample_number.f'
     double precision:: z0(n_sel)
     double precision:: x0(n_sel)
     double precision:: r0(n_sel)
     integer:: fid_selc(n_sel), selc_count, selc_count_total
     integer, parameter:: n_rank = 501
     integer:: n_traj(n_rank), time_cost(n_rank), i_rank, i_s
-    character(*), parameter:: dir_dat = "../../dat/"
+    character(*), parameter:: dir_dat = "../../dat/selc/"
     character(len=64):: filename
     
     call sample_points( z0, x0, r0, n_sel )

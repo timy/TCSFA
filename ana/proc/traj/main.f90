@@ -8,7 +8,7 @@
 
 program main
     implicit none
-    integer, parameter:: file_index = 4
+    integer, parameter:: file_index = 1
     integer, parameter:: n_traj = 100
     integer, parameter:: fid_selc = 20
     integer, parameter:: fid_info = 21
@@ -23,7 +23,7 @@ program main
     character(len=128):: filename
 
     ! read initial data from file "selc_*.dat"
-    write( filename, '(a,i3,a)' ), '../../dat/selc_', file_index, '.dat'
+    write( filename, '(a,i3,a)' ), '../../dat/selc/selc_', file_index, '.dat'
     open( fid_selc, file=filename )
     open( fid_info, file='../../dat/traj/info.dat' )
     count = 0
@@ -44,7 +44,7 @@ program main
        ! --------------------------------------------------------------------
        ! set the filter, to only plot trajectores meeting the criteria
        !if( i_type .ne. 2 ) cycle
-       if( w .le. 1d-2 ) cycle
+       if( w .le. 2d-5 ) cycle
        ! --------------------------------------------------------------------
        count = count + 1
        Mp_total = Mp_total + Mp
