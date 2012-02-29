@@ -504,7 +504,8 @@ verb|sub_cc.f90:action_W_sub_sergey(ts)|
 \end_layout
 
 \begin_layout Subsection
-Correction with 1st-order trajectory using perturbation method
+Correction to transversal direction with 1st-order trajectory using perturbation
+ method
 \end_layout
 
 \begin_layout Standard
@@ -958,6 +959,296 @@ Thus we have
 \begin_inset Formula 
 \[
 \boxed{\tilde{c}_{2}=-i\mathrm{Im}\left[i\int_{t_{i}}^{0}\tilde{v}_{x1}(t')dt'\right]}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Correction in both directions with perturbation method
+\end_layout
+
+\begin_layout Standard
+The two-component equations of motion
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ddot{z}(t)=-E(t)-\frac{Zz(t)}{\left(z(t)^{2}+x(t)^{2}\right)^{3/2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ddot{x}(t)=-\frac{Zx(t)}{\left(z(t)^{2}+x(t)^{2}\right)^{3/2}}.
+\]
+
+\end_inset
+
+Consider 
+\begin_inset Formula $z(t)=z_{0}(t)+z_{1}(t)$
+\end_inset
+
+, 
+\begin_inset Formula $x(t)=x_{0}(t)+x_{1}(t)$
+\end_inset
+
+, with 
+\begin_inset Formula $x_{0}(t)$
+\end_inset
+
+, 
+\begin_inset Formula $z_{0}(t)$
+\end_inset
+
+ the solutions to Eq.
+ (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:traj_r0"
+
+\end_inset
+
+).
+ 
+\begin_inset Formula $x_{1}(t)$
+\end_inset
+
+, 
+\begin_inset Formula $z_{1}(t)$
+\end_inset
+
+ are small quantities, representing small variations from the 
+\begin_inset Formula $x_{0}(t)$
+\end_inset
+
+, 
+\begin_inset Formula $z_{0}(t)$
+\end_inset
+
+, respectively.
+ The EOM become
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ddot{z}_{0}(t)+\ddot{z}_{1}(t)=-E(t)-\frac{Z\left[z_{0}(t)+z_{1}(t)\right]}{\left(z_{0}(t)^{2}+z_{1}(t)^{2}+2z_{0}(t)z_{1}(t)+x_{0}(t)^{2}+x_{1}(t)^{2}+2x_{0}(t)x_{1}(t)\right)^{3/2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ddot{x}_{0}(t)+\ddot{x}_{1}(t)=-\frac{Z\left[x_{0}(t)+x_{1}(t)\right]}{\left(z_{0}(t)^{2}+z_{1}(t)^{2}+2z_{0}(t)z_{1}(t)+x_{0}(t)^{2}+x_{1}(t)^{2}+2x_{0}(t)x_{1}(t)\right)^{3/2}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the 
+\begin_inset Formula $z$
+\end_inset
+
+-direction, 
+\begin_inset Formula $\ddot{z}_{0}(t)=-E(t)$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\[
+\ddot{z}_{1}(t)\simeq-\frac{Z\left[z_{0}(t)+z_{1}(t)\right]}{\left(z_{0}(t)^{2}+2z_{0}(t)z_{1}(t)+x_{0}(t)^{2}+2x_{0}(t)x_{1}(t)\right)^{3/2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+=-\frac{Z\left[z_{0}(t)+z_{1}(t)\right]}{\left(z_{0}(t)^{2}+x_{0}(t)^{2}\right)^{3/2}\left(1+2\frac{z_{0}(t)z_{1}(t)+x_{0}(t)x_{1}(t)}{z_{0}(t)^{2}+x_{0}(t)^{2}}\right)^{3/2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where
+\begin_inset Formula 
+\[
+\frac{z_{0}(t)z_{1}(t)+x_{0}(t)x_{1}(t)}{z_{0}(t)^{2}+x_{0}(t)^{2}}=\frac{\frac{z_{1}(t)}{z_{0}(t)}+\frac{x_{0}(t)}{z_{0}(t)}\frac{x_{1}(t)}{z_{0}(t)}}{1+\left[\frac{x_{0}(t)}{z_{0}(t)}\right]^{2}}\ll1
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ddot{z}_{1}(t)\simeq-\frac{Z\left[z_{0}(t)+z_{1}(t)\right]}{\left(z_{0}(t)^{2}+x_{0}(t)^{2}\right)^{3/2}}\left[1-3\frac{z_{0}(t)z_{1}(t)+x_{0}(t)x_{1}(t)}{z_{0}(t)^{2}+x_{0}(t)^{2}}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+The approximation with only the 0th order term
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ddot{z}_{1}(t)\simeq f_{z1}(t)\equiv-\frac{Zz_{0}(t)}{\left(z_{0}(t)^{2}+x_{0}(t)^{2}\right)^{3/2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\ddot{x}_{1}(t)\simeq f_{x1}(t)\equiv-\frac{Zx_{0}(t)}{\left(x_{0}(t)^{2}+z_{0}(t)^{2}\right)^{3/2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Similarly, we have the correction to the 
+\begin_inset Formula $z$
+\end_inset
+
+-direction
+\begin_inset Formula 
+\[
+\boxed{v_{z1}(t_{0}+it)=\tilde{v}_{z1}(t)=i\int_{t_{i}}^{t}f_{z1}(t_{0}+it')dt'+\tilde{c}_{z1}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\boxed{\tilde{c}_{z1}=-i\mathrm{Im}\left[i\int_{t_{i}}^{0}f_{z1}(t_{0}+it')dt'\right]}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\boxed{\tilde{z}_{1}(t)=i\int_{t_{i}}^{t}\tilde{v}_{z1}(t')dt'+\tilde{c}_{z2}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\boxed{\tilde{c}_{z2}=-i\mathrm{Im}\left[i\int_{t_{i}}^{0}\tilde{v}_{z1}(t')dt'\right]}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and the correction to the 
+\begin_inset Formula $x$
+\end_inset
+
+-direction,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\boxed{v_{x1}(t_{0}+it)=\tilde{v}_{x1}(t)=i\int_{t_{i}}^{t}f_{x1}(t_{0}+it')dt'+\tilde{c}_{x1}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\boxed{\tilde{c}_{x1}=-i\mathrm{Im}\left[i\int_{t_{i}}^{0}f_{x1}(t_{0}+it')dt'\right]}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\boxed{\tilde{x}_{1}(t)=i\int_{t_{i}}^{t}\tilde{v}_{x1}(t')dt'+\tilde{c}_{x2}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\boxed{\tilde{c}_{x2}=-i\mathrm{Im}\left[i\int_{t_{i}}^{0}\tilde{v}_{x1}(t')dt'\right]}.
 \]
 
 \end_inset
