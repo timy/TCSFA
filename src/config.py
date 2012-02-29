@@ -28,6 +28,9 @@ config.read('../parameter.cfg')
 dir_inc = './include/'
 dir_dat = os.getcwd() + '/../ana/dat/'
 
+if not os.path.exists( dir_inc ):
+    os.makedirs( dir_inc )
+
 ######################### GRID ##################################
 n_px     = config.getint('GRID', 'n_px')
 n_pz     = config.getint('GRID', 'n_pz')

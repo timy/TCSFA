@@ -197,8 +197,8 @@ subroutine newton_equation_re( ne, t, y, dy )
     return;
 end subroutine Newton_equation_re
 
-
-
+! ////////////////////////////////////////////////////////////////////////////////
+! x(t_0)
 double complex function init_x0( ts )
 
     implicit none
@@ -209,23 +209,21 @@ double complex function init_x0( ts )
     return;
 end function init_x0
 
-
+! ////////////////////////////////////////////////////////////////////////////////
+! z(t_0)
 double complex function init_z0( ts )
 
     implicit none;
     double complex, intent(in):: ts;
-    double complex, external:: PULSE_ALPHA_Z;
-    double complex:: t0;
+    double complex, external:: sub_traj_z_0!, sub_traj_z_1
 
-    t0 = dcmplx( dreal( ts ), 0d0 );
-    init_z0 = PULSE_ALPHA_Z( t0 ) - dreal( PULSE_ALPHA_Z( ts ) );
-
+    init_z0 = sub_traj_z_0( dcmplx( dreal(ts), 0d0 ), ts )! + sub_traj_z_1( 0d0 )
     return;
 end function init_z0
 
-
+! ////////////////////////////////////////////////////////////////////////////////
+! vx(t_0)
 double complex function init_vx0( ts )
-    use mod_p0;
 
     implicit none;
     double complex, intent(in):: ts;
@@ -235,17 +233,15 @@ double complex function init_vx0( ts )
     return;
 end function init_vx0
 
-
+! ////////////////////////////////////////////////////////////////////////////////
+! vz(t_0)
 double complex function init_vz0( ts )
     use mod_p0;
 
     implicit none;
     double complex, intent(in):: ts;
-    double complex, external:: PULSE_A_Z;
-    double complex:: t0;
+    double complex, external:: sub_traj_vz_0
 
-    t0 = dcmplx( dreal( ts ), 0d0 );
-    init_vz0 = p0_z + PULSE_A_Z( t0 );
-
+    init_vz0 = sub_traj_vz_0( dcmplx(dreal(ts), 0d0) ) !+ sub_traj_vz_1( 0d0, ts )
     return;
 end function init_vz0
