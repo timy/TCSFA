@@ -7,7 +7,7 @@
 #$ -cwd
 #
 # request 311 slots
-#$ -pe mvapich2 501
+#$ -pe mvapich2 601
 #
 #$ -v MPI_HOME=/usr/local/Packages/mvapich2-1.6
 # -v MPI_HOME=/usr/local/Packages/openmpi-1.2.8-intel
