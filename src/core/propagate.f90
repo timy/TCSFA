@@ -71,6 +71,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 
  !   W_sub = W_sub + W_sub_r_rcpr
     W_sub = action_W_sub(ts)
+    print*, 'W_sub', W_sub
 ! --------------------------------------------------------------------------------
 ! DDW
 #if MISC_PRINT > 2
@@ -215,7 +216,7 @@ double complex function init_z0( ts )
 
     implicit none;
     double complex, intent(in):: ts;
-    double complex, external:: sub_traj_z_0!, sub_traj_z_1
+    double complex, external:: sub_traj_z_0, sub_traj_z_1
 
     init_z0 = sub_traj_z_0( dcmplx( dreal(ts), 0d0 ), ts )! + sub_traj_z_1( 0d0 )
     return;

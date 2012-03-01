@@ -10,30 +10,35 @@ double complex function action_W_sub( ts ) result(action)
     double complex, parameter:: eye = dcmplx(0d0, 1d0)
     double complex, external:: simpson_sub, integrand_sub_1st
  
-    ti = dimag(ts)    
+    ti = dimag(ts) 
+    call generate_perturb_vz(ts)
+    call generate_perturb_z(ts)
     call generate_perturb_vx(ts)
     call generate_perturb_x(ts)
+!    call plot_sub_traj_ptb_1(ts)
     action = eye * simpson_sub(0d0, ti, n_step, ts, integrand_sub_1st)
     return
 end function action_W_sub
 
 ! ////////////////////////////////////////////////////////////////////////////////
-! the integrand
+! the integrand of the sub-barrier action
 double complex function integrand_sub_1st( t, ts ) result(integrand)
     implicit none
     double precision:: t, t0, ti
     double complex:: ts, z, x, r, tau, vz, vx, v2
     double complex, parameter:: eye = dcmplx(0d0, 1d0)
-    double complex, external:: sub_traj_z_0, sub_traj_x_0, sub_traj_x_1, &
-          sub_traj_vz_0, sub_traj_vx_0, sub_traj_vx_1
+    double complex, external:: sub_traj_z_0, sub_traj_vz_0
+    double complex, external:: sub_traj_z_1, sub_traj_vz_1
+    double complex, external:: sub_traj_x_0, sub_traj_vx_0
+    double complex, external:: sub_traj_x_1, sub_traj_vx_1
 
     t0 = dreal(ts)
     ti = dimag(ts)
     tau = t0 + eye*t
-    vz = sub_traj_vz_0( tau )
-    vx = sub_traj_vx_0( tau ) !+ sub_traj_vx_1( t, ts )
+    vz = sub_traj_vz_0( tau ) + sub_traj_vz_1( t, ts )
+    vx = sub_traj_vx_0( tau ) + sub_traj_vx_1( t, ts )
     v2 = vz * vz + vx * vx
-    z = sub_traj_z_0(tau, ts)
+    z = sub_traj_z_0(tau, ts) + sub_traj_z_1(t)
     x = sub_traj_x_0(tau, ts) + sub_traj_x_1(t)
     r = cdsqrt(z*z+x*x)
     integrand = 0.5 * v2 - ATOM_CHARGE_Z / r + IONIZATION_IP
