@@ -71,6 +71,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 
  !   W_sub = W_sub + W_sub_r_rcpr
     W_sub = action_W_sub(ts)
+    print*, 'W_sub', W_sub
 ! --------------------------------------------------------------------------------
 ! DDW
 #if MISC_PRINT > 2

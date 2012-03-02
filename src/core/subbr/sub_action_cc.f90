@@ -13,6 +13,7 @@ double complex function action_W_sub( ts ) result(action)
     ti = dimag(ts)    
     call generate_perturb_vx(ts)
     call generate_perturb_x(ts)
+    call plot_sub_traj_ptb_1(ts)
     action = eye * simpson_sub(0d0, ti, n_step, ts, integrand_sub_1st)
     return
 end function action_W_sub
