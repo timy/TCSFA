@@ -5,7 +5,6 @@
 
 #define ACTION_W_SUB action_w_sub_1_0_1
 
-
 module mod_sub_ptb_prop
     implicit none
     double precision:: m_t0, m_ti
@@ -46,20 +45,20 @@ subroutine sub_ptb_prop( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag )
     m_t0 = dreal(ts)
     m_ti = dimag(ts)
 
-    Bpz = -eye * simpson_sub(0d0, m_ti, 1000, ts, sub_ptb1_fz)
-    Bpx = -eye * simpson_sub(0d0, m_ti, 1000, ts, sub_ptb1_fx)
+    Bpz = SUB_RZ - eye * dimag( eye * simpson_sub(m_ti, 0d0, 1000, ts, sub_ptb1_fz) )
+    Bpx = SUB_RX - eye * dimag( eye * simpson_sub(m_ti, 0d0, 1000, ts, sub_ptb1_fx) )
 
     h0 = (0d0 - m_ti) / (nt - 1d0)
-    y0(1) = dcmplx(0d0, 0d0)
-    y0(2) = dcmplx(0d0, 0d0)
-    y0(3) = dcmplx(0d0, 0d0)
-    y0(4) = dcmplx(0d0, 0d0)
+    y0(1) = Bpx * ts
+    y0(2) = eye * Bpx
+    y0(3) = Bpz * ts
+    y0(4) = eye * Bpz
 
     array_t(1) = m_ti
     array_x(1) = y0(1)
     array_z(1) = y0(3)
-    array_vx(1) = -eye*y0(2) - Bpx
-    array_vz(1) = -eye*y0(4) - Bpz
+    array_vx(1) = -eye*y0(2)
+    array_vz(1) = -eye*y0(4)
 
 #if MISC_PRINT > 0
     write(*,'(a,x,a)'), 'Print in『sub_prop』', repeat('-', 40)
@@ -127,10 +126,10 @@ subroutine sub_ptb_prop( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag )
         end if
 
         array_t(n_step+1) = t
-        array_x(n_step+1) = y(1)
-        array_z(n_step+1) = y(3)
-        array_vx(n_step+1) = -eye*y(2) - Bpx
-        array_vz(n_step+1) = -eye*y(4) - Bpz
+        array_x(n_step+1) = y_actual(1)
+        array_z(n_step+1) = y_actual(3)
+        array_vx(n_step+1) = y_actual(2)
+        array_vz(n_step+1) = y_actual(4)
 
 #ifdef MISC_PLOT_TRAJ
         call rk4_plot_write_cmplx( n_step, t, y_actual, h, n_substep )
@@ -165,16 +164,18 @@ subroutine sub_ptb_prop( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag )
         Cpz = Cpz + ( array_vz(i+1) + array_vz(i) ) * ( array_t(i+1) - array_t(i) )
         Cpx = Cpx + ( array_vx(i+1) + array_vx(i) ) * ( array_t(i+1) - array_t(i) )
     end do
-    Cpz = eye * ( - dimag( eye * 0.5d0 * Cpz ) + Bpz * m_ti )
-    Cpx = eye * ( - dimag( eye * 0.5d0 * Cpx ) + Bpx * m_ti )
+    Cpz = - dreal(Bpz * ts) - eye * ( dimag( eye * 0.5d0 * Cpz + Bpz * m_t0 ) )
+    Cpx = - dreal(Bpx * ts) - eye * ( dimag( eye * 0.5d0 * Cpx + Bpx * m_t0 ) )
 
-    forall(i=1:n_step+1) array_z(i) = array_z(i) - eye * Bpz * array_t(i) + Cpz
-    forall(i=1:n_step+1) array_x(i) = array_x(i) - eye * Bpx * array_t(i) + Cpx
+    print*, "Cpz = ", Cpz
+    print*, "Cpx = ", Cpx
+
+    forall(i=1:n_step+1) array_z(i) = array_z(i) + Cpz
+    forall(i=1:n_step+1) array_x(i) = array_x(i) + Cpx
 
 #ifdef MISC_PLOT_TRAJ
     call rk4_plot_init(1, tag)
     call rk4_plot_open_file()
-    !
     do i = 1, n_step+1
         y_actual(1) = sub_traj_x_0(dcmplx(m_t0, array_t(i)), ts) + array_x(i)
         y_actual(2) = sub_traj_vx_0(dcmplx(m_t0, array_t(i))) + array_vx(i)
@@ -185,10 +186,10 @@ subroutine sub_ptb_prop( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag )
     call rk4_plot_close_file()
 #endif
 
-    z_t0 = sub_traj_z_0(dcmplx(m_t0, 0d0), ts)! + array_z(n_step+1)
-    x_t0 = sub_traj_x_0(dcmplx(m_t0, 0d0), ts)! + array_x(n_step+1)
-    vz_t0 = sub_traj_vz_0(dcmplx(m_t0, 0d0)) !+ array_vz(n_step+1)
-    vx_t0 = sub_traj_vx_0(dcmplx(m_t0, 0d0)) !+ array_vx(n_step+1)
+    z_t0 = sub_traj_z_0(dcmplx(m_t0, 0d0), ts) + array_z(n_step+1)
+    x_t0 = sub_traj_x_0(dcmplx(m_t0, 0d0), ts) + array_x(n_step+1)
+    vz_t0 = sub_traj_vz_0(dcmplx(m_t0, 0d0)) + array_vz(n_step+1)
+    vx_t0 = sub_traj_vx_0(dcmplx(m_t0, 0d0)) + array_vx(n_step+1)
     w =  ACTION_W_SUB( n_step, array_t, array_z, array_x, array_vz, array_vx, ts )
 
     vz_ts = sub_traj_vz_0(ts) + array_vz(1)
