@@ -30,8 +30,11 @@ all: build
 build: head build_core build_entry
 
 head:
+ifeq ($(PARALLEL), 1)
 	cd .. && python config.py
-
+else
+	cd ..&& python config.py print traj
+endif
 build_core:
 	cd $(DIR_CORE) && $(MAKE) build
 

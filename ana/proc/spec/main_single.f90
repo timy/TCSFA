@@ -5,7 +5,7 @@ program spec
     integer, parameter:: nx = 400
     integer, parameter:: nz = 1600
     integer, parameter:: n_type = 5
-    integer, parameter:: n_rank = 501
+    integer, parameter:: n_rank = 301
     double precision, parameter:: grid_lower_x = 0d0
     double precision, parameter:: grid_upper_x = 1d0
     double precision, parameter:: grid_lower_z = -2d0
@@ -17,6 +17,7 @@ program spec
     integer:: err_count( 4 )
     double precision:: cls_Mp( nx, nz, n_type )
     double complex:: qtm_Mp( nx, nz, n_type )
+    double precision:: err_spe( nx, nz, n_type )
     integer:: i_rank, i_px, i_pz, i_type, ierr
     character(len=128):: file_name 
     double complex:: grid_Mp( nx, nz )
@@ -26,6 +27,7 @@ program spec
     err_count = 0
     cls_Mp = 0d0
     qtm_Mp = (0d0,0d0)
+    err_spe = 0d0
 
     do i_rank = 0, n_rank-1
         
@@ -38,7 +40,7 @@ program spec
         write(*,'(a,i)'), 'n_traj = ', n_traj(i_rank)
         call read_traj( nx, nz, grid_lower_x, d_px, grid_lower_z, d_pz, &
               n_type, i_rank, n_traj(i_rank), traj_count, err_count, &
-              qtm_Mp, cls_Mp )
+              qtm_Mp, cls_Mp, err_spe )
         write(*,'(a)'), repeat('-', 79)
 
     end do
@@ -114,6 +116,11 @@ program spec
     call calc_w( nx, nz, d_px, d_pz, grid_lower_x, grid_lower_z, &
           grid_Mp, fig_nx, fig_nz, file_name )
 
+    ! the error_spe distribution
+    forall(i_px=1:nx,i_pz=1:nz) grid_Mp(i_px,i_pz) = sum( err_spe(i_px,i_pz,1:4) ) / sum( traj_count(i_px,i_pz,1:4));
+    file_name = dir_dat // 'spec_err_spe.dat';
+    call calc_w( nx, nz, d_px, d_pz, grid_lower_x, grid_lower_z, &
+          grid_Mp, fig_nx, fig_nz, file_name )
 
     write(*,*), 'Hasta la vista'
 

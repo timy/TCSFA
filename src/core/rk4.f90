@@ -33,7 +33,7 @@ subroutine rk4_prop( t0, tp, x0, vx0, z0, vz0, ierr, w, px, pz, L, n_near_core, 
 
 
 #ifdef MISC_PLOT_TRAJ
-    call rk4_plot_init(tag)
+    call rk4_plot_init(0, tag)
     call rk4_plot_open_file()
 #endif
 #if MISC_PRINT > 3
@@ -92,7 +92,7 @@ subroutine rk4_prop( t0, tp, x0, vx0, z0, vz0, ierr, w, px, pz, L, n_near_core, 
 
 
 #ifdef MISC_PLOT_TRAJ
-        call rk4_plot_write( n_step, t, y, h, n_substep )
+        call rk4_plot_write_real( n_step, t, y, h, n_substep )
 #endif
         n_substep = 0
 

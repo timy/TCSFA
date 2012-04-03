@@ -23,7 +23,7 @@ double complex function simpson_sub(a, b, n_step, ts, f)
     integer, intent(in):: n_step
     double complex, intent(in):: ts
     double complex, external:: f
-    double precision:: h
+    double precision:: dt, h
     integer:: i, m
     m = n_step / 2
     h = (b-a) / (2*m)

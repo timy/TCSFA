@@ -207,12 +207,12 @@ misc.append( def_key_val( 'REPRESENTATION_OPT', 's', representation_opt ) )
 
 ###################### ANALYSIS & PLOT #######################
 if len( sys.argv ) > 1:
-    if sys.argv[1] == 're_traj':
-        print 're_traj mode is selected'
+    if 'traj' in sys.argv:
+        print 'traj mode is selected'
         misc.append( def_key_val( 'MISC_PLOT_TRAJ ', 'i', 1 ) )
         if not os.path.exists(dir_dat+'traj/'):
             os.makedirs(dir_dat+'traj/')
-        # plot the real-space quantum trajectory/ies
+        # plot trajectory/ies
         plot_rk4 = []
         plot_rk4.append( def_key_val( 'RK4_PLOT_TRAJ', 's', '') )
         plot_rk4.append( def_key_val( 'RK4_TRAJ_QUEU_FILE_ID', 'i', get_lun() ) )
@@ -224,10 +224,10 @@ if len( sys.argv ) > 1:
             for s in plot_rk4:
                 f.write( s )
 
-    if sys.argv[1] == 'crf':
+    if 'crf' in sys.argv:
         print "crf mode is selected"
         misc.append( def_key_val( 'MISC_PLOT_CRF ', 'i', 1 ) )
-        # trace the complex root finding
+        # trace the Complex-Root-Finding (CRF)
         plot_crf_track = []
         plot_crf_track.append( def_key_val( 'CRF_PLOT_STEP   ', 's', '' ) )
         plot_crf_track.append( def_key_val( 'CRF_PLOT_FILE_ID', 'i', get_lun() ) )
@@ -250,7 +250,7 @@ if len( sys.argv ) > 1:
             for s in plot_crf_map:
                 f.write( s )
 
-    if sys.argv[1] == 'im_traj':
+    if 'im_traj' in sys.argv:
         print "im_traj mode is selected"
         misc.append( def_key_val( 'MISC_PLOT_SUB ', 'i', 1 ) )
         # trace the integrand of the action
@@ -265,9 +265,9 @@ if len( sys.argv ) > 1:
             for s in plot_im_integrand:
                 f.write( s )
 
-    if sys.argv[1] == 'print':
+    if 'print' in sys.argv:
         print_info = 1
-        misc.append( def_key_val( 'MISC_PRINT', 'i', 1 ) )
+        misc.append( def_key_val( 'MISC_PRINT', 'i', 3 ) )
 
 with open( dir_inc+'inc_misc.h', 'w' ) as f:
     for s in misc:
@@ -280,5 +280,3 @@ const.append( def_key_val( 'PI', 'f', pi ) )
 with open( dir_inc+'inc_const.h', 'w' ) as f:
     for s in const:
         f.write( s )
-
-

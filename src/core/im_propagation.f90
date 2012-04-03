@@ -9,70 +9,30 @@
 
 #define CRF_STEP_LENGTH 0.1d0
 
-
-! in this file, saddle_point equation should be defined
-
-subroutine set_p0( p0_x_, p0_z_ )
+! --------------------------------------------------------------------------------
+double complex function solve_ts_from_p0( ets, ierr ) result(ts)
     use mod_p0
-    
     implicit none
-    double precision, intent(in):: p0_x_, p0_z_
-
-    p0_x = p0_x_;
-    p0_z = p0_z_;
-    
-    return;
-end subroutine set_p0
-
-double complex function solve_ts_from_p0( ts0, ierr ) result(ts)
-    use mod_p0;
-
-    implicit none;
-
-    double complex, intent(in):: ts0;
-    double complex, external:: SPE
-    double complex, external:: find_root
+    double complex, intent(in):: ets
+    double complex, external:: SPE, find_root
     integer:: ierr
 
-#if MISC_PRINT > 3
-    double complex, external:: sub_traj_x_0, sub_traj_z_0, sub_traj_vx_0, sub_traj_vz_0
-#endif
-
-    ts = find_root( ts0, SPE, CRF_STEP_LENGTH, ierr );
-    if( ierr > 0 ) then
-        print*, 'root not found!'
-        return;
-    end if
-
-#if MISC_PRINT > 3
-    print*, 'ts:', ts
-    print*, 'x(ts):', sub_traj_x_0( ts, ts );
-    print*, 'z(ts):', sub_traj_z_0( ts, ts );
-    print*, 'vx(ts):', sub_traj_vx_0( ts );
-    print*, 'vz(ts):', sub_traj_vz_0( ts );
-#endif
-
+    ts = find_root( ets, SPE, CRF_STEP_LENGTH, ierr );
+    if( ierr > 0 ) print*, 'problem with solve_ts_from_p0!'
+    return
 end function solve_ts_from_p0
 
-
-
-
+! --------------------------------------------------------------------------------
 double complex function SPE( t ) ! saddle point equation
-    use mod_p0;
+    use mod_p0
+    implicit none
+    double complex, intent(in):: t
+    double precision, parameter:: Ip = IONIZATION_IP
+    double complex, external:: PULSE_A_X, PULSE_A_Z
 
-    implicit none;
-    double complex, intent(in):: t;
-    double precision, parameter:: Ip = IONIZATION_IP;
-    double complex, external:: PULSE_A_X, PULSE_A_Z;
-
-    
     SPE = ( p0_x + PULSE_A_X(t) )**2 + ( p0_z + PULSE_A_Z(t) )**2 + 2d0 * Ip;
-
-    return;
+    return
 end function SPE
-
-
-
 
 
 ! calculate action W for imaginary time part with numerical integration
@@ -107,7 +67,6 @@ double complex function action_W_im_num( ts )
 end function action_W_im_num
 
 
-
 ! second-order derivative of the action W
 double complex function action_DDW( ts )
     
@@ -136,7 +95,6 @@ double complex function v2_integrand( t )
     vz = sub_traj_vz_0( t );
     vx = sub_traj_vx_0( t );
     v2 = vz * vz + vx * vx;
-
     v2_integrand = 0.5d0 * v2
     
     return;

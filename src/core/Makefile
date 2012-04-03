@@ -12,7 +12,8 @@ SRC	= \
 	find_root.f90 \
 	im_propagation.f90 \
 	spline.f90 \
-	propagate.f90
+	propagate.f90 \
+	display.f90
 
 OBJ	= $(SRC:.f90=.o)
 

@@ -1,19 +1,15 @@
 DIR_ROOT = ../../..
 include $(DIR_ROOT)/Makefile.cfg
 
-SRC	=  \
-	sub_test.f90 \
+SRC	= \
 	sub_p0.f90 \
 	sub_integrate.f90 \
 	sub_traj_ptb_0.f90 \
-	sub_ptb_prop.f90 \
-	sub_ptb_prop_0.f90 \
-	sub_ptb_action.f90
-#	sub_traj_ptb_1.f90 \
-#	sub_cc_rcpr.f90 \
-#	sub_action_0.f90 \
-#	sub_action_cc.f90 \
-#	sub_prop.f90
+	sub_traj_ptb_1.f90 \
+	sub_cc_rcpr.f90 \
+	sub_action_0.f90 \
+	sub_action_cc.f90 \
+	sub_prop.f90
 
 OBJ	= $(SRC:.f90=.o)
 

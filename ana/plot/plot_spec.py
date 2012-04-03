@@ -6,7 +6,7 @@ file_dir = '../dat/'
 nz, nx = 1600, 400
 grid_lower_x, grid_upper_x = 0.0, 1.0
 grid_lower_z, grid_upper_z = -2.0, 2.0
-orders = 4.0
+orders = 6.0
 
 
 data = np.loadtxt( file_dir + file_name )
@@ -18,9 +18,13 @@ pz = data_pz.reshape( nx, nz )
 px = data_px.reshape( nx, nz )
 w = data_w.reshape( nx, nz )
 w_max = np.amax(w)
-w_lower_limit = np.log10(w_max) - orders
+print "w_max=", w_max
+w_upper_limit = 10**2
+w_lower_limit = np.log10(w_upper_limit) - orders
 i_too_small = np.where( w < 10 ** w_lower_limit )
+i_too_big = np.where( w > 10 ** w_upper_limit )
 w[i_too_small] = 10 ** w_lower_limit
+w[i_too_big] = 10 ** w_upper_limit
 w = np.log10(w)
 
 

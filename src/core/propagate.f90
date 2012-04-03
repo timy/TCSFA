@@ -5,9 +5,13 @@
 #include '../include/inc_ts_guess.h'
 #include '../include/inc_misc.h'
 #include '../include/inc_field.h'
+
+
+#define SUB_PTB_PROP sub_ptb_prop
+
 ! --------------------------------------------------------------------------------
 subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
-      ts, amp_M, x0, z0, px_inf, pz_inf, L, n_pass_x, n_pass_z, n_near_core, ierr, tag )
+      ts, amp_M, x0, z0, px_inf, pz_inf, L, n_near_core, err_spe, ierr, tag )
 
 
     implicit none;
@@ -16,36 +20,27 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     integer, intent(in):: tag
     double complex, external:: solve_ts_from_p0, &
           init_x0, init_z0, init_vx0, init_vz0, &
-          action_DDW, action_W_sub_0_traj_0, action_W_sub_r_rcpr, action_W_sub
+          action_DDW!, action_W_sub_0_traj_0, action_W_sub_r_rcpr, action_W_sub_ptb
     double precision:: t0, x0, z0, vx0, vz0
     double complex:: ts, x0_, z0_, vx0_, vz0_
     external:: newton_equation_re
-    integer:: ierr, n_near_core, n_pass_x, n_pass_z
-    double complex:: W_sub, W_sub_r_rcpr, W_re, action_W, DDW, amp_M
+    integer:: ierr, n_near_core
+    double complex:: W_sub, W_re, action_W, DDW, amp_M !W_sub_r_rcpr, 
     double precision:: px_inf, pz_inf, L
+    double precision:: err_spe
 !#if MISC_PRINT > 2
     double complex, external:: PULSE_E_Z, PULSE_E_X, PULSE_A_Z, PULSE_A_X
 !#endif
 
-#if MISC_PRINT > 2
-    write(*,'(a)'), ''
-    write(*,'(a)'), repeat('#', 50)
-    write(*,'(a)'), 'propagate.f90: propagate_with_single_p0 '
-#endif
-
     call set_p0( p0_x, p0_z );
-
-! --------------------------------------------------------------------------------
-! saddle point  ts
-#if MISC_PRINT > 2
-    write(*,'(a)'), ''
-    write(*,'(2x, a)'), '* start to solve ts '
-#endif
-
     ts = solve_ts_from_p0( ts_guess, ierr );    
-    if( ierr > 0 ) then ! cannot find the saddle point
+    if( ierr > 0 ) then
         return
     end if
+
+    call SUB_PTB_PROP( ts, ierr, z0_, x0_, vz0_, vx0_, w_sub, err_spe, tag )
+    if( ierr > 0 ) return
+
 
 ! --------------------------------------------------------------------------------
 ! W_sub and sub-barrier trajectory
@@ -64,13 +59,13 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     ! add the contribution from 1/r 
 !    W_sub_r_rcpr = action_W_sub_r_rcpr(ts)
 
-#if MISC_PRINT > 2
-    write(*,'(a)'), ''
-    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_sub_r_rcpr      (', W_sub_r_rcpr,         '  )'
-#endif
+!#if MISC_PRINT > 2
+!    write(*,'(a)'), ''
+!    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_sub_r_rcpr      (', W_sub_r_rcpr,         '  )'
+!#endif
 
- !   W_sub = W_sub + W_sub_r_rcpr
-    W_sub = action_W_sub(ts)
+!   W_sub = W_sub + W_sub_r_rcpr
+!    W_sub = action_W_sub_ptb(ts)
 ! --------------------------------------------------------------------------------
 ! DDW
 #if MISC_PRINT > 2
@@ -92,10 +87,10 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     write(*,'(2x, a)'), '* start to obtain boundary values from ts '
 #endif
 
-    x0_ = init_x0( ts );
-    z0_ = init_z0( ts );
-    vx0_ = init_vx0( ts );
-    vz0_ = init_vz0( ts );
+    ! x0_ = init_x0( ts );
+    ! z0_ = init_z0( ts );
+    ! vx0_ = init_vx0( ts );
+    ! vz0_ = init_vz0( ts );
 
     t0 = dreal( ts );
 
@@ -129,9 +124,6 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 #endif
 
     call rk4_prop( t0, Tp, x0, vx0, z0, vz0, ierr, W_re, px_inf, pz_inf, L, n_near_core, tag );
-
-    n_pass_x = 0
-    n_pass_z = 0
 
     if( ierr == 0 ) then
         action_W = W_sub + W_re;
@@ -197,51 +189,51 @@ subroutine newton_equation_re( ne, t, y, dy )
     return;
 end subroutine Newton_equation_re
 
-! ////////////////////////////////////////////////////////////////////////////////
-! x(t_0)
-double complex function init_x0( ts )
+! ! ////////////////////////////////////////////////////////////////////////////////
+! ! x(t_0)
+! double complex function init_x0( ts )
 
-    implicit none
-    double complex, intent(in):: ts
-    double complex, external:: sub_traj_x_0, sub_traj_x_1
+!     implicit none
+!     double complex, intent(in):: ts
+!     double complex, external:: sub_traj_x_0, sub_traj_x_1
 
-    init_x0 = sub_traj_x_0( dcmplx( dreal(ts), 0d0 ), ts ) + sub_traj_x_1( 0d0 )
-    return;
-end function init_x0
+!     init_x0 = sub_traj_x_0( dcmplx( dreal(ts), 0d0 ), ts ) + sub_traj_x_1( 0d0 )
+!     return;
+! end function init_x0
 
-! ////////////////////////////////////////////////////////////////////////////////
-! z(t_0)
-double complex function init_z0( ts )
+! ! ////////////////////////////////////////////////////////////////////////////////
+! ! z(t_0)
+! double complex function init_z0( ts )
 
-    implicit none;
-    double complex, intent(in):: ts;
-    double complex, external:: sub_traj_z_0!, sub_traj_z_1
+!     implicit none;
+!     double complex, intent(in):: ts;
+!     double complex, external:: sub_traj_z_0!, sub_traj_z_1
 
-    init_z0 = sub_traj_z_0( dcmplx( dreal(ts), 0d0 ), ts )! + sub_traj_z_1( 0d0 )
-    return;
-end function init_z0
+!     init_z0 = sub_traj_z_0( dcmplx( dreal(ts), 0d0 ), ts )! + sub_traj_z_1( 0d0 )
+!     return;
+! end function init_z0
 
-! ////////////////////////////////////////////////////////////////////////////////
-! vx(t_0)
-double complex function init_vx0( ts )
+! ! ////////////////////////////////////////////////////////////////////////////////
+! ! vx(t_0)
+! double complex function init_vx0( ts )
 
-    implicit none;
-    double complex, intent(in):: ts;
-    double complex, external:: sub_traj_vx_0, sub_traj_vx_1;
+!     implicit none;
+!     double complex, intent(in):: ts;
+!     double complex, external:: sub_traj_vx_0, sub_traj_vx_1;
 
-    init_vx0 = sub_traj_vx_0( dcmplx(dreal(ts), 0d0) ) !+ sub_traj_vx_1( 0d0, ts )
-    return;
-end function init_vx0
+!     init_vx0 = sub_traj_vx_0( dcmplx(dreal(ts), 0d0) ) !+ sub_traj_vx_1( 0d0, ts )
+!     return;
+! end function init_vx0
 
-! ////////////////////////////////////////////////////////////////////////////////
-! vz(t_0)
-double complex function init_vz0( ts )
-    use mod_p0;
+! ! ////////////////////////////////////////////////////////////////////////////////
+! ! vz(t_0)
+! double complex function init_vz0( ts )
+!     use mod_p0;
 
-    implicit none;
-    double complex, intent(in):: ts;
-    double complex, external:: sub_traj_vz_0
+!     implicit none;
+!     double complex, intent(in):: ts;
+!     double complex, external:: sub_traj_vz_0
 
-    init_vz0 = sub_traj_vz_0( dcmplx(dreal(ts), 0d0) ) !+ sub_traj_vz_1( 0d0, ts )
-    return;
-end function init_vz0
+!     init_vz0 = sub_traj_vz_0( dcmplx(dreal(ts), 0d0) ) !+ sub_traj_vz_1( 0d0, ts )
+!     return;
+! end function init_vz0

@@ -82,6 +82,27 @@ subroutine spec_output( nx, nz, n_type, fig_nx, fig_nz, &
     file_name = dir_dat // 'spec_qtm_1+2+3.dat'
     call calc_w( nx, nz, d_px, d_pz, grid_lower_x, grid_lower_z, &
           grid_Mp, fig_nx, fig_nz, file_name )
-    
+
     write(*,*), 'Hasta la vista'
 end subroutine spec_output
+
+subroutine spec_map_output( nx, nz, n_type, fig_nx, fig_nz, &
+      grid_lower_x, grid_lower_z, d_px, d_pz, err_spe)
+    
+    implicit none
+    integer, intent(in):: nx, nz, n_type, fig_nx, fig_nz
+    double precision, intent(in):: grid_lower_x, grid_lower_z, d_px, d_pz
+    double precision, intent(in):: err_spe( nx, nz, n_type )
+    integer, parameter:: fid_spec = 102
+    character(*), parameter:: dir_dat = "../../dat/"
+    double complex:: grid_Mp( nx, nz )
+    integer:: i_px, i_pz
+    character(len=128):: file_name
+    
+    ! the quantum spectra including all types of traj
+    forall(i_px=1:nx,i_pz=1:nz) grid_Mp(i_px,i_pz) = sum( err_spe(i_px,i_pz,1:4) );
+    file_name = dir_dat // 'spec_err_spe.dat';
+    call calc_w( nx, nz, d_px, d_pz, grid_lower_x, grid_lower_z, &
+          err_spe, fig_nx, fig_nz, file_name )
+    
+end subroutine spec_map_output

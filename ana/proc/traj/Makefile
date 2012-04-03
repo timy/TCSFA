@@ -34,7 +34,7 @@ all: build
 build: head build_core build_entry
 
 head:
-	cd $(DIR_ROOT)/src && python config.py re_traj
+	cd $(DIR_ROOT)/src && python config.py traj
 
 build_core:
 	cd $(DIR_CORE) && $(MAKE) build

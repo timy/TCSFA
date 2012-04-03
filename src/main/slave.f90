@@ -19,7 +19,7 @@ subroutine slave_thread( n_node, rank )
     double precision:: rand_px_0, rand_pz_0
 
     double complex:: ts, Mp
-    double precision:: x0, z0, px_inf, pz_inf, L
+    double precision:: x0, z0, px_inf, pz_inf, L, err_spe
     integer:: n_pass_x, n_pass_z, ierr, n_near_core
     integer:: seed(1)
     integer, parameter:: tag = 0
@@ -104,9 +104,9 @@ subroutine slave_thread( n_node, rank )
         !do i_ts = 2, 3
             call propagate_with_single_p0( px(i_p0), pz(i_p0), &
                   ts_guess(i_p0, i_ts), ts, Mp, x0, z0, px_inf, pz_inf, &
-                  L, n_pass_x, n_pass_z, n_near_core, ierr, tag )
+                  L, n_near_core, err_spe, ierr, tag )
             write( 103, '(11(e16.8, 1x), i4, 1x, i1)' ), &
-                  px(i_p0), pz(i_p0), ts, x0, z0, px_inf, pz_inf, L, &
+                  px(i_p0), pz(i_p0), ts, x0, z0, px_inf, pz_inf, err_spe, &
                   Mp, n_near_core, ierr 
         end do
     end do
