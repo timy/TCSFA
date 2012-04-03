@@ -7,7 +7,7 @@
 #include '../include/inc_field.h'
 
 
-#define SUB_PTB_PROP sub_ptb_prop
+#define SUB_PTB_PROP sub_ptb_prop_0
 
 ! --------------------------------------------------------------------------------
 subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
