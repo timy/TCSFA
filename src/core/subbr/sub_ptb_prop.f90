@@ -167,9 +167,6 @@ subroutine sub_ptb_prop( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag )
     Cpz = - dreal(Bpz * ts) - eye * ( dimag( eye * 0.5d0 * Cpz + Bpz * m_t0 ) )
     Cpx = - dreal(Bpx * ts) - eye * ( dimag( eye * 0.5d0 * Cpx + Bpx * m_t0 ) )
 
-    print*, "Cpz = ", Cpz
-    print*, "Cpx = ", Cpx
-
     forall(i=1:n_step+1) array_z(i) = array_z(i) + Cpz
     forall(i=1:n_step+1) array_x(i) = array_x(i) + Cpx
 
