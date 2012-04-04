@@ -200,14 +200,9 @@ with open( dir_inc+'inc_rk4.h', 'w' ) as f:
 
 ###################### REPRESENTATION ########################
 representation_opt = config.get( 'MISC', 'representation' )
-sub_Rz = config.getfloat( 'MISC', 'sub_Rz' )
-sub_Rx = config.getfloat( 'MISC', 'sub_Rx' )
 
 misc = [] 
 misc.append( def_key_val( 'REPRESENTATION_OPT', 's', representation_opt ) )
-misc.append( def_key_val( 'SUB_RZ', 'f', sub_Rz ) )
-misc.append( def_key_val( 'SUB_RX', 'f', sub_Rx ) )
-
 
 ###################### ANALYSIS & PLOT #######################
 if len( sys.argv ) > 1:
