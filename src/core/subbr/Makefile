@@ -2,22 +2,14 @@ DIR_ROOT = ../../..
 include $(DIR_ROOT)/Makefile.cfg
 
 SRC	=  \
-	sub_test.f90 \
 	sub_p0.f90 \
+	sub_rk4.f90 \
 	sub_integrate.f90 \
 	sub_traj_ptb_0.f90 \
-	sub_ptb_prop.f90 \
-	sub_ptb_prop_0.f90 \
-	sub_ptb_action.f90
-#	sub_traj_ptb_1.f90 \
-#	sub_cc_rcpr.f90 \
-#	sub_action_0.f90 \
-#	sub_action_cc.f90 \
-#	sub_prop.f90
 
 OBJ	= $(SRC:.f90=.o)
 
-#DIR_PULSE	=	./pulse
+SUBDIRS		=	./ptb
 FC_FLAGS	+=	-fpp
 INCLUDE	+=
 
@@ -29,10 +21,16 @@ INCLUDE	+=
 
 all: build
 
-build: $(OBJ)
+build: $(OBJ) build_subdir
 
-clean:
+clean: clean_subdir
 	rm -rf ./*.o 
 	rm -rf *.mod 
 	rm -rf *~
 	rm -rf *genmod.f90
+
+build_subdir: $(SUBDIRS)
+	for subdir in $(SUBDIRS); do (cd $${subdir}; $(MAKE) build); done
+
+clean_subdir: $(SUBDIRS)
+	for subdir in $(SUBDIRS); do (cd $${subdir}; $(MAKE) clean); done
