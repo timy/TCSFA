@@ -7,8 +7,8 @@
 #include '../include/inc_field.h'
 
 
-#define SUB_PTB_PROP sub_ptb_prop
-!#define SUB_PTB_PROP sub_ptb_prop_0
+#define SUB_PROP sub_bkw_prop
+!#define SUB_PROP sub_ptb_prop_0
 
 ! --------------------------------------------------------------------------------
 subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
@@ -39,9 +39,8 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
         return
     end if
 
-    call SUB_PTB_PROP( ts, ierr, z0_, x0_, vz0_, vx0_, w_sub, err_spe, tag )
+    call SUB_PROP( ts, ierr, z0_, x0_, vz0_, vx0_, w_sub, err_spe, tag )
     if( ierr > 0 ) return
-
 
 ! --------------------------------------------------------------------------------
 ! W_sub and sub-barrier trajectory
@@ -50,24 +49,11 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     write(*,'(2x, a)'), '* start to calculate action for sub-barrier '
 #endif
 
-!    W_sub = action_W_sub_0_traj_0(ts)
-
 #if MISC_PRINT > 2
     write(*,'(a)'), ''
     write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_sub                 (', W_sub,                    ' )'
 #endif
 
-    ! add the contribution from 1/r 
-!    W_sub_r_rcpr = action_W_sub_r_rcpr(ts)
-
-!#if MISC_PRINT > 2
-!    write(*,'(a)'), ''
-!    write(*,'(4x, a, f15.8, 2x, f15.8, a)'),  'W_sub_r_rcpr      (', W_sub_r_rcpr,         '  )'
-!#endif
-
-!   W_sub = W_sub + W_sub_r_rcpr
-!    W_sub = action_W_sub_ptb(ts)
-! --------------------------------------------------------------------------------
 ! DDW
 #if MISC_PRINT > 2
     write(*,'(a)'), ''

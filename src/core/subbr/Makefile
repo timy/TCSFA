@@ -5,11 +5,11 @@ SRC	=  \
 	sub_p0.f90 \
 	sub_rk4.f90 \
 	sub_integrate.f90 \
-	sub_traj_ptb_0.f90 \
+	sub_traj_0.f90 \
 
 OBJ	= $(SRC:.f90=.o)
 
-SUBDIRS		=	./ptb
+SUBDIRS		=	./ptb ./bkw
 FC_FLAGS	+=	-fpp
 INCLUDE	+=
 

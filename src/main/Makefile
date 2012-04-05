@@ -26,7 +26,7 @@ LK_FLAGS	+= 	#-m64
 
 OBJ_ENTRY	=	$(SRC:.f90=.o)
 OBJ_CORE		+=	$(DIR_CORE)/*.o $(DIR_SUBBR)/*.o $(DIR_PULSE)/*.o \
-	$(DIR_SUBBR_PTB)/*.o #$(DIR_SUBBR_BKW)/*.o
+	$(DIR_SUBBR_PTB)/*.o $(DIR_SUBBR_BKW)/*.o
 
 all: build
 
