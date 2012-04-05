@@ -46,8 +46,8 @@ program main
     print*, 'ts', ts
     print*, 'Mp', Mp
     print*, "x0, z0", x0, z0
-    print*,  px_inf, pz_inf, ierr
-    print*, "n_near_core", n_near_core
+    print*,  "px, pz", px_inf, pz_inf
+    print*, "ierr", ierr, "n_near_core", n_near_core
 
     deallocate( ts_guess )
 end program main

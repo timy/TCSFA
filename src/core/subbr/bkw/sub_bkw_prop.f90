@@ -173,12 +173,12 @@ subroutine sub_bkw_prop( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag )
 
     z_t0 = y0(3)
     x_t0 = y0(1)
-    vz_t0 = y0(4)
-    vx_t0 = y0(2)
+    vz_t0 = -eye*y0(4)
+    vx_t0 = -eye*y0(2)
     w = action_w_sub_bkw( n_step, array_t, array_z, array_x, array_vz, array_vx )
 
-    vz_ts = sub_traj_vz_0(ts) + array_vz(1)
-    vx_ts = sub_traj_vx_0(ts) + array_vx(1)
+    vz_ts = array_vz(n_step+1)
+    vx_ts = array_vx(n_step+1)
     err_spe = cdabs(0.5 * (vz_ts*vz_ts + vx_ts*vx_ts) + Ip)
 
     return    
