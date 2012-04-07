@@ -1,19 +1,16 @@
-!#define PROP_PRNT_INIT_DATA
-!#define PROP_PRNT_RK4_DATA
-
 #include '../include/inc_atom.h'
 #include '../include/inc_ts_guess.h'
 #include '../include/inc_misc.h'
 #include '../include/inc_field.h'
 
-
-#define SUB_PROP sub_bkw_prop
+#define SUB_PROP sub_bkw_prop_eps
+!#define SUB_PROP sub_bkw_prop
 !#define SUB_PROP sub_ptb_prop_0
+!#define SUB_PROP sub_ptb_prop
 
 ! --------------------------------------------------------------------------------
 subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
       ts, amp_M, x0, z0, px_inf, pz_inf, L, n_near_core, err_spe, ierr, tag )
-
 
     implicit none;
     double precision, intent(in):: p0_x, p0_z
@@ -26,7 +23,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     double complex:: ts, x0_, z0_, vx0_, vz0_
     external:: newton_equation_re
     integer:: ierr, n_near_core
-    double complex:: W_sub, W_re, action_W, DDW, amp_M !W_sub_r_rcpr, 
+    double complex:: W_sub, W_re, action_W, DDW, amp_M
     double precision:: px_inf, pz_inf, L
     double precision:: err_spe
 !#if MISC_PRINT > 2
@@ -74,13 +71,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     write(*,'(2x, a)'), '* start to obtain boundary values from ts '
 #endif
 
-    ! x0_ = init_x0( ts );
-    ! z0_ = init_z0( ts );
-    ! vx0_ = init_vx0( ts );
-    ! vz0_ = init_vz0( ts );
-
     t0 = dreal( ts );
-
     x0 = dreal( x0_ );
     z0 = dreal( z0_ );
     vx0 = dreal( vx0_ );

@@ -80,7 +80,6 @@ subroutine sub_bkw_prop( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag )
     w = dcmplx( 0d0, 0d0 )
     n_step = 0
     n_substep = 0
-    b_last = 0
 
 10  n_step = n_step + 1
     t_old = t
@@ -91,7 +90,8 @@ subroutine sub_bkw_prop( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag )
     call rk4_sub( h, t, y, y1, newton_equation_sub_bkw )
     
     ! second try
-20  h = 0.5d0 * h
+20  b_last = 0
+    h = 0.5d0 * h
     if( dabs(h) < eps ) then ! too small steps
         ierr = 2
         return

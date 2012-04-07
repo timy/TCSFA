@@ -51,7 +51,6 @@ subroutine rk4_prop( t0, tp, x0, vx0, z0, vz0, ierr, w, px, pz, L, n_near_core, 
     n_step = 0
     n_substep = 0
     n_near_core = 0
-    b_last = 0
 
 10  n_step = n_step + 1
     t_old = t
@@ -62,7 +61,8 @@ subroutine rk4_prop( t0, tp, x0, vx0, z0, vz0, ierr, w, px, pz, L, n_near_core, 
     call rk4( h, t, y, y1 )
     
     ! second try
-20  h = 0.5d0 * h
+20  b_last = 0  
+    h = 0.5d0 * h
     if( h < eps ) then ! too small steps
         ierr = 2
         return

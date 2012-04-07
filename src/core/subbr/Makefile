@@ -9,7 +9,7 @@ SRC	=  \
 
 OBJ	= $(SRC:.f90=.o)
 
-SUBDIRS		=	./ptb ./bkw
+SUBDIRS		=	./ptb ./bkw ./bkw_eps
 FC_FLAGS	+=	-fpp
 INCLUDE	+=
 
