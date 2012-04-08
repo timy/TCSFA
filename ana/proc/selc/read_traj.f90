@@ -26,7 +26,7 @@ subroutine read_traj( ns, x0, z0, r0, rank, n_traj, fid_selc, selc_count )
     do i_pos = 1, n_traj
 
         ! read in raw data
-        read( fid_traj, '(11(e16.8,1x),i4,1x,i1)', &
+        read( fid_traj, '(11(e16.8,1x),i4,1x,i2)', &
               err=101, iostat=ierr_read, end=105 ), &
               data_px_0, data_pz_0, data_ts_re, data_ts_im, &
               data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &

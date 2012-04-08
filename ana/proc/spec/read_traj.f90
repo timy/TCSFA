@@ -24,7 +24,7 @@ subroutine read_traj( nx, nz, grid_lower_x, d_px, &
 
     do i_pos = 1, n_traj
         
-        read( fid_traj, '(11(e16.8,1x),i4,1x,i1)', &
+        read( fid_traj, '(11(e16.8,1x),i4,1x,i2)', &
               err=101, iostat=ierr_read, end=105 ), &
               data_px_0, data_pz_0, data_ts_re, data_ts_im, &
               data_x_0, data_z_0, data_px_inf, data_pz_inf, data_err_spe, &

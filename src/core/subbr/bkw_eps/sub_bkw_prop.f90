@@ -36,7 +36,7 @@ subroutine sub_bkw_prop_eps( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag
     double precision, intent(out):: err_spe
     external:: newton_equation_sub_bkw_eps
 
-    integer, parameter:: n_interval = 8000
+    integer, parameter:: n_interval = 10
     integer:: i_interval
     double precision:: h_interval, interval_ta, interval_tb
 
@@ -124,7 +124,6 @@ subroutine sub_bkw_prop_eps( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag
             y_actual(2) = -eye*y(2); y_actual(4) = -eye*y(4)
 
             if(n_step > nt) then
-                print*, 'overflow of n_step @ i_interval', i_interval
                 ierr = 10  ! too many steps to store for the sub-prop
                 return
             end if
