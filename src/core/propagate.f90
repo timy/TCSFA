@@ -3,9 +3,9 @@
 #include '../include/inc_misc.h'
 #include '../include/inc_field.h'
 
-#define SUB_PROP sub_bkw_prop_eps
+!#define SUB_PROP sub_bkw_prop_eps
 !#define SUB_PROP sub_bkw_prop
-!#define SUB_PROP sub_ptb_prop_0
+#define SUB_PROP sub_ptb_prop_0
 !#define SUB_PROP sub_ptb_prop
 
 ! --------------------------------------------------------------------------------

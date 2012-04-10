@@ -3,7 +3,7 @@
 #include '../../../include/inc_misc.h'
 #include '../../../include/inc_field.h'
 
-#define ACTION_W_SUB action_w_sub_1_0_0
+#define ACTION_W_SUB action_w_sub_0_0_0
 
 !#define SUB_RZ 0d0
 !#define SUB_RX 0d0

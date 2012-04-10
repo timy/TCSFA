@@ -35,7 +35,7 @@ double complex function action_w_sub_1_1_1( n_step, t, z1, x1, vz1, vx1, ts ) re
     w_sub = - eye * w_sub
 end function action_w_sub_1_1_1
 
-! W_sub with H = 0.5*v0^2
+! W_sub with H = 0.5*v0^2; there is also an analytical version
 double complex function action_w_sub_0_0_0( n_step, t, z1, x1, vz1, vx1, ts ) result(w_sub)
     use mod_sub_ptb_prop, only: m_t0, m_ti
     implicit none
@@ -62,29 +62,8 @@ double complex function action_w_sub_0_0_0( n_step, t, z1, x1, vz1, vx1, ts ) re
     end do
     w_sub = - eye * w_sub
 end function action_w_sub_0_0_0
-! or use this for direct analytical solution
-! ////////////////////////////////////////////////////////////////////////////////
-! the sub-barrier action for the 0th-order trajectory without -1/r term
-! for the linearly polarized field along the z-axis
-double complex function action_W_sub_0_0_0_ana( ts ) result(w_sub)
-    use mod_p0, only: p0_x, p0_z
-    implicit none
-    double complex, intent(in):: ts
-    double complex, external:: PULSE_ALPHA_Z, PULSE_ALPHA2_Z
-    double complex:: t0
 
-    t0 = dcmplx( dreal(ts), 0d0 )
-    w_sub = &
-         (0.5d0 * (p0_z*p0_z+p0_x*p0_x) + IONIZATION_IP ) * ( ts - t0 ) &
-         + p0_z * ( PULSE_ALPHA_Z(ts) - PULSE_ALPHA_Z(t0) ) &
-         + 0.5d0 * ( PULSE_ALPHA2_Z(ts) - PULSE_ALPHA2_Z(t0) )
-    return;
-end function action_W_sub_0_0_0_ana
-
-
-
-
-! W_sub with H = 0.5*v0^2 - 1/|r0|
+! W_sub with H = 0.5*v0^2 - 1/|r0|; there is also an analytical version
 double complex function action_w_sub_1_0_0( n_step, t, z1, x1, vz1, vx1, ts ) result(w_sub)
     use mod_sub_ptb_prop, only: m_t0, m_ti
     implicit none

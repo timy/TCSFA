@@ -3,8 +3,9 @@ include $(DIR_ROOT)/Makefile.cfg
 
 SRC	=  \
 	sub_ptb_prop.f90 \
-	sub_ptb_prop_0.f90 \
-	sub_ptb_action.f90
+	sub_ptb_prop_ana.f90 \
+	sub_ptb_action.f90 \
+	sub_ptb_action_ana.f90
 
 OBJ	= $(SRC:.f90=.o)
 
