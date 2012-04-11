@@ -127,7 +127,7 @@ subroutine sub_ptb_prop( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag )
         y_actual(2) = -eye*y(2); y_actual(4) = -eye*y(4)
 
         if(n_step > nt) then
-            ierr = 10  ! too many steps to store for the sub-prop
+            ierr = 5  ! too many steps to store for the sub-prop
             return
         end if
 

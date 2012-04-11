@@ -22,7 +22,7 @@ clean:
 cleanall: clean
 	for subdir in $(SUBDIRS); do (cd $${subdir}; $(MAKE) $@); done
 	$(RM) $(EXE_NAME)
-	$(RM) dat/*.dat
+	$(RM) dat
 	$(RM) LOG
 	$(RM) ana/dat/*~
 	$(RM) ana/plot/*~

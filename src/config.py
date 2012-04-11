@@ -26,10 +26,14 @@ config = ConfigParser.RawConfigParser()
 config.read('../parameter.cfg')
 
 dir_inc = './include/'
-dir_dat = os.getcwd() + '/../ana/dat/'
+dir_ana_dat = os.getcwd() + '/../ana/dat/'
+dir_raw_dat = os.getcwd() + '/../dat/'
 
 if not os.path.exists( dir_inc ):
     os.makedirs( dir_inc )
+if not os.path.exists( dir_raw_dat ):
+    os.makedirs( dir_raw_dat )
+
 
 ######################### GRID ##################################
 n_px     = config.getint('GRID', 'n_px')
@@ -122,9 +126,9 @@ elif envelop == 'const':
     field.append("#include \'../pulse/pulse_const.f90\'\n")
 
 field.append( def_key_val( 'FID_PULSE', 'i', get_lun() ) )
-if not os.path.exists(dir_dat+'pulse/'):
-    os.makedirs(dir_dat+'pulse/')
-field.append( def_key_val( 'FNM_PULSE', 's', dir_dat+"pulse/pulse.dat") )
+if not os.path.exists(dir_ana_dat+'pulse/'):
+    os.makedirs(dir_ana_dat+'pulse/')
+field.append( def_key_val( 'FNM_PULSE', 's', dir_ana_dat+"pulse/pulse.dat") )
 
 with open( dir_inc+'inc_field_func.h', 'w' ) as f:
     for s in field:
@@ -209,15 +213,15 @@ if len( sys.argv ) > 1:
     if 'traj' in sys.argv:
         print 'traj mode is selected'
         misc.append( def_key_val( 'MISC_PLOT_TRAJ ', 'i', 1 ) )
-        if not os.path.exists(dir_dat+'traj/'):
-            os.makedirs(dir_dat+'traj/')
+        if not os.path.exists(dir_ana_dat+'traj/'):
+            os.makedirs(dir_ana_dat+'traj/')
         # plot trajectory/ies
         plot_rk4 = []
         plot_rk4.append( def_key_val( 'RK4_PLOT_TRAJ', 's', '') )
         plot_rk4.append( def_key_val( 'RK4_TRAJ_QUEU_FILE_ID', 'i', get_lun() ) )
-        plot_rk4.append( def_key_val( 'RK4_TRAJ_QUEU_FILE_NAME', 's', dir_dat+'traj/temp') )
+        plot_rk4.append( def_key_val( 'RK4_TRAJ_QUEU_FILE_NAME', 's', dir_ana_dat+'traj/temp') )
         plot_rk4.append( def_key_val( 'RK4_TRAJ_PLOT_FILE_ID', 'i', get_lun() ) )
-        plot_rk4.append( def_key_val( 'RK4_TRAJ_PLOT_FILE_NAME', 's', dir_dat+'traj/traj') )
+        plot_rk4.append( def_key_val( 'RK4_TRAJ_PLOT_FILE_NAME', 's', dir_ana_dat+'traj/traj') )
         
         with open( dir_inc+'inc_plot_rk4.h', 'w' ) as f:
             for s in plot_rk4:
@@ -230,7 +234,7 @@ if len( sys.argv ) > 1:
         plot_crf_track = []
         plot_crf_track.append( def_key_val( 'CRF_PLOT_STEP   ', 's', '' ) )
         plot_crf_track.append( def_key_val( 'CRF_PLOT_FILE_ID', 'i', get_lun() ) )
-        plot_crf_track.append( def_key_val( 'CRF_PLOT_FILE_NAME', 's', dir_dat+'crf_track.dat' ) )
+        plot_crf_track.append( def_key_val( 'CRF_PLOT_FILE_NAME', 's', dir_ana_dat+'crf_track.dat' ) )
 
         with open( dir_inc+'inc_plot_crf_track.h', 'w' ) as f:
             for s in plot_crf_track:
@@ -243,7 +247,7 @@ if len( sys.argv ) > 1:
         plot_crf_map.append( def_key_val( 'CRF_PLOT_N_GRID_Y', 'i', lms_ny ) )
         plot_crf_map.append( def_key_val( 'CRF_PLOT_MAP', 's', '' ) )
         plot_crf_map.append( def_key_val( 'CRF_PLOT_MAP_FIX', 's', '' ) )
-        plot_crf_map.append( def_key_val( 'CRF_PLOT_MAP_FILE_NAME', 's', dir_dat+'crf_map.dat') )
+        plot_crf_map.append( def_key_val( 'CRF_PLOT_MAP_FILE_NAME', 's', dir_ana_dat+'crf_map.dat') )
 
         with open( dir_inc+'inc_plot_crf_map.h', 'w' ) as f:
             for s in plot_crf_map:
@@ -256,7 +260,7 @@ if len( sys.argv ) > 1:
         plot_im_integrand = []
         plot_im_integrand.append( def_key_val( 'IM_PLOT_INTEGRAND  ', 's', '') )
         plot_im_integrand.append( def_key_val( 'IM_PLOT_FILE_ID', 'i', get_lun() ) )
-        plot_im_integrand.append( def_key_val( 'IM_PLOT_FILE_NAME', 's', dir_dat+'im_integrand.dat') )
+        plot_im_integrand.append( def_key_val( 'IM_PLOT_FILE_NAME', 's', dir_ana_dat+'im_integrand.dat') )
         plot_im_integrand.append( def_key_val( 'IM_PLOT_N_PTS', 'i', 200 ) )
         plot_im_integrand.append( def_key_val( 'IM_PLOT_OFFSET', 'f', 40.0) )
         
