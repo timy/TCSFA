@@ -6,11 +6,11 @@
 !#define ACTION_W_SUB action_w_sub_0_0_0_ana
 #define ACTION_W_SUB action_w_sub_1_0_0_ana
 
-subroutine sub_ptb_prop_0( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag )
+subroutine sub_ptb_prop_0( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w_sub_0, w_sub_r_recp, err_spe, tag )
     use mod_sub_ptb_prop, only: m_t0, m_ti
     implicit none
     double complex, intent(in):: ts
-    double complex:: w
+    double complex:: w_sub_0, w_sub_r_recp
     integer:: ierr, tag
     integer, parameter:: nt = RK4_NT
     integer, parameter:: ne = RK4_NE
@@ -24,8 +24,7 @@ subroutine sub_ptb_prop_0( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag )
     double precision, intent(out):: err_spe
     double complex:: vz_ts, vx_ts
     integer:: i
-    double complex, external:: ACTION_W_SUB
-
+    
     m_t0 = dreal(ts)
     m_ti = dimag(ts)
 
@@ -48,7 +47,7 @@ subroutine sub_ptb_prop_0( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag )
     x_t0 = sub_traj_x_0(dcmplx(m_t0, 0d0), ts)
     vz_t0 = sub_traj_vz_0(dcmplx(m_t0, 0d0))
     vx_t0 = sub_traj_vx_0(dcmplx(m_t0, 0d0))
-    w =  ACTION_W_SUB( ts )
+    call ACTION_W_SUB( ts, w_sub_0, w_sub_r_recp )
 
     vz_ts = sub_traj_vz_0(ts)
     vx_ts = sub_traj_vx_0(ts)
