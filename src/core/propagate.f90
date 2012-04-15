@@ -7,6 +7,7 @@
 !#define SUB_PROP sub_bkw_prop
 #define SUB_PROP sub_ptb_prop_0
 !#define SUB_PROP sub_ptb_prop
+! when calling sub_ptb_prop_0, remember to modify the code below with different arguments
 
 ! --------------------------------------------------------------------------------
 subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
@@ -21,7 +22,8 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     double complex:: ts, x0_, z0_, vx0_, vz0_
     external:: newton_equation_re
     integer:: ierr, n_near_core
-    double complex:: w_sub_0, w_sub_r_recp, w_re, action_W, DDW, amp_M
+    double complex:: w_sub, w_sub_0, w_sub_r_recp, w_sub_r_recp_abs, &
+          w_re, action_W, DDW, amp_M
     double precision:: px_inf, pz_inf, L
     double precision:: err_spe
     integer:: i_type
@@ -36,7 +38,8 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     end if
 
 !    call SUB_PROP( ts, ierr, z0_, x0_, vz0_, vx0_, w_sub, err_spe, tag )
-    call SUB_PROP( ts, ierr, z0_, x0_, vz0_, vx0_, w_sub_0, w_sub_r_recp, err_spe, tag )
+    call SUB_PROP( ts, ierr, z0_, x0_, vz0_, vx0_, w_sub_0, w_sub_r_recp, &
+          w_sub_r_recp_abs, err_spe, tag )
     if( ierr > 0 ) return
 
 ! --------------------------------------------------------------------------------
@@ -120,11 +123,12 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
             i_type = 0;
         end if
 
-        if( i_type .eq. 3 ) then
-            action_W = W_sub_0 + W_re
-        else
-            action_W = W_sub_0 + W_sub_r_recp + W_re
-        end if
+         if( (i_type .eq. 3) .or. (i_type .eq. 4) ) then
+             action_W = W_sub_0 + W_sub_r_recp_abs + W_re
+         else
+!            action_w = w_sub + w_re
+             action_W = W_sub_0 + W_sub_r_recp + W_re
+         end if
 
         ! this one is for 1s state
         amp_M = cdexp( dcmplx(0d0, 1d0) * action_W ) / DDW;

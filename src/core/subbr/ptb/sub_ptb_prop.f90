@@ -3,12 +3,12 @@
 #include '../../../include/inc_misc.h'
 #include '../../../include/inc_field.h'
 
-#define ACTION_W_SUB action_w_sub_1_0_0
+#define ACTION_W_SUB action_w_sub_1_1_1
 
-!#define SUB_RZ 0d0
-!#define SUB_RX 0d0
-#define SUB_RZ dreal( eye * simpson_sub(0d0, m_ti, 1000, ts, sub_ptb1_fz) )
-#define SUB_RX dreal( eye * simpson_sub(0d0, m_ti, 1000, ts, sub_ptb1_fx) )
+#define SUB_RZ 0d0
+#define SUB_RX 0d0
+!#define SUB_RZ dreal( eye * simpson_sub(0d0, m_ti, 1000, ts, sub_ptb1_fz) )
+!#define SUB_RX dreal( eye * simpson_sub(0d0, m_ti, 1000, ts, sub_ptb1_fx) )
 
 module mod_sub_ptb_prop
     implicit none
@@ -189,10 +189,10 @@ subroutine sub_ptb_prop( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w, err_spe, tag )
     call rk4_plot_close_file()
 #endif
 
-    z_t0 = sub_traj_z_0(dcmplx(m_t0, 0d0), ts) !+ array_z(n_step+1)
-    x_t0 = sub_traj_x_0(dcmplx(m_t0, 0d0), ts) !+ array_x(n_step+1)
-    vz_t0 = sub_traj_vz_0(dcmplx(m_t0, 0d0)) !+ array_vz(n_step+1)
-    vx_t0 = sub_traj_vx_0(dcmplx(m_t0, 0d0)) !+ array_vx(n_step+1)
+    z_t0 = sub_traj_z_0(dcmplx(m_t0, 0d0), ts) + array_z(n_step+1)
+    x_t0 = sub_traj_x_0(dcmplx(m_t0, 0d0), ts) + array_x(n_step+1)
+    vz_t0 = sub_traj_vz_0(dcmplx(m_t0, 0d0)) + array_vz(n_step+1)
+    vx_t0 = sub_traj_vx_0(dcmplx(m_t0, 0d0)) + array_vx(n_step+1)
     w =  ACTION_W_SUB( n_step, array_t, array_z, array_x, array_vz, array_vx, ts )
 
     vz_ts = sub_traj_vz_0(ts) + array_vz(1)

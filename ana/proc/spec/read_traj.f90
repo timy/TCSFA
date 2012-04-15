@@ -119,12 +119,24 @@ end subroutine read_traj
 
 integer function filter_condition( px0, pz0, ts_re, ts_im, x0, z0, px, pz, err_spe, M_re, M_im, n_near_core, i_type )
     implicit none
-    double precision, intent(in):: px0, pz0, ts_re, ts_im, x0, z0, px, pz, err_spe, M_re, M_im
+    double precision, intent(in):: px0, pz0, ts_re, ts_im, x0, z0, px, pz, err_spe
+    double precision:: M_re, M_im
     integer, intent(in):: n_near_core, i_type
     double complex, external:: pulse_A_z
     double precision:: vz0
+    double complex, parameter:: eye = dcmplx(0d0, 1d0)
+    double precision, parameter:: PI = 2d0 * dasin(1d0)
+    double precision, parameter:: phi = 1.0d0 * PI
+    double complex:: Mp
 
     filter_condition = 1
+
+    if( ( i_type .eq. 3 ) .or. ( i_type .eq. 4 ) ) then
+        Mp = dcmplx( M_re, M_im )
+        Mp = Mp * cdexp(eye*phi) * 0.6d0
+        M_re = dreal( Mp )
+        M_im = dimag( Mp )
+    end if
 
 !!$    if( (i_type .eq. 2) .and. n_near_core > 0 ) then
 !!$        filter_condition = 0
