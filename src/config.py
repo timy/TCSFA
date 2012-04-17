@@ -122,7 +122,7 @@ with open( dir_inc+'inc_field.h', 'w' ) as f:
 field = []
 if envelope == 'sin2':
     field.append("#include \'../pulse/pulse_sin2.f90\'\n")
-elif envelop == 'const':
+elif envelope == 'const':
     field.append("#include \'../pulse/pulse_const.f90\'\n")
 
 field.append( def_key_val( 'FID_PULSE', 'i', get_lun() ) )
