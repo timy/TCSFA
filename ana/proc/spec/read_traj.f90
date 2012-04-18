@@ -1,6 +1,6 @@
 subroutine read_traj( nx, nz, grid_lower_x, d_px, &
       grid_lower_z, d_pz, n_type, rank, n_traj, &
-      traj_count, err_count, qtm_Mp, cls_Mp, err_spe )
+      traj_count, err_count, qtm_Mp, cls_Mp, L )
     implicit none
     integer, parameter:: fid_traj = 102
     integer, intent(in):: nx, nz, n_type, rank, n_traj
@@ -8,15 +8,15 @@ subroutine read_traj( nx, nz, grid_lower_x, d_px, &
     integer:: traj_count( nx, nz, n_type ), err_count( 4 )
     double precision:: cls_Mp( nx, nz, n_type )
     double complex:: qtm_Mp( nx, nz, n_type )
-    double precision:: err_spe( nx, nz, n_type )
+    double precision:: L( nx, nz, n_type )
     character(len=64):: file_name
     integer:: i_pos, i_px, i_pz, i_type, ierr_read, b_filter
     integer, parameter:: b_mirrow = 1
 
     double precision:: data_px_0, data_pz_0, data_ts_re, data_ts_im, &
-          data_x_0, data_z_0, data_px_inf, data_pz_inf, data_err_spe, &
+          data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
           data_M_re, data_M_im
-    integer:: data_n_pass_x, data_n_pass_z, data_ierr, data_n_near_core
+    integer:: data_n_pass_x, data_n_pass_z, data_ierr, data_n_step
     integer, external:: filter_condition
 
     write( file_name, '(a,i3,a)' ), '../../../dat/traj_', rank, '.dat'
@@ -24,11 +24,10 @@ subroutine read_traj( nx, nz, grid_lower_x, d_px, &
 
     do i_pos = 1, n_traj
         
-        read( fid_traj, '(11(e16.8,1x),i4,1x,i2)', &
-              err=101, iostat=ierr_read, end=105 ), &
+        read( fid_traj, *, err=101, iostat=ierr_read, end=105 ), &
               data_px_0, data_pz_0, data_ts_re, data_ts_im, &
-              data_x_0, data_z_0, data_px_inf, data_pz_inf, data_err_spe, &
-              data_M_re, data_M_im, data_n_near_core, data_ierr;
+              data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
+              data_M_re, data_M_im, data_n_step, data_ierr
 
         if( data_ierr > 0 ) then
 
@@ -80,8 +79,8 @@ subroutine read_traj( nx, nz, grid_lower_x, d_px, &
         end if
 
         b_filter = filter_condition( data_px_0, data_pz_0, data_ts_re, data_ts_im, &
-              data_x_0, data_z_0, data_px_inf, data_pz_inf, data_err_spe, data_M_re, data_M_im, &
-              data_n_near_core, i_type )
+              data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, data_M_re, data_M_im, &
+              data_n_step, i_type )
 
         if( b_filter .eq. 1 ) then
             ! count for statistics information
@@ -95,9 +94,9 @@ subroutine read_traj( nx, nz, grid_lower_x, d_px, &
             cls_Mp(i_px,i_pz,i_type) = cls_Mp(i_px,i_pz,i_type) &
                   + dsqrt( data_M_re**2d0 + data_M_im**2d0 );
 
-            ! err_spe
-            err_spe(i_px,i_pz,i_type) = err_spe(i_px,i_pz,i_type) &
-                  + data_err_spe
+            ! L
+            L(i_px,i_pz,i_type) = L(i_px,i_pz,i_type) &
+                  + data_L
         end if
 
         cycle;
@@ -117,11 +116,11 @@ end subroutine read_traj
 
 
 
-integer function filter_condition( px0, pz0, ts_re, ts_im, x0, z0, px, pz, err_spe, M_re, M_im, n_near_core, i_type )
+integer function filter_condition( px0, pz0, ts_re, ts_im, x0, z0, px, pz, L, M_re, M_im, n_step, i_type )
     implicit none
-    double precision, intent(in):: px0, pz0, ts_re, ts_im, x0, z0, px, pz, err_spe
+    double precision, intent(in):: px0, pz0, ts_re, ts_im, x0, z0, px, pz, L
     double precision:: M_re, M_im
-    integer, intent(in):: n_near_core, i_type
+    integer, intent(in):: n_step, i_type
     double complex, external:: pulse_A_z
     double precision:: vz0
     double complex, parameter:: eye = dcmplx(0d0, 1d0)
@@ -138,7 +137,7 @@ integer function filter_condition( px0, pz0, ts_re, ts_im, x0, z0, px, pz, err_s
         M_im = dimag( Mp )
     end if
 
-!!$    if( (i_type .eq. 2) .and. n_near_core > 0 ) then
+!!$    if( (i_type .eq. 2) .and. n_step > 0 ) then
 !!$        filter_condition = 0
 !!$    end if
 !!$

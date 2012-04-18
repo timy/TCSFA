@@ -11,7 +11,7 @@
 
 ! --------------------------------------------------------------------------------
 subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
-      ts, amp_M, x0, z0, px_inf, pz_inf, L, n_near_core, err_spe, ierr, tag )
+      ts, amp_M, x0, z0, px_inf, pz_inf, L, n_step, err_spe, ierr, tag )
 
     implicit none;
     double precision, intent(in):: p0_x, p0_z
@@ -21,7 +21,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     double precision:: t0, x0, z0, vx0, vz0
     double complex:: ts, x0_, z0_, vx0_, vz0_
     external:: newton_equation_re
-    integer:: ierr, n_near_core
+    integer:: ierr, n_step
     double complex:: w_sub, w_sub_0, w_sub_r_recp, w_sub_r_recp_abs, &
           w_re, action_W, DDW, amp_M
     double precision:: px_inf, pz_inf, L
@@ -105,7 +105,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     write(*,'(2x, a)'), '* start to calculate real trajectory with rk4'
 #endif
 
-    call rk4_prop( t0, Tp, x0, vx0, z0, vz0, ierr, W_re, px_inf, pz_inf, L, n_near_core, tag );
+    call rk4_prop( t0, Tp, x0, vx0, z0, vz0, ierr, W_re, px_inf, pz_inf, L, n_step, tag );
 
     if( ierr == 0 ) then
 

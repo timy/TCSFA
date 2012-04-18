@@ -14,12 +14,12 @@ program main
     integer, parameter:: fid_info = 21
     double precision:: x0, z0, px_inf, pz_inf, L, w, w_max
     double complex:: ts, Mp, Mp_total
-    integer:: n_pass_x, n_pass_z, n_near_core, ierr
+    integer:: n_pass_x, n_pass_z, n_step, ierr
     ! data read from selc_*.dat
     double precision:: data_px_0, data_pz_0, data_ts_re, data_ts_im, &
           data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
           data_M_re, data_M_im
-    integer:: count, i_pos, i_type, ierr_read, data_n_near_core
+    integer:: count, i_pos, i_type, ierr_read, data_n_step
     character(len=128):: filename
 
     ! read initial data from file "selc_*.dat"
@@ -34,7 +34,7 @@ program main
             err=101, iostat=ierr_read, end=105 ), &
             data_px_0, data_pz_0, data_ts_re, data_ts_im, &
             data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
-            data_M_re, data_M_im, data_n_near_core, i_type
+            data_M_re, data_M_im, data_n_step, i_type
        
        i_pos = i_pos + 1
 
@@ -53,7 +53,7 @@ program main
        call propagate_with_single_p0( data_px_0, data_pz_0, &
             dcmplx(data_ts_re, data_ts_im), &
             ts, Mp, x0, z0, px_inf, pz_inf, L, &
-            n_pass_x, n_pass_z, n_near_core, ierr, count )
+            n_pass_x, n_pass_z, n_step, ierr, count )
        write(*, '(a,i3)'), 'traj: ', count
 
        write( fid_info, '(i4,1x,e15.8,1x,i1)' ), count, &

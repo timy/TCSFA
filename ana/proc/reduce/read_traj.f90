@@ -11,7 +11,7 @@ subroutine read_traj( rank, n_traj, fid_output, selc_count )
     double precision:: data_px_0, data_pz_0, data_ts_re, data_ts_im, &
           data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
           data_M_re, data_M_im
-    integer:: data_n_near_core, data_ierr
+    integer:: data_n_step, data_ierr
     integer, parameter:: b_mirrow = 1
 
     err_count = 0
@@ -23,11 +23,10 @@ subroutine read_traj( rank, n_traj, fid_output, selc_count )
     do i_pos = 1, n_traj
 
         ! read in raw data
-        read( fid_traj, '(11(e16.8,1x),i4,1x,i1)', &
-              err=101, iostat=ierr_read, end=105 ), &
+        read( fid_traj, *, err=101, iostat=ierr_read, end=105 ), &
               data_px_0, data_pz_0, data_ts_re, data_ts_im, &
               data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
-              data_M_re, data_M_im, data_n_near_core, data_ierr;
+              data_M_re, data_M_im, data_n_step, data_ierr;
 
         ! check errors
         if( data_ierr > 0 ) then
@@ -71,7 +70,7 @@ subroutine read_traj( rank, n_traj, fid_output, selc_count )
         write( fid_output, '(11(e16.8,1x),i4,1x,i1)' ), &
               data_px_0, data_pz_0, data_ts_re, data_ts_im, &
               data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
-              data_M_re, data_M_im, data_n_near_core, i_type
+              data_M_re, data_M_im, data_n_step, i_type
         selc_count = selc_count + 1
 
         cycle

@@ -5,31 +5,31 @@ subroutine read_selc( n_traj, fid_selc )
     double precision:: data_px_0, data_pz_0, data_ts_re, data_ts_im, &
           data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
           data_M_re, data_M_im
-    integer:: data_n_near_core, i_type, i_pos, os
+    integer:: data_n_step, i_type, i_pos, os
     double precision, allocatable:: ts_re(:), ts_im(:), Mp_re(:), Mp_im(:), &
           x0(:), z0(:), p0_x(:), p0_z(:), L(:), w(:)
-    integer, allocatable:: n_near_core(:), types(:)
+    integer, allocatable:: n_step(:), types(:)
     character(*), parameter:: dir_dat = "../../dat/"
 
     allocate( ts_re(n_traj) ); allocate( ts_im(n_traj) )
     allocate( Mp_re(n_traj) ); allocate( Mp_im(n_traj) )
     allocate( x0(n_traj) ); allocate( z0(n_traj) )
     allocate( p0_x(n_traj) ); allocate( p0_z(n_traj) )
-    allocate( n_near_core(n_traj) )
+    allocate( n_step(n_traj) )
     allocate( L(n_traj) ); allocate( types(n_traj) )
     allocate( w(n_traj) )
 
     do i_pos = 1, n_traj
-        read( fid_selc, '(11(e16.8e3,1x),i4,1x,i1)' ), &
+        read(fid_selc, *), &
               data_px_0, data_pz_0, data_ts_re, data_ts_im, &
               data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
-              data_M_re, data_M_im, data_n_near_core, i_type
+              data_M_re, data_M_im, data_n_step, i_type
 
         ts_re(i_pos) = data_ts_re; ts_im(i_pos) = data_ts_im
         Mp_re(i_pos) = data_M_re; Mp_im(i_pos) = data_M_im
         x0(i_pos) = data_x_0; z0(i_pos) = data_z_0
         p0_x(i_pos) = data_px_0; p0_z(i_pos) = data_pz_0
-        n_near_core(i_pos) = data_n_near_core
+        n_step(i_pos) = data_n_step
         L(i_pos) = data_L; types(i_pos) = i_type
         w(i_pos) = dsqrt( Mp_re(i_pos)**2 + Mp_im(i_pos)**2 )
     end do
@@ -92,7 +92,7 @@ subroutine read_selc( n_traj, fid_selc )
     deallocate( Mp_re ); deallocate( Mp_im )
     deallocate( x0 ); deallocate( z0 ); 
     deallocate( p0_x ); deallocate( p0_z ); 
-    deallocate( n_near_core )
+    deallocate( n_step )
     deallocate( L ); deallocate( types )
     deallocate( w )
     

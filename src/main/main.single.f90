@@ -8,7 +8,7 @@ program main
     double precision:: px, pz
     double precision:: x0, z0, px_inf, pz_inf, L
     double complex:: ts, Mp
-    integer:: n_near_core, ierr
+    integer:: n_step, ierr
     double complex, allocatable:: ts_guess(:)
     double complex, external:: spe
     integer:: n_ts, i
@@ -39,15 +39,19 @@ program main
 
     ! start propagation with designated ts
     call propagate_with_single_p0( px, pz, ts_guess(4), ts, Mp, x0, z0, px_inf, pz_inf, L, &
-          n_near_core, err_spe, ierr, tag )
+          n_step, err_spe, ierr, tag )
 
+    open(101, file='dat/test.dat')
+    write(101, '(2(f0.7,1x), 2(f0.3,1x), 2(f0.2,1x), 2(f0.4,1x), 3(es10.3,1x), i0,1x,i0)' ), &
+         px, pz, ts, x0, z0, px_inf, pz_inf, L, Mp, n_step, ierr
+    close(101)
 
     print*, 'p0_x, p0_z', px, pz
     print*, 'ts', ts
     print*, 'Mp', Mp
     print*, "x0, z0", x0, z0
     print*,  "px, pz", px_inf, pz_inf
-    print*, "ierr", ierr, "n_near_core", n_near_core
+    print*, "ierr", ierr, "n_step", n_step
 
     deallocate( ts_guess )
 end program main

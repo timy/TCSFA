@@ -3,7 +3,7 @@
 #include '../include/inc_misc.h'
 #include '../include/inc_field.h'
 
-subroutine rk4_prop( t0, tp, x0, vx0, z0, vz0, ierr, w, px, pz, L, n_near_core, tag )
+subroutine rk4_prop( t0, tp, x0, vx0, z0, vz0, ierr, w, px, pz, L, n_step, tag )
 
     implicit none
     double precision:: t0, tp, x0, vx0, z0, vz0, px, pz, L
@@ -22,7 +22,7 @@ subroutine rk4_prop( t0, tp, x0, vx0, z0, vz0, ierr, w, px, pz, L, n_near_core, 
     double precision:: h, h0, h_old, t, t_old
     double precision:: y(ne), y0(ne), y_old(ne), y_mid(ne), y1(ne), y2(ne), y_new(ne)
     double precision:: ratio, r
-    integer:: n_step, n_substep, n_near_core, b_near_core
+    integer:: i_step, n_step, n_substep, n_near_core, b_near_core
     double complex, external:: action_w_re
     integer:: b_last
     
@@ -48,11 +48,12 @@ subroutine rk4_prop( t0, tp, x0, vx0, z0, vz0, ierr, w, px, pz, L, n_near_core, 
     h = h0
     y = y0
     w = dcmplx( 0d0, 0d0 )
+    i_step = 0
     n_step = 0
     n_substep = 0
     n_near_core = 0
 
-10  n_step = n_step + 1
+10  i_step = i_step + 1
     t_old = t
     h_old = h
     y_old = y
@@ -92,8 +93,9 @@ subroutine rk4_prop( t0, tp, x0, vx0, z0, vz0, ierr, w, px, pz, L, n_near_core, 
 
 
 #ifdef MISC_PLOT_TRAJ
-        call rk4_plot_write_real( n_step, t, y, h, n_substep )
+        call rk4_plot_write_real( i_step, t, y, h, n_substep )
 #endif
+        n_step = n_step + n_substep
         n_substep = 0
 
         ! adjust the step length to accelerate the calculation

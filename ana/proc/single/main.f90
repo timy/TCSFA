@@ -12,7 +12,7 @@ program main
     double precision:: px, pz
     double precision:: x0, z0, px_inf, pz_inf, L
     double complex:: ts, Mp
-    integer:: n_pass_x, n_pass_z, n_near_core, ierr
+    integer:: n_pass_x, n_pass_z, n_step, ierr
     double complex, allocatable:: ts_guess(:)
     double complex, external:: spe
     integer:: n_ts
@@ -38,7 +38,7 @@ program main
     print*, 'ts_guess', ts_guess(1:n_ts)
 
     call propagate_with_single_p0( px, pz, ts_guess(4), ts, Mp, x0, z0, px_inf, pz_inf, L, &
-          n_pass_x, n_pass_z, n_near_core, ierr, tag )
+          n_pass_x, n_pass_z, n_step, ierr, tag )
 
 
     print*, 'p0_x, p0_z', px, pz
@@ -46,7 +46,7 @@ program main
     print*, 'Mp', Mp
     print*, "x0, z0", x0, z0
     print*,  px_inf, pz_inf, ierr
-    print*, "n_near_core", n_near_core
+    print*, "n_step", n_step
 
     deallocate( ts_guess )
 end program main
