@@ -43,7 +43,7 @@ subroutine rk4_plot_write_real( n_step, t, y, h, n_substep )
     double precision, intent(in):: y(4)
     integer, intent(in):: n_step, n_substep
     ! order of z, x, vz, vx
-    write( os, '(i6,x,6(e16.8,x),i6)' ), n_step, t, y(3), y(1), y(4), y(2), h, n_substep
+    write( os, '(i6,x,6(f0.4,x),i6)' ), n_step, t, y(3), y(1), y(4), y(2), h, n_substep
     return
 end subroutine rk4_plot_write_real
 
@@ -55,7 +55,7 @@ subroutine rk4_plot_write_cmplx( n_step, t, y, h, n_substep )
     double complex, intent(in):: y(4)
     integer, intent(in):: n_step, n_substep
     ! order of z, x, vz, vx
-    write( os, '(i6,x,10(e16.8,x),i6)' ), n_step, t, y(3), y(1), y(4), y(2), h, n_substep
+    write( os, '(i6,x,10(f0.4,x),i6)' ), n_step, t, y(3), y(1), y(4), y(2), h, n_substep
     return
 end subroutine rk4_plot_write_cmplx
 

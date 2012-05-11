@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-file_name = 'spec_qtm_all.dat'
+file_name = 'spec_qtm_1+2.dat'
 file_dir = '../dat/'
 nz, nx = 1600, 400
 grid_lower_x, grid_upper_x = 0.0, 1.0

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.cm as cm
 import  matplotlib.pyplot as plt
-file_index = 1
+file_index = 2
 filename = '../dat/selc/selc_%3d.dat' % file_index
 data = np.loadtxt( filename )
 px_0 = data[:, 0]
@@ -15,6 +15,7 @@ pz = data[:, 7]
 L = data[:, 8]
 M_re = data[:, 9]
 M_im = data[:, 10]
+n_step = data[:, 11]
 iType = data[:, 12]
 w2 = M_re**2 + M_im**2
 phi = np.arctan2(M_im, M_re) * 180 / np.pi
@@ -44,13 +45,14 @@ ymax = y.max()
 fig = plt.figure(figsize=(figsize_x, figsize_y))
 fig.canvas.set_window_title(filename) 
 #plt.subplots_adjust(hspace=0.5)
-plt.subplots_adjust(bottom=0.1, left=0.25, right=0.9, top=0.95, hspace=0.05)
-ax = plt.subplot(211, aspect='equal')
+#plt.subplots_adjust(bottom=0.1, left=0.25, right=0.9, top=0.95, hspace=0.05)
+#ax = plt.subplot(211, aspect='equal')
+ax = plt.subplot(211)
 #ax = fig.add_subplot(211, aspect='equal')
 ax.hexbin(x, y, gridsize=50, cmap=cm.jet, bins='log', C=w2)
 #ax.grid(True)
-plt.xlim([-0.03, 0.03])
-plt.ylim([-0.03, 0.03])
+#plt.xlim([-0.03, 0.03])
+#plt.ylim([-0.03, 0.03])
 #ax.set_xticks([-0.03, -0.015, 0.0, 0.015, 0.03])
 ax.set_xticklabels([])
 ax.set_yticks([-0.03, -0.015, 0.0, 0.015, 0.03])
@@ -59,7 +61,7 @@ plt.ylabel(r'$\mathrm{Im}[M_p]$ (arb.)')
 #plt.ylim([0.8, 4.2])
 
 x = M_re
-y = z0
+y = ts_re
 
 xmin = x.min()
 xmax = x.max()
@@ -70,8 +72,8 @@ ylen = ymax - ymin
 ax = plt.subplot(212)
 ax.hexbin(x, y, gridsize=50, cmap=cm.jet, bins='log', C=w2)
 #ax.grid(True)
-plt.xlim([-0.03, 0.03])
-plt.ylim([ymin-0.1*ylen, ymax+0.1*ylen])
+#plt.xlim([-0.03, 0.03])
+#plt.ylim([ymin-0.1*ylen, ymax+0.1*ylen])
 #x.xlim
 #plt.ylim([-0.03, 0.03])
 ax.set_xticks([-0.03, -0.015, 0.0, 0.015, 0.03])

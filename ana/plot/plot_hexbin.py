@@ -15,13 +15,16 @@ pz = data[:, 7]
 L = data[:, 8]
 M_re = data[:, 9]
 M_im = data[:, 10]
+n_step = data[:, 11]
 iType = data[:, 12]
 w2 = M_re**2 + M_im**2
 phi = np.arctan2(M_im, M_re) * 180 / np.pi
 w2[w2<1e-99] = 1e-99
 
+# x = M_re
+# y = M_im
 x = M_re
-y = M_im
+y = ts_re
 
 xmin = x.min()
 xmax = x.max()

@@ -74,10 +74,11 @@ subroutine read_traj( ns, x0, z0, r0, rank, n_traj, fid_selc, selc_count )
                 print*, 'unknown type!';
             end if
 
-            write( fid_selc(i_s), '(11(e16.8,1x),i4,1x,i1)' ), &
+            write( fid_selc(i_s), '(2(f0.7,1x), 2(f0.3,1x), 2(f0.2,1x), 2(f0.4,1x), 3(es10.3,1x), i0,1x,i0)' ), &
                   data_px_0, data_pz_0, data_ts_re, data_ts_im, &
                   data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
                   data_M_re, data_M_im, data_n_step, i_type
+
             selc_count = selc_count + 1
             
         end do

@@ -123,12 +123,12 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
             i_type = 0;
         end if
 
-         if( (i_type .eq. 3) .or. (i_type .eq. 4) ) then
-             action_W = W_sub_0 + W_sub_r_recp_abs + W_re
-         else
+!         if( (i_type .eq. 3) .or. (i_type .eq. 4) ) then
+!             action_W = W_sub_0 + W_sub_r_recp_abs + W_re
+!         else
 !            action_w = w_sub + w_re
              action_W = W_sub_0 + W_sub_r_recp + W_re
-         end if
+!         end if
 
         ! this one is for 1s state
         amp_M = cdexp( dcmplx(0d0, 1d0) * action_W ) / DDW;

@@ -33,7 +33,7 @@ subroutine calc_w( nx, nz, d_px, d_pz, grid_lower_x, grid_lower_z, &
             
             if ( dabs(fig_w(i_px,i_pz)) < 1d-99 ) fig_w(i_px,i_pz) = 1d-99;
             if ( dabs(fig_w(i_px,i_pz)) > 1d99 ) fig_w(i_px,i_pz) = 1d99;
-            write( fid_spec, '(3(es,1x))' ), fig_pz(i_pz), fig_px(i_px), fig_w(i_px,i_pz);
+            write( fid_spec, '(2(f0.4,1x), es10.3)' ), fig_pz(i_pz), fig_px(i_px), fig_w(i_px,i_pz);
                 
         end do
     end do

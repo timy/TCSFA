@@ -108,7 +108,7 @@ subroutine histogram( n, a, n_bin, os )
     
     a_min = minval(a)
     a_max = maxval(a)
-    write(*,'(2(a, e16.8e3, 2x))'), 'min = ', a_min, 'max = ', a_max
+    write(*,'(2(a, es10.3, 2x))'), 'min = ', a_min, 'max = ', a_max
     da = ( a_max - a_min ) / ( n_bin - 1d0 )
     if( da .eq. 0d0 ) then
         write(*, '(a)'), 'histogram: no interval, neglected'
@@ -131,7 +131,7 @@ subroutine histogram( n, a, n_bin, os )
 
     if( os > 0 ) then
         do i = 1, n_bin
-            write( os, '(2(e16.8e3,1x))' ), a_min + (i-1)*da, bin(i)
+            write( os, '(2(e10.3,1x))' ), a_min + (i-1)*da, bin(i)
         end do
     end if
 
@@ -149,7 +149,7 @@ subroutine histogram_w( n, a, w, types, n_bin, os )
     
     a_min = minval(a)
     a_max = maxval(a)
-    write(*,'(2(a, e16.8e3, 2x))'), 'min = ', a_min, 'max = ', a_max
+    write(*,'(2(a, es10.3, 2x))'), 'min = ', a_min, 'max = ', a_max
     da = ( a_max - a_min ) / ( n_bin - 1d0 )
     if( da .eq. 0d0 ) then
         write(*, '(a)'), 'histogram: no interval, neglected'
@@ -165,7 +165,7 @@ subroutine histogram_w( n, a, w, types, n_bin, os )
         
     if( os > 0 ) then
         do i = 1, n_bin
-            write( os, '(5(e16.8e3,1x))' ), a_min + (i-1)*da, ( bin(i,j), j=1,4 )
+            write( os, '(5(es10.3,1x))' ), a_min + (i-1)*da, ( bin(i,j), j=1,4 )
         end do
     end if
 

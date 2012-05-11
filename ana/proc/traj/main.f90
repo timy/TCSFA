@@ -8,13 +8,13 @@
 
 program main
     implicit none
-    integer, parameter:: file_index = 1
+    integer, parameter:: file_index = 2
     integer, parameter:: n_traj = 100
     integer, parameter:: fid_selc = 20
     integer, parameter:: fid_info = 21
-    double precision:: x0, z0, px_inf, pz_inf, L, w, w_max
+    double precision:: x0, z0, px_inf, pz_inf, L, w, w_max, err_spe
     double complex:: ts, Mp, Mp_total
-    integer:: n_pass_x, n_pass_z, n_step, ierr
+    integer:: n_step, ierr
     ! data read from selc_*.dat
     double precision:: data_px_0, data_pz_0, data_ts_re, data_ts_im, &
           data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
@@ -51,9 +51,9 @@ program main
 
        call set_p0( data_px_0, data_pz_0 )  
        call propagate_with_single_p0( data_px_0, data_pz_0, &
-            dcmplx(data_ts_re, data_ts_im), &
-            ts, Mp, x0, z0, px_inf, pz_inf, L, &
-            n_pass_x, n_pass_z, n_step, ierr, count )
+             dcmplx(data_ts_re, data_ts_im), &
+             ts, Mp, x0, z0, px_inf, pz_inf, L, n_step, err_spe, ierr, count )
+
        write(*, '(a,i3)'), 'traj: ', count
 
        write( fid_info, '(i4,1x,e15.8,1x,i1)' ), count, &

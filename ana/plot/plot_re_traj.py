@@ -4,8 +4,8 @@ import os
 
 traj_dir = '../dat/traj/'
 n_traj_plot = len([f for f in os.listdir(traj_dir) 
-                   if f.startswith('traj') ])
-print n_traj_plot
+                   if f.startswith('traj_re') ])
+print 'No. of trajectories: ', n_traj_plot
 
 
 # read the info file
@@ -40,7 +40,7 @@ ax = plt.subplot( 111, frameon=True )
 plt.hold( True )
 
 for i in range(n_traj_plot):
-    data = np.loadtxt( traj_dir + "traj%5d.dat"%(i+1) )
+    data = np.loadtxt( traj_dir + "traj_re_%5d.dat"%(i+1) )
     plt.plot(data[:,2], data[:,3], lw=lw[i], label="%d"%i, c=cl[i] )
     plt.plot(data[0,2], data[0,3], 'd', c='r')
 

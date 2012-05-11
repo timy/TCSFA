@@ -14,6 +14,9 @@ OUT			=	$(EXE_NAME)
 DIR_CORE	= 	$(DIR_ROOT)/src/core
 DIR_PULSE	=	$(DIR_CORE)/pulse
 DIR_SUBBR	=	$(DIR_CORE)/subbr
+DIR_SUBBR_PTB	=	$(DIR_SUBBR)/ptb
+DIR_SUBBR_BKW	=	$(DIR_SUBBR)/bkw
+DIR_SUBBR_BKW_EPS	=	$(DIR_SUBBR)/bkw_eps
 
 FC_FLAGS	+= 	-fpp
 INCLUDE	+= 	-I. -I$(DIR_CORE) -I$(DIR_PULSE) -I$(DIR_SUBBR)
@@ -27,7 +30,8 @@ LK_FLAGS	+= 	#-m64
 	$(FC) $(FC_FLAGS) $(INCLUDE) $< -c -o $@ 
 
 OBJ_ENTRY	=	$(SRC:.f90=.o)
-OBJ_CORE	+=	$(DIR_CORE)/*.o $(DIR_SUBBR)/*.o $(DIR_PULSE)/*.o
+OBJ_CORE	+=	$(DIR_CORE)/*.o $(DIR_SUBBR)/*.o $(DIR_PULSE)/*.o \
+	$(DIR_SUBBR_PTB)/*.o $(DIR_SUBBR_BKW)/*.o $(DIR_SUBBR_BKW_EPS)/*.o
 
 all: build
 

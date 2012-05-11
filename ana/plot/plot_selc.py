@@ -45,7 +45,8 @@ data_w = data[:,2]
 pz = data_pz.reshape( nx, nz )
 px = data_px.reshape( nx, nz )
 w = data_w.reshape( nx, nz )
-w_max = np.amax(w)
+#w_max = np.amax(w)
+w_max = 1e0
 w_lower_limit = np.log10(w_max) - orders
 i_too_small = np.where( w < 10 ** w_lower_limit )
 w[i_too_small] = 10 ** w_lower_limit
@@ -58,8 +59,8 @@ fig.patch.set_alpha(0.0)
 spec = plt.imshow( w, interpolation='bilinear',
             origin='lower', cmap=plt.cm.jet,
             extent=[fig_lower_z, fig_upper_z, fig_lower_x, fig_upper_x] )
-plt.xlim([-1.0, -0.8])
-plt.ylim([0.05, 0.25])
+#plt.xlim([-1.0, -0.8])
+#plt.ylim([0.05, 0.25])
 plt.xlabel(r'$p_z$ (a.u.)')
 plt.ylabel(r'$p_x$ (a.u.)')
 plt.grid()

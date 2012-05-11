@@ -130,11 +130,13 @@ integer function filter_condition( px0, pz0, ts_re, ts_im, x0, z0, px, pz, L, M_
 
     filter_condition = 1
 
+!    if( M_re*M_re + M_im*M_im > 0.6**2) filter_condition = 0
+
     if( ( i_type .eq. 3 ) .or. ( i_type .eq. 4 ) ) then
-        Mp = dcmplx( M_re, M_im )
-        Mp = Mp * cdexp(eye*phi) * 0.6d0
-        M_re = dreal( Mp )
-        M_im = dimag( Mp )
+        !         Mp = dcmplx( M_re, M_im )
+        Mp = Mp * 0.2d0
+        !         M_re = dreal( Mp )
+        !         M_im = dimag( Mp )
     end if
 
 !!$    if( (i_type .eq. 2) .and. n_step > 0 ) then
