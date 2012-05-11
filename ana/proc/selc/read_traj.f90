@@ -12,7 +12,7 @@ subroutine read_traj( ns, x0, z0, r0, rank, n_traj, fid_selc, selc_count )
     integer:: i_pos, i_type, i_s, ierr_read
     double precision:: r2
     double precision:: data_px_0, data_pz_0, data_ts_re, data_ts_im, &
-          data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
+          data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L1, data_L2, &
           data_M_re, data_M_im
     integer:: data_n_step, data_ierr
     integer, parameter:: b_mirrow = 1
@@ -28,8 +28,8 @@ subroutine read_traj( ns, x0, z0, r0, rank, n_traj, fid_selc, selc_count )
         ! read in raw data
         read( fid_traj, *, err=101, iostat=ierr_read, end=105 ), &
               data_px_0, data_pz_0, data_ts_re, data_ts_im, &
-              data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
-              data_M_re, data_M_im, data_n_step, data_ierr;
+              data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L1, data_L2, &
+              data_M_re, data_M_im, data_n_step, data_ierr
 
         ! check errors
         if( data_ierr > 0 ) then
@@ -74,10 +74,10 @@ subroutine read_traj( ns, x0, z0, r0, rank, n_traj, fid_selc, selc_count )
                 print*, 'unknown type!';
             end if
 
-            write( fid_selc(i_s), '(2(f0.7,1x), 2(f0.3,1x), 2(f0.2,1x), 2(f0.4,1x), 3(es10.3,1x), i0,1x,i0)' ), &
-                  data_px_0, data_pz_0, data_ts_re, data_ts_im, &
-                  data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
-                  data_M_re, data_M_im, data_n_step, i_type
+            write(fid_selc(i_s), '(2(f0.7,1x), 2(f0.3,1x), 2(f0.2,1x), 2(f0.4,1x), 4(es10.3,1x), i0,1x,i0)' ), &
+                  data_px_0, data_pz_0, data_ts_re, data_ts_im, data_x_0, data_z_0, data_px_inf, data_pz_inf, &
+                  data_L1, data_L2, data_M_re, data_M_im, data_n_step, i_type
+
             selc_count = selc_count + 1
             
         end do
