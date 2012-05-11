@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-file_name = 'spec_qtm_1+2.dat'
+file_name = 'spec_qtm_all.dat'
 file_dir = '../dat/'
 nz, nx = 1600, 400
 grid_lower_x, grid_upper_x = 0.0, 1.0
@@ -19,7 +19,7 @@ px = data_px.reshape( nx, nz )
 w = data_w.reshape( nx, nz )
 w_max = np.amax(w)
 print "w_max=", w_max
-w_upper_limit = 10**2
+w_upper_limit = 10**(0.5)
 w_lower_limit = np.log10(w_upper_limit) - orders
 i_too_small = np.where( w < 10 ** w_lower_limit )
 i_too_big = np.where( w > 10 ** w_upper_limit )

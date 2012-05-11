@@ -58,6 +58,8 @@ double complex function sub_int_r_reciprocal( t, ts ) result(w_r_recp)
     
     r = (z0*z0 + x0*x0)**0.5
     w_r_recp = - ATOM_CHARGE_Z / r
+!    w_r_recp = - 1d0 / r
+        
     return
 end function sub_int_r_reciprocal
 
@@ -80,6 +82,7 @@ double complex function sub_int_r_reciprocal_abs( t, ts ) result(w_r_recp_abs)
     r = (z0*z0 + x0*x0)**0.5
 !    r_abs = cdabs(r)
     w_r_recp_abs = - dreal( ATOM_CHARGE_Z / r )
+!    w_r_recp_abs = - dreal( 1d0 / r )
 
 !    x = dreal( 1d0 / r )
 !    y = dimag( 1d0 / r )

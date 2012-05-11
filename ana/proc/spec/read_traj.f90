@@ -14,7 +14,7 @@ subroutine read_traj( nx, nz, grid_lower_x, d_px, &
     integer, parameter:: b_mirrow = 1
 
     double precision:: data_px_0, data_pz_0, data_ts_re, data_ts_im, &
-          data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
+          data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L1, data_L2, &
           data_M_re, data_M_im
     integer:: data_n_pass_x, data_n_pass_z, data_ierr, data_n_step
     integer, external:: filter_condition
@@ -26,7 +26,7 @@ subroutine read_traj( nx, nz, grid_lower_x, d_px, &
         
         read( fid_traj, *, err=101, iostat=ierr_read, end=105 ), &
               data_px_0, data_pz_0, data_ts_re, data_ts_im, &
-              data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, &
+              data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L1, data_L2, &
               data_M_re, data_M_im, data_n_step, data_ierr
 
         if( data_ierr > 0 ) then
@@ -79,7 +79,7 @@ subroutine read_traj( nx, nz, grid_lower_x, d_px, &
         end if
 
         b_filter = filter_condition( data_px_0, data_pz_0, data_ts_re, data_ts_im, &
-              data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L, data_M_re, data_M_im, &
+              data_x_0, data_z_0, data_px_inf, data_pz_inf, data_L1, data_L2, data_M_re, data_M_im, &
               data_n_step, i_type )
 
         if( b_filter .eq. 1 ) then
@@ -96,7 +96,7 @@ subroutine read_traj( nx, nz, grid_lower_x, d_px, &
 
             ! L
             L(i_px,i_pz,i_type) = L(i_px,i_pz,i_type) &
-                  + data_L
+                  + data_L1
         end if
 
         cycle;
@@ -116,9 +116,9 @@ end subroutine read_traj
 
 
 
-integer function filter_condition( px0, pz0, ts_re, ts_im, x0, z0, px, pz, L, M_re, M_im, n_step, i_type )
+integer function filter_condition( px0, pz0, ts_re, ts_im, x0, z0, px, pz, L1, L2, M_re, M_im, n_step, i_type )
     implicit none
-    double precision, intent(in):: px0, pz0, ts_re, ts_im, x0, z0, px, pz, L
+    double precision, intent(in):: px0, pz0, ts_re, ts_im, x0, z0, px, pz, L1, L2
     double precision:: M_re, M_im
     integer, intent(in):: n_step, i_type
     double complex, external:: pulse_A_z

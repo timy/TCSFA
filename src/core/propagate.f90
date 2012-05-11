@@ -11,7 +11,7 @@
 
 ! --------------------------------------------------------------------------------
 subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
-      ts, amp_M, x0, z0, px_inf, pz_inf, L, n_step, err_spe, ierr, tag )
+      ts, amp_M, x0, z0, px_inf, pz_inf, L1, L2, n_step, err_spe, ierr, tag )
 
     implicit none;
     double precision, intent(in):: p0_x, p0_z
@@ -24,7 +24,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     integer:: ierr, n_step
     double complex:: w_sub, w_sub_0, w_sub_r_recp, w_sub_r_recp_abs, &
           w_re, action_W, DDW, amp_M
-    double precision:: px_inf, pz_inf, L
+    double precision:: px_inf, pz_inf, L1, L2, L
     double precision:: err_spe
     integer:: i_type
 !#if MISC_PRINT > 2
@@ -41,6 +41,9 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
     call SUB_PROP( ts, ierr, z0_, x0_, vz0_, vx0_, w_sub_0, w_sub_r_recp, &
           w_sub_r_recp_abs, err_spe, tag )
     if( ierr > 0 ) return
+
+    L1 = dreal( w_sub_r_recp )
+    L2 = dimag( w_sub_r_recp )
 
 ! --------------------------------------------------------------------------------
 ! W_sub and sub-barrier trajectory
@@ -106,6 +109,7 @@ subroutine propagate_with_single_p0( p0_x, p0_z, ts_guess, &
 #endif
 
     call rk4_prop( t0, Tp, x0, vx0, z0, vz0, ierr, W_re, px_inf, pz_inf, L, n_step, tag );
+!    L1 = L
 
     if( ierr == 0 ) then
 

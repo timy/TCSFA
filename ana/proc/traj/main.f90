@@ -43,8 +43,8 @@ program main
 
        ! --------------------------------------------------------------------
        ! set the filter, to only plot trajectores meeting the criteria
-       !if( i_type .ne. 2 ) cycle
-       if( w .le. 2d-5 ) cycle
+       if( (i_type .ne. 1) .and. (i_type .ne. 2) ) cycle
+       !if( w .le. 2d-5 ) cycle
        ! --------------------------------------------------------------------
        count = count + 1
        Mp_total = Mp_total + Mp

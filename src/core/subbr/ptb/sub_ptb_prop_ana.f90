@@ -49,6 +49,8 @@ subroutine sub_ptb_prop_0( ts, ierr, z_t0, x_t0, vz_t0, vx_t0, w_sub_0, &
     vz_t0 = sub_traj_vz_0(dcmplx(m_t0, 0d0))
     vx_t0 = sub_traj_vx_0(dcmplx(m_t0, 0d0))
     call ACTION_W_SUB( ts, w_sub_0, w_sub_r_recp, w_sub_r_recp_abs )
+!    call ACTION_W_SUB( ts, w_sub_0, w_sub_r_recp )
+    w_sub_r_recp_abs=0d0
 
     vz_ts = sub_traj_vz_0(ts)
     vx_ts = sub_traj_vx_0(ts)
