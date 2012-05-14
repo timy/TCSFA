@@ -97,28 +97,26 @@ class SpectraAnalyzer:
         
         if event.key == 'g':
             print 'start generating data file...'
-            dir_fig = os.path.dirname( file_fig )
-            if not os.path.exists( dir_fig ):
-                os.makedirs( dir_fig )
-            if not os.path.exists( dir_dat_selc ):
-                os.makedirs( dir_dat_selc )
-            # generate figure
-            plt.savefig( file_fig )
-            # generate source file for  FORTRAN
-            src_selc = []
-            for i in range(self.n_smp):
-                src_selc.append('z0(%d) = %f\nx0(%d) = %f\n\n' % 
-                                ((i+1), self.smp_ptr_z[i], (i+1), self.smp_ptr_x[i]))
-            with open(file_src_selc, 'w') as f:
-                for s in src_selc:
-                    f.write(s)
-            # write the the number of sample points
-            src_selc_number = 'integer, parameter:: n_sel = %d' % self.n_smp
-            with open(file_src_selc_number, 'w') as f:
-                f.write(src_selc_number)
-            # generate data file
+            self.save_fig()
             self.save()
             print 'done with generation.'
+        if event.key == 'a':
+            print 'start appending data file...'
+            # store the new data into temporary buffer
+            temp_ptr_z = self.smp_ptr_z
+            temp_ptr_x = self.smp_ptr_x
+            temp_n = self.n_smp
+            # load the old data
+            self.load()
+            # append the new data into the old data
+            self.n_smp += temp_n
+            for i in range(temp_n):
+                self.smp_ptr_z.append(temp_ptr_z[i])
+                self.smp_ptr_x.append(temp_ptr_x[i])
+            # only plot the selected points in the current figure
+            self.save_fig(self.n_smp-temp_n)
+            self.save()
+            print  'done with appending.'
         if event.key == 'l':
             print 'start loading data from file \'sample.dat\'...'
             self.load()
@@ -161,10 +159,6 @@ class SpectraAnalyzer:
         self.update_cursor()
         print 'update done.'
     def update_sample(self):
-        # get the size of the figure (display)
-        len_fig_z, len_fig_x = plt.gcf().get_size_inches()
-        pos_lbl_z = len_fig_z * ratio_smp_lbl_z
-        pos_lbl_x = len_fig_x * ratio_smp_lbl_x
         # get the boundary of displayed data
 #         box_dat = plt.axis()
 #         len_dat_z = box_dat[1] - box_dat[0]
@@ -174,8 +168,8 @@ class SpectraAnalyzer:
 
         for i in range(self.n_smp):
             plt.plot( self.smp_ptr_z[i], self.smp_ptr_x[i], '+', ms=20, c='k' )
-            plt.text( self.smp_ptr_z[i]+pos_lbl_z, self.smp_ptr_x[i]+pos_lbl_x, "%d"%(i+1), 
-                      color='k', fontsize=12)
+            #plt.text( self.smp_ptr_z[i]+pos_lbl_z, self.smp_ptr_x[i]+pos_lbl_x, "%d"%(i+1), 
+            #          color='k', fontsize=12)
     def update_cursor(self):
         self.cursor.set_xdata([self.cur_ptr_z])
         self.cursor.set_ydata([self.cur_ptr_x])
@@ -189,13 +183,44 @@ class SpectraAnalyzer:
             self.smp_ptr_z.append(ptr[i,0])
             self.smp_ptr_x.append(ptr[i,1])
     def save(self):
+        # prepare the output directory
+        if not os.path.exists( dir_dat_selc ):
+            os.makedirs( dir_dat_selc )
+        # write sample points to "sample.f"
+        src_selc = []
+        for i in range(self.n_smp):
+            src_selc.append('z0(%d) = %f\nx0(%d) = %f\n\n' % 
+                            ((i+1), self.smp_ptr_z[i], (i+1), self.smp_ptr_x[i]))
+        with open(file_src_selc, 'w') as f:
+            for s in src_selc:
+                f.write(s)
+        # write the number of sample points to "sample_number.f"
+        src_selc_number = 'integer, parameter:: n_sel = %d' % self.n_smp
+        with open(file_src_selc_number, 'w') as f:
+            f.write(src_selc_number)
+        # write the points to "sample.dat"
         str_ptr = []
         for i in range(self.n_smp):
             str_ptr.append('%f %f\n' % (self.smp_ptr_z[i], self.smp_ptr_x[i]))
         with open(file_dat_selc, 'w') as f:
             for s in str_ptr:
                 f.write(s)
-        
+    def save_fig(self, n_ignore=0):
+        # indexing points
+        # get the size of the figure (display)
+        len_fig_z, len_fig_x = plt.gcf().get_size_inches()
+        pos_lbl_z = len_fig_z * ratio_smp_lbl_z
+        pos_lbl_x = len_fig_x * ratio_smp_lbl_x
+        for i in range(self.n_smp):
+            if i < n_ignore:
+                continue
+            plt.text( self.smp_ptr_z[i]+pos_lbl_z, self.smp_ptr_x[i]+pos_lbl_x, "%d"%(i+1), 
+                      color='k', fontsize=12)
+        # save the figure
+        dir_fig = os.path.dirname( file_fig )
+        if not os.path.exists( dir_fig ):
+            os.makedirs( dir_fig )
+        plt.savefig( file_fig )
 
 sa = SpectraAnalyzer( spec )
 plt.show()

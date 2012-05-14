@@ -1,1 +1,1 @@
-integer, parameter:: n_sel = 10
+integer, parameter:: n_sel = 90
