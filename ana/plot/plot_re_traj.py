@@ -3,13 +3,14 @@ import numpy as np
 import os
 
 traj_dir = '../dat/traj/'
-n_traj_plot = len([f for f in os.listdir(traj_dir) 
-                   if f.startswith('traj_re') ])
-print 'No. of trajectories: ', n_traj_plot
-
+# n_traj_plot = len([f for f in os.listdir(traj_dir) 
+#                    if f.startswith('traj_re') ])
 
 # read the info file
 info = np.loadtxt( traj_dir + "info.dat" )
+n_traj_plot = sum(1 for line in open( traj_dir  + "info.dat" ))
+print 'No. of trajectories: ', n_traj_plot
+
 
 # map the weight to the line width
 w = info[:,1]
@@ -44,6 +45,8 @@ for i in range(n_traj_plot):
     plt.plot(data[:,2], data[:,3], lw=lw[i], label="%d"%i, c=cl[i] )
     plt.plot(data[0,2], data[0,3], 'd', c='r')
 
+plt.xlim([-500,200])
+plt.ylim([-20,10])
 plt.grid(True)
 plt.savefig( '../fig/traj.png' )
 plt.show()
